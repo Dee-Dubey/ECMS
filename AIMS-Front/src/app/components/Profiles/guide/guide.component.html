@@ -1,0 +1,1457 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+
+  <!-- <div class="row hero"> -->
+
+    <!-- MAIN CONTENT -->
+    <!-- <div class="col-lg-12 primary-container fix-height"> -->
+
+      <div class="row g-3 m-1">
+
+        <!-- Admin Department -->
+        <div class="col-md-4 mt-1">
+          <div class="dept-card">
+            <div class="card-top admin-gradient">
+              <i class="bi bi-hdd-rack"></i>
+              <h4 class="mb-0">Admin Department - User Guide</h4>
+            </div>
+            <div class="card-bottom">
+              <!-- <p>View your admin department Assigned</p> -->
+
+              <div class="sub-item" (click)="selectSection('fixed')">
+                <span><i class="bi bi-archive me-2"></i> 📦 Fixed Assets </span>
+                <i class="bi bi-chevron-right"></i>
+              </div>
+
+              <div class="sub-item" (click)="selectSection('consumable')">
+                <span><i class="bi bi-box-seam me-2"></i> 🛍️ Consumable </span>
+                <i class="bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Hardware Department -->
+        <div class="col-md-4 mt-1">
+          <div class="dept-card">
+            <div class="card-top hardware-gradient">
+              <i class="bi bi-cpu"></i>
+              <h4 class="mb-0">Hardware Department - User Guide</h4>
+            </div>
+            <div class="card-bottom">
+              <!-- <p>View your hardware department Assigned</p> -->
+
+              <div class="sub-item" (click)="selectSection('electronic')">
+                <span><i class="bi bi-motherboard me-2"></i> 🔌 Electronic Components </span>
+                <i class="bi bi-chevron-right"></i>
+              </div>
+
+              <div class="sub-item" (click)="selectSection('testing')">
+                <span><i class="bi bi-tools me-2"></i> 🛠️ Testing Equipments </span>
+                <i class="bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- IT Department -->
+        <div class="col-md-4 mt-1">
+          <div class="dept-card">
+            <div class="card-top it-gradient">
+              <i class="bi bi-laptop"></i>
+              <h4 class="mb-0">IT Department - User Guide</h4>
+            </div>
+            <div class="card-bottom it-cardBottom">
+              <!-- <p>View your IT inventory Assigned</p> -->
+              <div class="sub-item" (click)="selectSection('it')">
+                <span><i class="bi bi-motherboard me-2"></i> 💻 IT Inventory </span>
+                <i class="bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TABS (UNCHANGED) -->
+      <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <div class="col-lg-6 mb-2">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#componentInventory">
+              Component Inventory
+            </button>
+          </li>
+        </div>
+        <div class="col-lg-6 mb-2">
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#itInventory">
+              IT and Other Inventory
+            </button>
+          </li>
+        </div>
+      </ul> -->
+
+      <div class="tab-content" style="height: 65%;">
+        <!-- ================================== Admin  Department ================================== -->
+        <!-- ================= Fixed Assets ============================== -->
+        <div *ngIf="selectedSection === 'fixed'"  id="fixedAssets">
+          <div class="row p-2">
+            <div class="collapse-header admin-gradient">
+              <span style="font-size: 1.5rem;"> 📦 Fixed Assets </span>
+            </div>
+
+            <!-- MAIN GUIDE CONTENT -->
+            <div class="col-lg-8 fix-height">
+              <!-- <h2>Fixed Assets - User Guide </h2> -->
+              <!-- <h5>Everything you need to know to use the system</h5> -->
+
+              <div class="card p-3" style="height: 86%;">
+                <h5>Everything you need to know to use the system</h5> <hr>
+                <div class="guide-scroll">
+                  <div id="logins">
+                    <h4 class="section-title">LOGIN:</h4>
+                    <div class="section-content">
+                      <p>When you navigate to the URL <a href="http://localhost:3010"
+                          target="_blank">http://192.168.1.85:3010</a>, this is the first page you will
+                        see.
+                      </p>
+                      <p>To log in as an Admin, use the following credentials:</p>
+                      <p><strong>Username:</strong> AcevinMaster</p>
+                      <p><strong>Password:</strong> &#64;cevin2024</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT CONTENTS PANEL -->
+            <div class="col-lg-4 fix-height">
+              <div class="card p-3 position-sticky" style="height: 86%;">
+                <div class="guide-scroll">
+                  <h5>Contents</h5>
+                  <div class="index-content">
+                    <ul>
+                      <li><a [routerLink]="['/guide']" fragment="logins">LOGIN</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= Consumable ============================== -->
+        <div *ngIf="selectedSection === 'consumable'"  id="consumable">
+          <div class="row p-2">
+            <div class="collapse-header admin-gradient">
+              <span style="font-size: 1.5rem;"> 🛍️ Consumable </span>
+            </div>
+
+            <!-- MAIN GUIDE CONTENT -->
+            <div class="col-lg-8 fix-height">
+              <!-- <h2>Consumable - User Guide </h2> -->
+              <!-- <h5>Everything you need to know to use the system</h5> -->
+
+              <div class="card p-3" style="height: 86%;">
+                <h5>Everything you need to know to use the system</h5> <hr>
+                <div class="guide-scroll">
+                  <div id="logins">
+                    <h4 class="section-title">LOGIN:</h4>
+                    <div class="section-content">
+                      <p>When you navigate to the URL <a href="http://localhost:3010"
+                          target="_blank">http://192.168.1.85:3010</a>, this is the first page you will
+                        see.
+                      </p>
+                      <p>To log in as an Admin, use the following credentials:</p>
+                      <p><strong>Username:</strong> AcevinMaster</p>
+                      <p><strong>Password:</strong> &#64;cevin2024</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT CONTENTS PANEL -->
+            <div class="col-lg-4 fix-height">
+              <div class="card p-3 position-sticky" style="height: 86%;">
+                <div class="guide-scroll">
+                  <h5>Contents</h5>
+                  <div class="index-content">
+                    <ul>
+                      <li><a [routerLink]="['/guide']" fragment="logins">LOGIN</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================== Hardware  Department ================================== -->
+        <!-- ================= COMPONENT INVENTORY TAB ================= -->
+        <div *ngIf="selectedSection === 'electronic'"  id="componentInventory">
+          <div class="row p-2">
+            <div class="collapse-header hardware-gradient">
+              <span style="font-size: 1.5rem;"> 🔌 Electronic Components </span>
+            </div>
+
+            <!-- MAIN GUIDE CONTENT -->
+            <div class="col-lg-8 fix-height">
+
+              <!-- <h4>This is the user guide for how to use Component Inventory</h4> -->
+              <!-- <h2>Electronic Component - User Guide </h2> -->
+              <!-- <h5>Everything you need to know to use the system</h5> -->
+
+              <div class="card p-3" style="height: 86%;">
+                <h5>Everything you need to know to use the system</h5> <hr>
+                <div class="guide-scroll">
+                  <div id="logins">
+                    <h4 class="section-title">LOGIN:</h4>
+                    <div class="section-content">
+                      <p>When you navigate to the URL <a href="http://localhost:3010"
+                          target="_blank">http://192.168.1.85:3010</a>, this is the first page you will
+                        see.
+                      </p>
+                      <p>To log in as an Admin, use the following credentials:</p>
+                      <p><strong>Username:</strong> AcevinMaster</p>
+                      <p><strong>Password:</strong> &#64;cevin2024</p>
+                    </div>
+                  </div>
+
+                  <div id="usersection">
+                    <h4 class="section-title">USER SECTION:</h4>
+                    <div class="section-content">
+                      <h5>How to Add an User by an Admin?</h5>
+                      <p>To add a new user to the system, follow these steps:</p>
+                      <ol>
+                        <li>Navigate to the <strong>Users</strong> of the system.</li>
+                        <li>Click on the <strong>Add User</strong> button.</li>
+                        <li>Fill in the required details for the new user in the provided form.</li>
+                        <li>Submit the form to add the user to the system.</li>
+                      </ol>
+                      <p><b>Once the user is added, they will have the necessary rights to manage, issue, and
+                          return
+                          components as required.</b></p>
+                    </div>
+                  </div>
+
+                  <div id="employeesection">
+                    <h4 class="section-title">EMPLOYEE SECTION:</h4>
+                    <div class="section-content">
+                      <h5>How to Add an Employees to the system by an Admin?</h5>
+                      <p>To add a new Employee, follow these steps: </p>
+                      <ol>
+                        <li>Navigate to the <strong>Users</strong> of the system.</li>
+                        <li>Click on the <strong>Add User</strong> button.</li>
+                        <li>Fill in the required details for the new employee in the provided form.</li>
+                        <li>Employees <b>do not have any rights regarding view, manage, issue and
+                            return.</b></li>
+                        <li>Submit the form to add the employee to the system.</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="usercsv">
+                    <h4 class="section-title">ADD USER BY UPLOAD CSV:</h4>
+                    <div class="section-content">
+                      <h5>Steps to add user or employee by upload csv: </h5>
+                      <li>Navigate to the <b>Users</b> in the navbar.</li>
+                      <li>Click on the <b>Upload Csv Button</b>.</li>
+                      <li>Select a file which contains the <b> required headers.</b></li>
+                      <li>Click on the <b>Submit Button</b> to add users/employees through csv.</li>
+                      <div class="csv-format">
+                        <h5>Required CSV Format and Headers:</h5>
+                        <p><b>Ensure that your CSV file includes the following headers and follows the
+                            specified format:</b></p>
+                        <ol>
+                          <li><b>loginid:</b>It is compulsory.</li>
+                          <li><b>password:</b>It is compulsory.</li>
+                          <li><b>firstname:</b>It is compulsory.</li>
+                          <li><b>middlename:</b>It is not compulsory</li>
+                          <li><b>lastname:</b>It is compulsory.</li>
+                          <li><b>employeecode:</b>It is compulsory and should be unique</li>
+                          <li><b>organizationemail:</b>It is compulsory.</li>
+                          <li><b>type:</b>It is compulsory.
+                            <ul>
+                              <li>User: <b>0</b></li>
+                              <li>Employee: <b>1</b></li>
+                            </ul>
+                          </li>
+                          <li><b>status:</b>It is compulsory.
+                            <ul>
+                              <li>Active: <b>1</b></li>
+                              <li>Disabled: <b>0</b></li>
+                              <li>Terminated: <b>3</b></li>
+                            </ul>
+                          </li>
+                          <li><b>userrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>If type is <b>0 (User):</b> Access to view, manage, issue, and
+                                return.</li>
+                              <li>If type is <b>1 (Employee):</b> No user rights.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentmanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Manage Right: <b>1</b> -- which refers to the user have component
+                                manage right.</li>
+                              <li>No Manage Right: <b>0</b> -- which refers to the user does not have
+                                component manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Issue Right: <b>1</b> -- which refers to the user have component
+                                issue right.</li>
+                              <li>No Issue Right: <b>0</b> -- which refers to the user does not have
+                                component issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentreturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Return Right: <b>1</b> -- which refers to the user have component
+                                return right.</li>
+                              <li>No Return Right: <b>0</b> -- which refers to the user does not have
+                                component return right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryviewrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory View Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory view right.</li>
+                              <li>No IT-Inventory View Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory view right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventorymanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Manage Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory manage right.</li>
+                              <li>No IT-Inventory Manage Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Issue Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory issue right.</li>
+                              <li>No IT-Inventory Issue Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryreturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Return Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory return right.</li>
+                              <li>No IT-Inventory Return Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory return right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumableviewrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable View Right: <b>1</b> -- which refers to the user have
+                                Consumable view right.</li>
+                              <li>No Consumable View Right: <b>0</b> -- which refers to the user does
+                                not have Consumable view right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumablemanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Manage Right: <b>1</b> -- which refers to the user have
+                                Consumable manage right.</li>
+                              <li>No Consumable Manage Right: <b>0</b> -- which refers to the user
+                                does not have Consumable manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumableissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Issue Right: <b>1</b> -- which refers to the user have
+                                Consumable issue right.</li>
+                              <li>No Consumable Issue Right: <b>0</b> -- which refers to the user does
+                                not have Consumable issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumablereturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Return Right: <b>1</b> -- which refers to the user have
+                                Consumable return right.</li>
+                              <li>No Consumable Return Right: <b>0</b> -- which refers to the user
+                                does not have Consumable return right.</li>
+                            </ul>
+                          </li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="editusers">
+                    <h4 class="section-title">EDIT (USERS AND EMPLOYEES):</h4>
+                    <div class="section-content">
+                      <div class="edit-usersection">
+                        <p><b>Once a user/employee is created, we can edit the user by clicking on the Edit
+                            Button in “Action” option and these modifications can be made by those who
+                            have
+                            users' rights.</b></p>
+                        <p>Note: The tabs are the same for both <b>USERS and EMPLOYEES.</b> Please follow
+                          the same steps.</p>
+                      </div>
+
+                      <div>
+                        <p>Edit user consisting of different tabs</p>
+                        <ol>
+                          <li><b>Edit User Data</b></li>
+                          <li><b>Reset Password</b></li>
+                          <li><b>Change User Status</b></li>
+                        </ol>
+                      </div>
+
+                      <div class="sub-section">
+                        <h5>Edit User Data:</h5>
+                        <p><b>Edit User Data Tab allows users/employees to make modifications in the
+                            system.</b></p>
+                        <p>To edit the information regarding users are as follows:</p>
+                        <ol>
+                          <li>Select the <b>User/Employee </b>for whom you want to edit.</li>
+                          <li>Click on the Edit Button in <b>“Action”</b> option.</li>
+                          <li>Click on the <b>Edit User Data Tab.</b></li>
+                          <li>Make the modification as per your requirements.</li>
+                          <li>Click on the <b> Submit Button</b> to save the modifications.</li>
+                        </ol>
+                      </div>
+
+                      <div class="sub-section">
+                        <h5>Reset Password:</h5>
+                        <p><b>Reset Password Tab enables users/employees to reset the password./</b></p>
+                        <p>To reset the password regarding users/employees are as follows:</p>
+                        <ol>
+                          <li>Select the User/Employee for whom you want to edit.</li>
+                          <li>Click on the Edit Button in <b>"Action"</b> option.</li>
+                          <li>Click on the <b>Reset Password Tab.</b></li>
+                          <li>Enter the New Password you wish to set.</li>
+                          <li>Confirm the New Password by re-entering it.</li>
+                          <li>Click on the <b>Submit Button</b> to save the new password.</li>
+                        </ol>
+                      </div>
+
+                      <div class="sub-section">
+                        <h5>Change User Status:</h5>
+                        <p><b>Change User Status Tab allows users/employees to switch the status of a
+                            user/employee between Active, Disabled, and Terminated.</b></p>
+                        <p>To switch the status, Follow these steps:</p>
+                        <ol>
+                          <li>Select the <b>User/Employee</b> for whom you want to change the status.</li>
+                          <li>Click on the Edit Button in <b>“Action”</b> option.</li>
+                          <li>Click on the <b>Change User Status Tab.</b></li>
+                          <li>Choose the desired status from the options provided <b>(Active, Disabled or
+                              Terminated).</b></li>
+                          <li>Click on the <b> Submit Button </b>to save the status.</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="componentsettings">
+                    <h4 class="section-title">COMPONENT SETTINGS:</h4>
+                    <div class="section-content">
+                      <p>Before Creating Component do the settings in the Setting Tab.</p>
+                      <p><b>A setting section will be available for those who have manage rights.</b></p>
+                      <ol>
+                        <li><b>Create Manufacturer</b></li>
+                        <li><b>Create Category</b></li>
+                        <li><b>Create Supplier</b></li>
+                        <li><b>Create Project</b></li>
+                        <li><b>Create Shelf Location</b></li>
+                      </ol>
+                      <p>After these settings, you can create component manually or by upload csv. </p>
+                    </div>
+                  </div>
+
+                  <div id="createcomponent">
+                    <h4 class="section-title">CREATE COMPONENT:</h4>
+                    <div class="section-content">
+                      <p><b>The steps to create components in the system manually.</b></p>
+                      <ol>
+                        <li>Navigate to the <b>Inventory Tab.</b></li>
+                        <li>Click on the <b>Create Component Button</b> in Dashboard.</li>
+                        <li>Fill in the <b>required fields</b> in the create component form. </li>
+                        <li>Click on the <b>Submit Button</b> to complete the process.</li>
+                        <li><b>Once the component is created, it is displayed in tabular format in the
+                            dashboard.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentcsv">
+                    <h4 class="section-title">ADD COMPONENT BY UPLOAD CSV:</h4>
+                    <div class="section-content">
+                      <p><b>Steps to add components by csv are as follows:</b></p>
+                      <ol>
+                        <li>Navigate to the <b>Inventory Tab</b> in the navbar. </li>
+                        <li>Click on the <b>Upload Csv Button.</b> </li>
+                        <li>Select a file which contains the <b>required headers.</b> </li>
+                        <li>Click on the <b>Submit Button</b> to add components through csv. </li>
+                      </ol>
+                      <div class="csv-format">
+                        <h5>Required CSV Format and Headers:</h5>
+                        <p>Ensure that your CSV file includes the following headers and follows the
+                          specified format:</p>
+                        <ol>
+                          <li><b>manufacturerPartNumber:</b>It is compulsory.</li>
+                          <li><b>manufacturer:</b>It is compulsory.</li>
+                          <li><b>description:</b>It is compulsory.</li>
+                          <li><b>package:</b>It is compulsory</li>
+                          <li><b>projectName:</b>It is compulsory.</li>
+                          <li><b>quantity:</b>It is compulsory.</li>
+                          <li><b>supplierName:</b>It is compulsory.</li>
+                          <li><b>supplierPartNo:</b>It is not compulsory.</li>
+                          <li><b>categoryName:</b>It is compulsory.</li>
+                          <li><b>shelfName:</b>It is not compulsory.</li>
+                          <li><b>boxName:</b>It is not compulsory.</li>
+                          <li><b>comment:</b>It is not compulsory.</li>
+                          <li><b>notificationQuantity:</b>It is not compulsory.</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="editcomponent">
+                    <h4 class="section-title">EDIT COMPONENT:</h4>
+                    <div class="section-content">
+                      <p>Once component is created, we can edit the component by clicking on the Edit Button
+                        in <b>“Action”</b> option. </p>
+                      <p><b>These modifications can be made by those who have component manage/issue/return
+                          rights.</b></p>
+                      <p>Edit component consisting of different tabs as follows: </p>
+                      <ol>
+                        <li><b>Modify Tab</b></li>
+                        <li><b>Change Location Tab</b></li>
+                        <li><b>Add Stock Tab</b></li>
+                        <li><b>Issue Stock Tab</b></li>
+                        <li><b>Return Stock Tab</b></li>
+                        <li><b>Report Consumption Tab</b></li>
+                        <li><b>Change Notification Quantity Tab</b></li>
+                        <li><b>Move Stock Tab:</b>If there is only one project selected in the component,
+                          the “Move Stock Tab” will be disabled. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componenthistory">
+                    <h4 class="section-title">COMPONENT HISTORY:</h4>
+                    <div class="section-content">
+                      <p><b>Component History feature enables the admin to track the stock details over time.
+                        </b></p>
+                      <p>To track the history of component, follow these steps: </p>
+                      <ol>
+                        <li><b>Select the component</b> for which you want to view stock details.</li>
+                        <li>Click on the <b>History Button</b> to access the entire stock details of the
+                          selected
+                          project.</li>
+                        <li>The History can also be viewed by <b>transaction type.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="exportcomponent">
+                    <h4 class="section-title">EXPORT COMPONENT:</h4>
+                    <div class="section-content">
+                      <p><b>The export csv feature lets you download specific project data as a csv file. This
+                          makes it easy to view and work with your project information in a spreadsheet.
+                          Additionally, you can check a box to include project histories in the export if
+                          needed.
+                        </b>
+                      </p>
+                      <p>Steps to export csv file as follows:</p>
+                      <ol>
+                        <li>Navigate to the <b>Inventory Tab</b> in the Navbar.</li>
+                        <li>Click on the <b>Export Csv Button.</b></li>
+                        <li><b>Select the project</b> you want to export.</li>
+                        <li>If you want to include the <b>project history,</b> check the box labeled <b>Include
+                            Stock History of Selected Project.</b></li>
+                        <li>Click on the <b>Export Button</b> to download the file. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="searchcomponent">
+                    <h4 class="section-title">SEARCH COMPONENT:</h4>
+                    <div class="section-content">
+                      <p><b>The Search Box allows you to find data within the system. Searches can be
+                          performed using the following
+                          criteria.
+                        </b></p>
+                      <li><b>Manufacturer Part Number</b></li>
+                      <li><b>Component ID</b></li>
+                      <li><b>Package</b></li>
+                      <li><b>Comment</b></li>
+                      <li><b>Description</b></li>
+
+                      <p>Steps to do searching are as follows: </p>
+                      <ol>
+                        <li>Navigate to <b>Search Input Box</b> in the dashboard. </li>
+                        <li>Type your search terms into the input box. You can search by <b>Manufacturer
+                            Part Number, Component ID, Package, Comment, or Description.</b> </li>
+                        <li>Click on the <b>Search Button</b> to see the result. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentpagination">
+                    <h4 class="section-title">COMPONENT PAGINATION:</h4>
+                    <div class="section-content">
+                      <p><b>Pagination helps to split a large amount of data into smaller, more manageable
+                          pages as per the results per page in the system. </b></p>
+                      <p>The steps are as follows:</p>
+                      <ol>
+                        <li>Go to the <b>"Results Per Page"</b> section in the dashboard. </li>
+                        <li>You can choose from three options for the number of results per page: <b>10, 50,
+                            or 100.</b> </li>
+                        <li>If you select a limit of 10, the data will be divided into pages with 10 items
+                          each. Similarly, selecting 50 or 100 will divide the data into pages with 50 or
+                          100 items respectively. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentbom">
+                    <h4 class="section-title">BOM (BILL OF MATERIALS):</h4>
+                    <div class="section-content">
+                      <p><b>A BOM is a detailed list of all components required to create a product.</b></p>
+                      <li>Go to <b>BOM Tab</b> in navbar.</li>
+                      <li>BOM is divided into tabs as follows: </li>
+                      <ul>
+                        <li><b>Consolidate BOM</b></li>
+                        <li><b>Update BOM Price</b></li>
+                      </ul>
+
+                      <h5><b>Consolidate BOM:</b></h5>
+                      <p>Steps to add Consolidate BOM are as follows:</p>
+                      <ol>
+                        <li>Select the <b>"Consolidate BOM" Tab.</b> </li>
+                        <li><b>Upload the BOM File: </b>Choose a BOM file that contains the necessary
+                          headers.</li>
+                        <li><b>View File: </b> The selected file will be displayed in a tabular format.</li>
+                        <li><b>Enter Number of Systems Required:</b> For example, enter "2."</li>
+                        <li><b>Download File: </b> Click the "Consolidate" button to download the
+                          consolidated .xls
+                          file.</li>
+                      </ol>
+
+                      <h5><b>Update BOM Price:</b></h5>
+                      <p>Steps to update BOM Price are as follows:</p>
+                      <ol>
+                        <li>Select the <b>"Update BOM Price" Tab.</b> </li>
+                        <li><b>Upload Consolidated BOM File: </b> First, upload the consolidated BOM file
+                          you
+                          downloaded.</li>
+                        <li><b>Upload BOM Files: </b> Next, upload the BOM files you selected in the
+                          Consolidate BOM
+                          step.</li>
+                        <li><b>View Files: </b> The uploaded files will be displayed in a tabular format.
+                        </li>
+                        <li><b>Enter GST Rate: </b> Input the applicable GST rate.</li>
+                        <li><b>Download Updated File:</b> Click the "Consolidate" button to download the
+                          updated
+                          .zip file.</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentuserinformation">
+                    <h4 class="section-title">USER/EMPLOYEE INFORMATION SECTION:</h4>
+                    <div class="section-content">
+                      <P><b>This section contains personal information about the user/employee, including their Name, Email,
+                          Login Id, and Employee code.</b></P>
+                      <p>Steps to view the Personal Information are as follows: </p>
+                      <ol>
+                        <li>Navigate to the <b>Profile Icon</b> in the Navbar.</li>
+                        <li>After Clicking on the <b>Profile Icon Button,</b> user or employee will be able to <b>view their
+                            personal information.</b></li>
+                        <li>The Personal Information are:</li>
+                        <ul>
+                          <li><b>Name</b></li>
+                          <li><b>Email</b></li>
+                          <li><b>Login Id</b></li>
+                          <li><b>Employee Code</b></li>
+                        </ul>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentlogout">
+                    <h4 class="section-title">LOGOUT:</h4>
+                    <div class="section-content">
+                      <p><b>To logout from the account, Follow these steps: </b></p>
+                      <ol>
+                        <li>Look for the <b> Logout Button</b> in Navbar.</li>
+                        <li>Click on the <b>Logout Button</b> to exit from the account. </li>
+                        <li>You will be <b>redirected to the Login Page.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="componentprofile">
+                    <h4 class="section-title">PROFILE SECTION:</h4>
+                    <p><b>Note: After logging out, you will need to log in again as a user or employee to access the Profile
+                        Section.</b></p>
+                    <div class="section-content">
+                      <P><b>The Profile section allows users/employees to view their personal data.</b></P>
+                      <p>The Profile Section includes the following subsections:</p>
+                      <ul>
+                        <li><b>Guide Section</b></li>
+                        <li><b>Assigned Section</b></li>
+                        <li><b>History Section</b></li>
+                      </ul>
+
+                      <h5><b>Guide Section:</b></h5>
+                      <p><b>Guide Section provides complete guidance to the user or employee for how to use AIMS.</b></p>
+                      <p>To access the Guide Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b> in Navbar.</li>
+                        <li>Click on the <b>Guide Section.</b></li>
+                        <li>Click on the <b>Component Inventory Tab</b> to view instructions on how to use AIMS for Component
+                          based. </li>
+                      </ol>
+
+                      <h5><b>Assigned Section:</b></h5>
+                      <p><b>Assigned Section displays the complete history of components assigned to employees or users within
+                          the system. </b></p>
+                      <p>To access the Assigned Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b>in navbar.</li>
+                        <li>Click on the <b>Assigned Section.</b></li>
+                        <li>A list of the complete assigned history will be displayed.</li>
+                      </ol>
+
+                      <h5><b>History Section:</b></h5>
+                      <p><b>The History section provides the complete list of logged-in users or employees' activities. </b>
+                      </p>
+                      <p>To access the History Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b>in navbar.</li>
+                        <li>Click on the <b>History Section.</b></li>
+                        <li>The history of the employee or user should be displayed, including details regarding <b>projects,
+                            components, stock histories, etc.</b> </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT CONTENTS PANEL -->
+            <div class="col-lg-4 fix-height">
+              <div class="card p-3 position-sticky" style="height: 86%;">
+                <div class="guide-scroll">
+                  <h5>Contents</h5>
+                  <div class="index-content">
+                    <ul>
+                      <li><a [routerLink]="['/guide']" fragment="logins">LOGIN</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="usersection">USER SECTION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="employeesection">EMPLOYEE SECTION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="usercsv">ADD USER BY UPLOAD CSV</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="editusers">EDIT (USERS AND EMPLOYEES)</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentsettings">COMPONENT SETTINGS</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="createcomponent">CREATE COMPONENT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentcsv">ADD COMPONENT BY UPLOAD CSV </a></li>
+                      <li><a [routerLink]="['/guide']" fragment="editcomponent">EDIT COMPONENT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componenthistory">COMPONENT HISTORY</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="exportcomponent">EXPORT COMPONENT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="searchcomponent">SEARCH COMPONENT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentpagination">COMPONENT PAGINATION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentbom">BOM (BILL OF MATERIALS)</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentuserinformation">USER/EMPLOYEE INFORMATION
+                          SECTION</a>
+                      </li>
+                      <li><a [routerLink]="['/guide']" fragment="componentlogout">LOGOUT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="componentprofile">PROFILE SECTION</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ================= testing equipments ============================== -->
+        <div *ngIf="selectedSection === 'testing'"  id="testingequipments">
+          <div class="row p-2">
+            <div class="collapse-header hardware-gradient">
+              <span style="font-size: 1.5rem;"> 🛠️ Testing Equipments </span>
+            </div>
+
+            <!-- MAIN GUIDE CONTENT -->
+            <div class="col-lg-8 fix-height">
+              <!-- <h2>Testing Equipments - User Guide </h2> -->
+              <!-- <h5>Everything you need to know to use the system</h5> -->
+
+              <div class="card p-3" style="height: 86%;">
+                <h5>Everything you need to know to use the system</h5> <hr>
+                <div class="guide-scroll">
+                  <div id="logins">
+                    <h4 class="section-title">LOGIN:</h4>
+                    <div class="section-content">
+                      <p>When you navigate to the URL <a href="http://localhost:3010"
+                          target="_blank">http://192.168.1.85:3010</a>, this is the first page you will
+                        see.
+                      </p>
+                      <p>To log in as an Admin, use the following credentials:</p>
+                      <p><strong>Username:</strong> AcevinMaster</p>
+                      <p><strong>Password:</strong> &#64;cevin2024</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT CONTENTS PANEL -->
+            <div class="col-lg-4 fix-height">
+              <div class="card p-3 position-sticky" style="height: 86%;">
+                <div class="guide-scroll">
+                  <h5>Contents</h5>
+                  <div class="index-content">
+                    <ul>
+                      <li><a [routerLink]="['/guide']" fragment="logins">LOGIN</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================== IT  Department ================================== -->
+        <!-- ================= IT INVENTORY TAB (UNCHANGED STRUCTURE) ================= -->
+        <div *ngIf="selectedSection === 'it'"  id="itInventory">
+          <div class="row p-2">
+            <div class="collapse-header it-gradient">
+              <span style="font-size: 1.5rem;"> 💻 IT Inventory</span>
+            </div>
+
+            <!-- MAIN GUIDE CONTENT -->
+            <div class="col-lg-8 fix-height">
+
+              <!-- <h4>This is the user guide for how to use Component Inventory</h4> -->
+              <!-- <h2>IT Inventory - User Guide </h2> -->
+              <!-- <h5>Everything you need to know to use the system</h5> -->
+
+              <div class="card p-3" style="height: 86%;">
+                <h5>Everything you need to know to use the system</h5> <hr>
+                <div class="guide-scroll">
+                  <div id="itlogins">
+                    <h4 class="section-title">LOGIN:</h4>
+                    <div class="section-content">
+                      <p>When you navigate to the URL <a href="http://localhost:3010"
+                          target="_blank">http://192.168.1.85:3010</a>, this is the first page you will
+                        see.
+                      </p>
+                      <p>To log in as an Admin, use the following credentials:</p>
+                      <p><strong>Username:</strong> AcevinMaster</p>
+                      <p><strong>Password:</strong> &#64;cevin2024</p>
+                    </div>
+                  </div>
+
+                  <div id="itusersection">
+                    <h4 class="section-title">USER SECTION:</h4>
+                    <div class="section-content">
+                      <h5>How to Add an User by an Admin?</h5>
+                      <p>To add a new user to the system, follow these steps:</p>
+                      <ol>
+                        <li>Navigate to the <strong>Users</strong> of the system.</li>
+                        <li>Click on the <strong>Add User</strong> button.</li>
+                        <li>Fill in the required details for the new user in the provided form.</li>
+                        <li>Submit the form to add the user to the system.</li>
+                      </ol>
+                      <p><b>Once the user is added, they will have the necessary rights to manage, issue, and
+                          return
+                          components as required.</b></p>
+                    </div>
+                  </div>
+
+                  <div id="itemployeesection">
+                    <h4 class="section-title">EMPLOYEE SECTION:</h4>
+                    <div class="section-content">
+                      <h5>How to Add an Employees to the system by an Admin?</h5>
+                      <p>To add a new Employee, follow these steps: </p>
+                      <ol>
+                        <li>Navigate to the <strong>Users</strong> of the system.</li>
+                        <li>Click on the <strong>Add User</strong> button.</li>
+                        <li>Fill in the required details for the new employee in the provided form.</li>
+                        <li>Employees <b>do not have any rights regarding view, manage, issue and
+                            return.</b> </li>
+                        <li>Submit the form to add the employee to the system.</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itusercsv">
+                    <h4 class="section-title">ADD USER BY UPLOAD CSV:</h4>
+                    <div class="section-content">
+                      <h5>Steps to add user or employee by upload csv: </h5>
+                      <li>Navigate to the <b>Users</b> in the navbar.</li>
+                      <li>Click on the <b>Upload Csv Button</b>.</li>
+                      <li>Select a file which contains the <b>required headers.</b></li>
+                      <li>Click on the <b>Submit Button</b> to add users/employees through csv.</li>
+                      <div class="csv-format">
+                        <h5>Required CSV Format and Headers:</h5>
+                        <p><b>Ensure that your CSV file includes the following headers and follows the
+                            specified format:</b></p>
+                        <ol>
+                          <li><b>loginid:</b>It is compulsory.</li>
+                          <li><b>password:</b>It is compulsory.</li>
+                          <li><b>firstname:</b>It is compulsory.</li>
+                          <li><b>middlename:</b>It is not compulsory</li>
+                          <li><b>lastname:</b>It is compulsory.</li>
+                          <li><b>employeecode:</b>It is compulsory and should be unique</li>
+                          <li><b>organizationemail:</b>It is compulsory.</li>
+                          <li><b>type:</b>It is compulsory.
+                            <ul>
+                              <li>User: <b>0</b></li>
+                              <li>Employee: <b>1</b></li>
+                            </ul>
+                          </li>
+                          <li><b>status:</b>It is compulsory.
+                            <ul>
+                              <li>Active: <b>1</b></li>
+                              <li>Disabled: <b>0</b></li>
+                              <li>Terminated: <b>3</b></li>
+                            </ul>
+                          </li>
+                          <li><b>userrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>If type is <b>0 (User):</b> Access to view, manage, issue, and
+                                return.</li>
+                              <li>If type is <b>1 (Employee):</b> No user rights.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentmanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Manage Right: <b>1</b> -- which refers to the user have component
+                                manage right.</li>
+                              <li>No Manage Right: <b>0</b> -- which refers to the user does not have
+                                component manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Issue Right: <b>1</b> -- which refers to the user have component
+                                issue right.</li>
+                              <li>No Issue Right: <b>0</b> -- which refers to the user does not have
+                                component issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>componentreturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Return Right: <b>1</b> -- which refers to the user have component
+                                return right.</li>
+                              <li>No Return Right: <b>0</b> -- which refers to the user does not have
+                                component return right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryviewrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory View Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory view right.</li>
+                              <li>No IT-Inventory View Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory view right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventorymanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Manage Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory manage right.</li>
+                              <li>No IT-Inventory Manage Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Issue Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory issue right.</li>
+                              <li>No IT-Inventory Issue Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>inventoryreturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>IT-Inventory Return Right: <b>1</b> -- which refers to the user have
+                                IT-Inventory return right.</li>
+                              <li>No IT-Inventory Return Right: <b>0</b> -- which refers to the user
+                                does not have IT-Inventory return right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumableviewrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable View Right: <b>1</b> -- which refers to the user have
+                                Consumable view right.</li>
+                              <li>No Consumable View Right: <b>0</b> -- which refers to the user does
+                                not have Consumable view right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumablemanagerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Manage Right: <b>1</b> -- which refers to the user have
+                                Consumable manage right.</li>
+                              <li>No Consumable Manage Right: <b>0</b> -- which refers to the user
+                                does not have Consumable manage right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumableissuerights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Issue Right: <b>1</b> -- which refers to the user have
+                                Consumable issue right.</li>
+                              <li>No Consumable Issue Right: <b>0</b> -- which refers to the user does
+                                not have Consumable issue right.</li>
+                            </ul>
+                          </li>
+                          <li><b>consumablereturnrights:</b>It is not Compulsory.
+                            <ul>
+                              <li>Consumable Return Right: <b>1</b> -- which refers to the user have
+                                Consumable return right.</li>
+                              <li>No Consumable Return Right: <b>0</b> -- which refers to the user
+                                does not have Consumable return right.</li>
+                            </ul>
+                          </li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="iteditusers">
+                    <h4 class="section-title">EDIT (USERS AND EMPLOYEES):</h4>
+                    <div class="section-content">
+                      <div class="edit-usersection">
+                        <p><b>Once a user/employee is created, we can edit the user by clicking on the Edit
+                            Button in “Action” option and these modifications can be made by those who
+                            have
+                            users' rights.</b></p>
+                        <p>Note: The tabs are the same for both <b>USERS and EMPLOYEES.</b> Please follow
+                          the same steps.</p>
+                      </div>
+
+                      <div>
+                        <p>Edit user consisting of different tabs</p>
+                        <ol>
+                          <li><b>Edit User Data</b></li>
+                          <li><b>Reset Password</b></li>
+                          <li><b>Change User Status</b></li>
+                        </ol>
+                      </div>
+                      <div class="sub-section">
+                        <h5>Edit User Data:</h5>
+                        <p><b>Edit User Data Tab allows users/employees to make modifications in the
+                            system.</b></p>
+                        <p>To edit the information regarding users are as follows:</p>
+                        <ol>
+                          <li>Select the <b>User/Employee </b>for whom you want to edit.</li>
+                          <li>Click on the Edit Button in <b>“Action”</b> option.</li>
+                          <li>Click on the <b>Edit User Data Tab.</b></li>
+                          <li>Make the modification as per your requirements.</li>
+                          <li>Click on the <b> Submit Button</b> to save the modifications.</li>
+                        </ol>
+                      </div>
+
+                      <div class="sub-section">
+                        <h5>Reset Password:</h5>
+                        <p><b>Reset Password Tab enables users/employees to reset the password./</b></p>
+                        <p>To reset the password regarding users/employees are as follows:</p>
+                        <ol>
+                          <li>Select the User/Employee for whom you want to edit.</li>
+                          <li>Click on the Edit Button in <b>"Action"</b> option.</li>
+                          <li>Click on the <b>Reset Password Tab.</b></li>
+                          <li>Enter the New Password you wish to set.</li>
+                          <li>Confirm the New Password by re-entering it.</li>
+                          <li>Click on the <b>Submit Button</b> to save the new password.</li>
+                        </ol>
+                      </div>
+
+                      <div class="sub-section">
+                        <h5>Change User Status:</h5>
+                        <p><b>Change User Status Tab allows users/employees to switch the status of a
+                            user/employee between Active, Disabled, and Terminated.</b></p>
+                        <p>To switch the status, Follow these steps:</p>
+                        <ol>
+                          <li>Select the <b>User/Employee</b> for whom you want to change the status.</li>
+                          <li>Click on the Edit Button in <b>“Action”</b> option.</li>
+                          <li>Click on the <b>Change User Status Tab.</b></li>
+                          <li>Choose the desired status from the options provided <b>(Active, Disabled or
+                              Terminated).</b></li>
+                          <li>Click on the <b> Submit Button </b>to save the status.</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="itinventorysettings">
+                    <h4 class="section-title">IT AND OTHER INVENTORY SETTINGS: </h4>
+                    <div class="section-content">
+                      <p><b>Before creating IT Inventory initially do the settings in the Setting Section.
+                        </b></p>
+                      <p><b>A setting section will be available for those who have manage rights.</b></p>
+                      <ol>
+                        <li><b>CATEGORIZATION</b></li>
+                        <li><b>SUPPLIER</b></li>
+                        <li><b>MANUFACTURER</b></li>
+                      </ol>
+                      <h5><b>CATEGORIZATION: </b></h5>
+                      <p>Categorization is consisting of two tabs which are: </p>
+                      <ul>
+                        <li><b>Category</b></li>
+
+                        <ul>
+                          <li><b>Create Category</b></li>
+                        </ul>
+
+                        <li><b>Sub Category</b></li>
+                        <ul>
+                          <li><b>Create Sub Category</b></li>
+                        </ul>
+                      </ul>
+
+                      <h5><b>SUPPLIER: </b></h5>
+                      <li><b>Create Supplier</b></li>
+
+                      <h5><b>MANUFACTURER: </b></h5>
+                      <li><b>Create Manufacturer</b></li>
+
+                      <p>After these settings, you can create component manually or by upload csv. </p>
+                    </div>
+                  </div>
+
+                  <div id="createitinventory">
+                    <h4 class="section-title">CREATE IT AND OTHER INVENTORY: </h4>
+                    <div class="section-content">
+                      <p><b>Steps to create IT-Inventory in the system manually are as follows: </b></p>
+                      <ol>
+                        <li>Navigate to <b>Inventory Tab</b> in the Dashboard. </li>
+                        <li>Go to the <b>IT And Other Inventory Tab.</b> </li>
+                        <li>Click on the <b>Create IT And Other Button.</b> </li>
+                        <li>Fill in the <b>required fields</b> in the Create IT form. </li>
+                        <li>Click on the <b>Submit Button</b> to save the IT. </li>
+                      </ol>
+                      <p><b>Once the IT-Inventory is created, it is displayed in tabular format in the
+                          dashboard. </b></p>
+                    </div>
+                  </div>
+
+                  <div id="itinventorycsv">
+                    <h4 class="section-title">ADD IT-INVENTORY BY UPLOAD CSV: </h4>
+                    <div class="section-content">
+                      <p><b>Steps to add IT-Inventory by csv are as follows: </b></p>
+                      <ol>
+                        <li>Navigate to Inventory Tab in navbar. </li>
+                        <li>Go to the IT And Other Inventory tab. </li>
+                        <li>Click on the Upload Csv Button.</li>
+                        <li>Select a file which contains the required headers.</li>
+                        <li>Click on the Submit button to add IT-Inventory through csv. </li>
+                      </ol>
+                      <div class="csv-format">
+                        <h5>Required CSV Format and Headers:</h5>
+                        <p>Ensure that your CSV file includes the following headers and follows the
+                          specified format:</p>
+                        <ol>
+                          <li><b>categoryName:</b> It is compulsory.</li>
+                          <li><b>subCategoryName:</b> It is compulsory.</li>
+                          <li><b>manufacturer:</b> It is compulsory.</li>
+                          <li><b>supplier:</b> It is compulsory</li>
+                          <li><b>projectName:</b> It is compulsory.</li>
+                          <li><b>amount:</b> It is compulsory.</li>
+                          <li><b>quantity:</b> It is compulsory.</li>
+                          <li><b>modelNo:</b> It is not compulsory.</li>
+                          <li><b>serialNo:</b> It is not compulsory.</li>
+                          <li><b>purchaseDate:</b> It is not compulsory, but the date format should be
+                            <b>YYYY-MM-DD.</b>
+                          </li>
+                          <li><b>warrantyDate:</b> It is not compulsory, but the date format should be
+                            <b>YYYY-MM-DD.</b>
+                          </li>
+                          <li><b>inputVoltage:</b> It is not compulsory.</li>
+                          <li><b>key:</b> It is not compulsory.</li>
+                          <li><b>subscriptionStart:</b> It is not compulsory, but the date format should
+                            be <b>YYYY-MM-DD.</b></li>
+                          <li><b>subscriptionEnd:</b> It is not compulsory, but the date format should be
+                            <b>YYYY-MM-DD.</b>
+                          </li>
+                          <li><b>cpu:</b> It is not compulsory.</li>
+                          <li><b>ram:</b> It is not compulsory.</li>
+                          <li><b>drive:</b> It is not compulsory.</li>
+                          <li><b>systemConfig:</b> It is not compulsory.</li>
+                          <li><b>licenseInEff::</b> It is not compulsory.</li>
+                          <li><b>msEffect:</b> It is not compulsory.</li>
+                          <li><b>ipAddress:</b> It is not compulsory.</li>
+                          <li><b>softwareInstalled:</b> It is not compulsory.</li>
+                          <li><b>lastUse:</b> It is not compulsory.</li>
+                          <li><b>description:</b> It is not compulsory.</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="edititinventory">
+                    <h4 class="section-title">EDIT IT INVENTORY: </h4>
+                    <div class="section-content">
+                      <p>Once IT-Inventory is created, we can edit the IT-Inventory by clicking on the Edit
+                        Button
+                        in <b>“Action”</b> option. </p>
+                      <p><b>These modifications can be made by those who have IT-Inventory manage/issue/return
+                          rights.</b></p>
+                      <p>Edit IT-Inventory consisting of different tabs as follows: </p>
+                      <ol>
+                        <li><b>Modify Tab</b></li>
+                        <li><b>Change Status Tab </b></li>
+                        <li><b>Issue Inventory Tab </b></li>
+                        <li><b>Return Inventory Tab </b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventoryhistory">
+                    <h4 class="section-title">IT INVENTORY HISTORY:</h4>
+                    <div class="section-content">
+                      <p><b>The IT-Inventory History feature enables the admin to track the stock details over
+                          time.
+                        </b></p>
+                      <p>To track the history of IT-Inventory, follow these steps: </p>
+                      <ol>
+                        <li><b>Select the IT-Inventory </b> for which you want to view asset details.</li>
+                        <li>Click on the <b>History Button</b> to access the entire asset details of the
+                          selected
+                          IT-Inventory.</li>
+                        <li>The History can also be viewed by <b>transaction type.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventoryexport">
+                    <h4 class="section-title">IT INVENTORY EXPORT:</h4>
+                    <div class="section-content">
+                      <p><b>The Export CSV feature lets you download specific asset data as a CSV file.
+                          This makes it easy to view and work with your asset information in a
+                          spreadsheet.
+                          Additionally, you can download the CSV with data for an entire category or for a
+                          specific subcategory, depending on your needs.
+                        </b>
+                      </p>
+                      <p>Steps to export csv file as follows:</p>
+                      <ol>
+                        <li>Navigate to the <b>Inventory Tab</b> in the Navbar.</li>
+                        <li>Go to the <b>IT And Other Inventory Tab.</b></li>
+                        <li>Click on the <b>Export Csv Button.</b></li>
+                        <li><b>Select the category or subcategory</b> you want to export.</li>
+                        <li>Click on the <b>Export Button</b> to download the file. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventorysearch">
+                    <h4 class="section-title">IT INVENTORY SEARCH:</h4>
+                    <div class="section-content">
+                      <p><b>The Search Box allows you to find data within the system. Searches can be
+                          performed using the following
+                          criteria.
+                        </b></p>
+                      <li><b>Asset ID</b></li>
+                      <li><b>Model No. </b></li>
+                      <li><b>Serial No.</b></li>
+                      <li><b>Input Voltage</b></li>
+                      <li><b>License In Effect</b></li>
+                      <li><b>CPU</b></li>
+                      <li><b>Key</b></li>
+                      <li><b>HDD/SDD</b></li>
+                      <li><b>Description</b></li>
+                      <li><b>MS 365 In Effect</b></li>
+                      <li><b>RAM</b></li>
+                      <li><b>IP Address</b></li>
+                      <li><b>Internet Access</b></li>
+                      <li><b>Software Installed</b></li>
+                      <li><b>Last Use</b></li>
+                      <p>Steps to do searching are as follows: </p>
+                      <ol>
+                        <li>Navigate to <b>Search Input Box</b> in the dashboard. </li>
+                        <li>Type your search terms into the input box. You can search by <b>Asset ID, Model No., Serial No.,
+                            Input Voltage, License In Effect, CPU,
+                            Key, HDD/SDD, Description, MS 365 In Effect, RAM, IP Address,
+                            Internet Access, Software Installed, Last Use.</b> </li>
+                        <li>Click on the <b>Search Button</b> to see the result. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventorypagination">
+                    <h4 class="section-title">IT INVENTORY PAGINATION:</h4>
+                    <div class="section-content">
+                      <p><b>Pagination helps to split a large amount of data into smaller, more manageable
+                          pages as per the results per page in the system. </b></p>
+                      <p>The steps are as follows:</p>
+                      <ol>
+                        <li>Go to the <b>"Results Per Page"</b> section in the dashboard. </li>
+                        <li>You can choose from three options for the number of results per page: <b>10, 50,
+                            or 100.</b> </li>
+                        <li>If you select a limit of 10, the data will be divided into pages with 10 items
+                          each. Similarly, selecting 50 or 100 will divide the data into pages with 50 or
+                          100 items respectively. </li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventorysummary">
+                    <h4 class="section-title">IT INVENTORY SUMMARY:</h4>
+                    <div class="section-content">
+                      <p><b>The Summary in IT is used to view the IT assets that have been created in the system. </b></p>
+                      <p>The steps to view the Summary in the system are as follows: </p>
+                      <ol>
+                        <li>Navigate to the <b>Summay Tab</b> in Navbar.</li>
+                        <li>Once on the Summary Tab, you will see detailed information regarding all IT assets in the system.
+                        </li>
+                        <li>This detailed Information includes: </li>
+                        <ul>
+                          <li><b>Total Assets</b></li>
+                          <li><b>In-Stock Assets</b></li>
+                          <li><b>Working Assets</b></li>
+                          <li><b>Issued Assets</b></li>
+                          <li><b>Repairable Assets</b></li>
+                          <li><b>Dead Assets</b></li>
+                          <li><b>Scrap Assets</b></li>
+                        </ul>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventoryuserinformation">
+                    <h4 class="section-title">USER/EMPLOYEE INFORMATION SECTION:</h4>
+                    <div class="section-content">
+                      <P><b>This section contains personal information about the user/employee, including their Name, Email,
+                          Login Id, and Employee code.</b></P>
+                      <p>Steps to view the Personal Information are as follows: </p>
+                      <ol>
+                        <li>Navigate to the <b>Profile Icon</b> in the Navbar</li>
+                        <li>After Clicking on the <b>Profile Icon Button,</b> user or employee will be able to <b>view their
+                            personal information.</b></li>
+                        <li>The Personal Infomation are:</li>
+                        <ul>
+                          <li><b>Name</b></li>
+                          <li><b>Email</b></li>
+                          <li><b>Login Id</b></li>
+                          <li><b>Employee Code</b></li>
+                        </ul>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventorylogout">
+                    <h4 class="section-title">LOGOUT:</h4>
+                    <div class="section-content">
+                      <p><b>To logout from the account, Follow these steps: </b></p>
+                      <ol>
+                        <li>Look for the <b> Logout Button</b> in Navbar.</li>
+                        <li>Click on the <b>Logout Button</b> to exit from the account. </li>
+                        <li>You will be <b>redirected to the Login Page.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div id="itinventoryprofile">
+                    <h4 class="section-title">PROFILE SECTION:</h4>
+                    <p><b>Note: After logging out, you will need to log in again as a user or employee to access the Profile
+                        Section.</b></p>
+                    <div class="section-content">
+                      <P><b>The Profile section allows users/employees to view their personal data.</b></P>
+                      <p>The Profile Section includes the following subsections:</p>
+                      <ul>
+                        <li><b>Guide Section</b></li>
+                        <li><b>Assigned Section</b></li>
+                        <li><b>History Section</b></li>
+                      </ul>
+
+                      <h5><b>Guide Section:</b></h5>
+                      <p><b>Guide Section provides complete guidance to the user or employee for how to use AIMS.</b></p>
+                      <p>To access the Guide Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b> in Navbar.</li>
+                        <li>Click on the <b>Guide Section.</b></li>
+                        <li>Click on the <b>IT And Other Inventory Tab</b> to view instructions on how to use AIMS for
+                          IT-Inventory based. </li>
+                      </ol>
+
+                      <h5><b>Assigned Section:</b></h5>
+                      <p><b>Assigned Section displays the complete history of assets assigned to employees or users within the
+                          system. </b></p>
+                      <p>To access the Assigned Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b>in navbar.</li>
+                        <li>Click on the <b>Assigned Section.</b></li>
+                        <li>A list of the complete assigned history will be displayed.</li>
+                      </ol>
+
+                      <h5><b>History Section:</b></h5>
+                      <p><b>The History section provides the complete list of logged-in users or employees' activities. </b>
+                      </p>
+                      <p>To access the History Section, steps are as follows:</p>
+                      <ol>
+                        <li>Login as an employee or user</li>
+                        <li>Navigate to the <b>Profile Tab</b>in navbar.</li>
+                        <li>Click on the <b>History Section.</b></li>
+                        <li>The history of the employee or user should be displayed, including details regarding
+                          <b>categories, subcategories, transaction types, etc.</b></li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT CONTENTS PANEL -->
+            <div class="col-lg-4 fix-height">
+              <div class="card p-3 position-sticky" style="height: 86%;">
+                <div class="guide-scroll">
+                  <h5>Contents</h5>
+                  <div class="index-content">
+                    <ul>
+                      <li><a [routerLink]="['/guide']" fragment="itlogins">LOGIN</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itusersection">USER SECTION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itemployeesection">EMPLOYEE SECTION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itusercsv">ADD USER BY UPLOAD CSV</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="iteditusers">EDIT (USERS AND EMPLOYEES)</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorysettings">IT AND OTHER INVENTORY
+                          SETTINGS</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="createitinventory">CREATE IT AND OTHER INVENTORY </a>
+                      </li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorycsv">ADD IT-INVENTORY BY UPLOAD CSV </a>
+                      </li>
+                      <li><a [routerLink]="['/guide']" fragment="edititinventory">EDIT IT INVENTORY</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventoryhistory">IT INVENTORY HISTORY</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventoryexport">IT INVENTORY EXPORT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorysearch">IT INVENTORY SEARCH</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorypagination">IT INVENTORY PAGINATION</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorysummary">IT INVENTORY SUMMARY</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventoryuserinformation">USER/EMPLOYEE INFORMATION SECTION</a>
+                      </li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventorylogout">LOGOUT</a></li>
+                      <li><a [routerLink]="['/guide']" fragment="itinventoryprofile">PROFILE SECTION</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+    <!-- </div> -->
+  <!-- </div> -->
+
+  <app-footer></app-footer>
+</div>

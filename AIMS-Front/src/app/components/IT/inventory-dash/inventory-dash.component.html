@@ -1,0 +1,641 @@
+<div class="dashboard-container">
+  <div class="row align-items-center">
+    <div class="col-mb-9">
+      <div class="row mb-3 align-items-end">
+        <div class="col-lg-2">
+          <label class="form-label"><b>Category</b></label>
+          <ng-select class="ng-select-filter" [items]="categoryList" bindLabel="name" bindValue="_id"
+            [(ngModel)]="selectedCategory" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <label class="form-label"><b>Sub-Category</b></label>
+          <ng-select class="ng-select-filter" [items]="subCategoryList" bindLabel="subCategoryName" bindValue="_id"
+            [(ngModel)]="selectedSubCategory" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <label class="form-label"><b>Manufacturers</b></label>
+          <ng-select class="ng-select-filter" [items]="manufacturerList" bindLabel="name" bindValue="_id"
+            [(ngModel)]="selectedManufacturer" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <!-- <button class="btn search-btn" (click)="getFilteredComponent()">Apply</button> -->
+          <button class="btn search-btn" (click)="applyFilter()">Apply</button>
+        </div>
+        <div class="col-lg-3">
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control search-input" placeholder="search..." [(ngModel)]="inputSearchText"
+              (input)="getAllInventories()">
+            <button class="btn search-btn" (click)="filterSearchedInventory()">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="inventory-container">
+    <table class="table table-responsive table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="align-middle background-dark">#</th>
+          <th scope="col" class="align-middle background-dark">Category Name</th>
+          <th scope="col" class="align-middle background-dark">Subcategory Name</th>
+          <th scope="col" class="align-middle background-dark">Asset ID</th>
+          <th scope="col" class="align-middle background-dark">Manufacturer Name</th>
+          <th scope="col" class="align-middle background-dark">Status</th>
+          <th scope="col" class="align-middle background-dark">Serial No</th>
+          <th scope="col" class="align-middle background-dark">Supplier Name</th>
+          <th scope="col" class="align-middle background-dark" colspan="2">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="value-row" *ngFor="let itInventory of ITInventoryList; let i = index"
+          (click)="openITInventoryEdit(itInventory)">
+          <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}"
+            scope="row">{{pageLimit *(currentPageNo-1)+(i+1)}}</th>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.categoryName.name || '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.subCategoryName.subCategoryName || '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.code || '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.manufacturer.manufacturerName || '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.status === 0 ? 'Working' : itInventory?.status === 1 ? 'Dead' : itInventory?.status === 2 ?
+            'Repairable' : itInventory.status === 3 ? 'Scrap': '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.serialNo || '--'}}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            {{ itInventory?.supplier.supplierName || '--' }}</td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            *ngIf="(employeeRights === '0' || employeeRights === 'undefined') && (userRights.ITDepartment.ITInventory.manage === 1 || userRights.ITDepartment.ITInventory.issue === 1 || userRights.ITDepartment.ITInventory.return === 1)"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            <button class="btn btn-action" [disabled]="itInventory.status === 3" data-bs-toggle="modal"
+              data-bs-target="#inventoryEdit" (click)="openITInventoryEdit(itInventory)">Edit</button>
+          </td>
+          <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"
+            [ngClass]="{'bg-dead': itInventory.status === 1 , 'bg-repairable': itInventory.status === 2, 'bg-scrap': itInventory.status === 3}">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#stockHistory" class="btn btn-action"
+              (click)="openStockHistoryModal(itInventory)">History</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-6">
+      <div class="select-pageNo">
+        <label class="form-label"><b>Results per page</b></label>
+        <select class="form-select form-select-sm" aria-label="Small select example" [(ngModel)]="pageLimit"
+          (change)="changeDataLimit()">
+          <option value="10">10</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <nav aria-label="Page navigation" class="pagination">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPageNo === 1">
+            <button class="page-link" (click)="goToFirstPage()">{{"|<"}}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo <= 3">
+            <button class="page-link" (click)="previousPage()">{{"<<"}}</button>
+          </li>
+          <li *ngFor="let page of getPagesToShow()" class="page-item" [class.active]="currentPageNo === page">
+            <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo + 3 > totalPages">
+            <button class="page-link" (click)="nextPage()">{{">>"}}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+            <button class="page-link" (click)="goToLastPage()">{{">|"}}</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Inventory Details Modal -->
+<div class="modal modal-xl fade" id="inventoryDetails" tabindex="-1" aria-labelledby="inventoryDetailsLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header justify-content-between">
+        <h5 class="modal-title">{{selectedITInventory.code}}</h5>
+        <div class="right-btns">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearSelection()"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row-detail">
+          <div class="text-container">
+            <p class="detailsHeading">Category:</p>
+            <p class="detailsValue">{{selectedITInventory?.categoryName?.name}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Sub-Category:</p>
+            <p class="detailsValue">{{selectedITInventory?.subCategoryName?.subCategoryName || '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Asset ID:</p>
+            <p class="detailsValue">{{selectedITInventory?.code || '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Supplier:</p>
+            <p class="detailsValue">{{selectedITInventory?.supplier?.supplierName || '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Manufacturer:</p>
+            <p class="detailsValue">{{selectedITInventory?.manufacturer?.manufacturerName || '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Status:</p>
+            <p class="detailsValue">{{selectedITInventory?.status === 0 ? 'Working' : (selectedITInventory?.status === 1 ?
+              'Dead' : (selectedITInventory?.status === 2 ? 'Repairable' : selectedITInventory?.status === 3 ?
+              'Scrap':'--'))}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Amount:</p>
+            <p class="detailsValue">{{selectedITInventory?.amount || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.purchaseDate === true">
+            <p class="detailsHeading">Purchase Date:</p>
+            <p class="detailsValue">{{ selectedITInventory?.purchaseDate ? (selectedITInventory.purchaseDate |
+              date:'yyyy-MM-dd') : '--' }}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.warrantyDate === true">
+            <p class="detailsHeading">Warranty Date:</p>
+            <p class="detailsValue">{{ selectedITInventory?.warrantyDate ? (selectedITInventory.warrantyDate |
+              date:'yyyy-MM-dd') : '--' }}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.modelNo === true">
+            <p class="detailsHeading">Model No:</p>
+            <p class="detailsValue">{{selectedITInventory?.modelNo || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.serialNo === true">
+            <p class="detailsHeading">Serial No:</p>
+            <p class="detailsValue">{{selectedITInventory?.serialNo || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.inputVoltage === true">
+            <p class="detailsHeading">Input Voltage:</p>
+            <p class="detailsValue">{{selectedITInventory?.inputVoltage || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.key === true">
+            <p class="detailsHeading">Key:</p>
+            <p class="detailsValue">{{selectedITInventory?.key || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.cpu === true">
+            <p class="detailsHeading">CPU:</p>
+            <p class="detailsValue">{{selectedITInventory?.cpu || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.licenseInEff === true">
+            <p class="detailsHeading">License In Effect:</p>
+            <p class="detailsValue">{{selectedITInventory?.licenseInEff || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.drive === true">
+            <p class="detailsHeading">HDD/SDD:</p>
+            <p class="detailsValue">{{selectedITInventory?.drive || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.subscriptionStart === true">
+            <p class="detailsHeading">subscription Start:</p>
+            <p class="detailsValue">{{ selectedITInventory?.subscriptionStart ? (selectedITInventory.subscriptionStart |
+              date:'yyyy-MM-dd') : '--' }}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.subscriptionEnd === true">
+            <p class="detailsHeading">Subscription End:</p>
+            <p class="detailsValue">{{ selectedITInventory?.subscriptionEnd ? (selectedITInventory.subscriptionEnd |
+              date:'yyyy-MM-dd') : '--' }}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.ram === true">
+            <p class="detailsHeading">RAM:</p>
+            <p class="detailsValue">{{selectedITInventory?.ram || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.systemConfig === true">
+            <p class="detailsHeading">System Configuration:</p>
+            <p class="detailsValue">{{selectedITInventory?.systemConfig || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.msEffect === true">
+            <p class="detailsHeading">MS 365 in Effect:</p>
+            <p class="detailsValue">{{selectedITInventory?.msEffect || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.ipAddress === true">
+            <p class="detailsHeading">IP Address:</p>
+            <p class="detailsValue">{{selectedITInventory?.ipAddress || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.internetAccess === true">
+            <p class="detailsHeading">Internet Access:</p>
+            <p class="detailsValue">{{selectedITInventory?.internetAccess || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.softwareInstalled === true">
+            <p class="detailsHeading">Sofware Installed:</p>
+            <p class="detailsValue">{{selectedITInventory?.softwareInstalled || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.lastUse === true">
+            <p class="detailsHeading">Last Use:</p>
+            <p class="detailsValue">{{selectedITInventory?.lastUse || '--'}}</p>
+          </div>
+          <div class="text-container" *ngIf="inputFields?.description === true">
+            <p class="detailsHeading">Description:</p>
+            <p class="detailsValue">{{selectedITInventory?.description || '--'}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal modal-xl fade" id="stockHistory" tabindex="-1" aria-labelledby="stockHistoryLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stockHistoryLabel">{{selectedITInventory?.code}}</h5>
+        <div class="color-cot">
+          <!-- Uncomment and adjust as necessary -->
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="all" [(ngModel)]="selectedFilterStockHistory"
+              (change)="stockHistoryAll()">
+            All
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="create"
+              [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryCreate()">
+            <div class="create box"></div>
+            Create
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="issue"
+              [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryIssue()">
+            <div class="issue box"></div>
+            Issue
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="returned"
+              [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryReturned()">
+            <div class="return box"></div>
+            Returned
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="clearSelection()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Content for stock history goes here -->
+        <div class="stockHistoryTable-container">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="col-header align-middle background-dark">#</th>
+                <th scope="col" class="col-header align-middle background-dark">Date</th>
+                <th scope="col" class="col-header align-middle background-dark">Transaction</th>
+                <th scope="col" class="col-header align-middle background-dark">Category</th>
+                <th scope="col" class="col-header align-middle background-dark">SubCategory</th>
+                <th scope="col" class="col-header align-middle background-dark">Handler</th>
+                <th scope="col" class="col-header align-middle background-dark">Issued To/ Returned By</th>
+                <th scope="col-2" class="col-header align-middle background-dark">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stock of filteredStockHistories; let i = index">
+                <th scope="row" class="align-middle col-data">{{i + 1}}</th>
+                <td class="align-middle col-data">{{stock.date | date:'shortDate' }} - {{stock.date | date:'shortTime'}}
+                </td>
+                <td class="align-middle col-data" [ngClass]="{
+                    green: stock.transactionType === 'create',
+                    orange: stock.transactionType === 'issue',
+                    violet: stock.transactionType === 'returned'
+                  }">{{stock.transactionType}}</td>
+                <td class="align-middle col-data">{{ITCategoryNameList[stock?.inventoryId?.categoryName] || '--'}}</td>
+                <td class="align-middle col-data">{{ITSubCategoryNameList[stock?.inventoryId?.subCategoryName] || '--'}}
+                </td>
+                <td class="align-middle col-data">{{stock.inventoryHandler}}</td>
+                <td class="align-middle col-data">{{stock.issuedTo?.employeeCode || "--"}} [{{stock.issuedTo?.loginId ||
+                  "--"}}]</td>
+                <td class="align-middle col-data">{{stock.note || "--"}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="clearSelection()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal modal-lg fade" id="inventoryEdit" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{selectedITInventory?.code}}</h1>
+        <button type="button" id="closeEditModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="clearSelection()"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation" *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+            <button class="nav-link active" id="modify-tab" data-bs-toggle="tab" data-bs-target="#modify" type="button"
+              role="tab" aria-controls="modify" aria-selected="true">Modify</button>
+          </li>
+          <li class="nav-item" role="presentation" *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+            <button class="nav-link" id="status-tab" data-bs-toggle="tab" data-bs-target="#status" type="button"
+              role="tab" aria-controls="status" aria-selected="false">Change Status</button>
+          </li>
+
+          <li class="nav-item" role="presentation" *ngIf="userRights.ITDepartment.ITInventory.issue === 1"
+            [ngClass]="{'bg-disabled': (selectedITInventory?.status === 1 || selectedITInventory?.status === 2 || selectedITInventory?.transactionType === 'issue')}">
+            <button class="nav-link"
+              [ngClass]="{active: (userRights.ITDepartment.ITInventory.issue === 1 && (selectedITInventory.transactionType === 'returned' || selectedITInventory.transactionType === 'create')) && userRights.ITDepartment.ITInventory.manage === 0 }"
+              id="issue-tab"
+              [disabled]="(selectedITInventory?.status === 1 || selectedITInventory?.status === 2 || selectedITInventory?.transactionType === 'issue') ? true : null"
+              data-bs-toggle="tab" data-bs-target="#issue" type="button" role="tab" aria-controls="issue"
+              aria-selected="false">Issue</button>
+          </li>
+
+          <li class="nav-item" role="presentation" *ngIf="userRights.ITDepartment.ITInventory.return === 1"
+            [ngClass]="{'bg-disabled': (selectedITInventory?.status === 1 || selectedITInventory?.status === 2 || selectedITInventory?.transactionType === 'returned' || selectedITInventory?.transactionType === 'create')}">
+            <button class="nav-link"
+              [ngClass]="{active: (userRights.ITDepartment.ITInventory.return === 1 && (selectedITInventory.transactionType === 'issue' || selectedITInventory.transactionType === 'create') && userRights.ITDepartment.ITInventory.manage === 0) }"
+              id="return-tab" data-bs-toggle="tab"
+              [disabled]="(selectedITInventory?.status === 1 || selectedITInventory?.status === 2 || selectedITInventory?.transactionType === 'returned' || selectedITInventory?.transactionType === 'create') ? true : null"
+              data-bs-target="#return" type="button" role="tab" aria-controls="return"
+              aria-selected="false">Return</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <!-- Modify Content -->
+          <div class="tab-pane fade show active" id="modify" role="tabpanel" aria-labelledby="modify-tab"
+            *ngIf="shouldShowModifyForm()">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="modifyITInventoryForm" (ngSubmit)="submitModifyInventory()">
+                <div class="row">
+                  <div class="col-md-4 form-group">
+                    <!-- <label class="form-label">Category Name <span class="required">*</span></label> -->
+                    <label class="form-label">Category Name</label>
+                    <select class="form-select" formControlName="categoryName">
+                      <option *ngFor="let category of categoryList" [value]="category._id">{{category.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <!-- <label class="form-label">Sub-category Name <span class="required">*</span></label> -->
+                    <label class="form-label">Sub-category Name</label>
+                    <select class="form-select" formControlName="subCategoryName">
+                      <option *ngFor="let subCategory of subCategoryList" [value]="subCategory._id">
+                        {{subCategory.subCategoryName}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <!-- <label class="form-label">Supplier <span class="required">*</span></label> -->
+                    <label class="form-label">Supplier</label>
+                    <select class="form-select" formControlName="supplier">
+                      <option *ngFor="let supplier of supplierList" [value]="supplier._id">{{supplier.supplierName}}
+                      </option>
+                    </select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyITInventoryForm.controls['supplier'].errors?.['required'] && modifyITInventoryForm.controls['supplier'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-8 form-group" *ngIf="inputFields?.description === true">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" formControlName="description" />
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Amount <span class="required">*</span></label>
+                    <input type="number" class="form-control" formControlName="amount" min="0" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyITInventoryForm.controls['amount'].errors?.['required'] && modifyITInventoryForm.controls['amount'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <!-- <label class="form-label">Manufacturer <span class="required">*</span></label> -->
+                    <label class="form-label">Manufacturer</label>
+                    <select class="form-select" formControlName="manufacturer">
+                      <option *ngFor="let manufacturer of manufacturerList" [value]="manufacturer._id">
+                        {{manufacturer.name}}</option>
+                    </select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyITInventoryForm.controls['manufacturer'].errors?.['required'] && modifyITInventoryForm.controls['manufacturer'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.purchaseDate === true">
+                    <label class="form-label">Purchase Date</label>
+                    <input type="date" class="form-control" formControlName="purchaseDate" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.warrantyDate === true">
+                    <label class="form-label">Warranty Date</label>
+                    <input type="date" class="form-control" formControlName="warrantyDate" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.modelNo === true">
+                    <label class="form-label">Model No.</label>
+                    <input type="text" class="form-control" formControlName="modelNo" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.serialNo === true">
+                    <label class="form-label">Serial No.</label>
+                    <input type="text" class="form-control" formControlName="serialNo" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.inputVoltage === true">
+                    <label class="form-label">Input Voltage</label>
+                    <input type="text" class="form-control" formControlName="inputVoltage" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.key === true">
+                    <label class="form-label">Key</label>
+                    <input type="text" class="form-control" formControlName="key" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.subscriptionStart === true">
+                    <label class="form-label">Subscription Start</label>
+                    <input type="date" class="form-control" formControlName="subscriptionStart" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.subscriptionEnd === true">
+                    <label class="form-label">Subscription End</label>
+                    <input type="date" class="form-control" formControlName="subscriptionEnd" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.cpu === true">
+                    <label class="form-label">CPU</label>
+                    <input type="text" class="form-control" formControlName="cpu" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.ram === true">
+                    <label class="form-label">RAM</label>
+                    <input type="text" class="form-control" formControlName="ram" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.drive === true">
+                    <label class="form-label">HDD/SSD</label>
+                    <input type="text" class="form-control" formControlName="drive" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields.systemConfig === true">
+                    <label class="form-label">System Configuration</label>
+                    <input type="text" class="form-control" formControlName="systemConfig" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.licenseInEff === true">
+                    <label class="form-label">License in Effect</label>
+                    <input type="text" class="form-control" formControlName="licenseInEff" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.msEffect === true">
+                    <label class="form-label">MS 365 in Effect</label>
+                    <input type="text" class="form-control" formControlName="msEffect" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.ipAddress === true">
+                    <label class="form-label">IP Address</label>
+                    <input type="text" class="form-control" formControlName="ipAddress" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.internetAccess === true">
+                    <label class="form-label">Internet Access</label>
+                    <input type="text" class="form-control" formControlName="internetAccess" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.softwareInstalled === true">
+                    <label class="form-label">Software Installed</label>
+                    <input type="text" class="form-control" formControlName="softwareInstalled" />
+                  </div>
+                  <div class="col-md-4 form-group" *ngIf="inputFields?.lastUse === true">
+                    <label class="form-label">Last Use</label>
+                    <input type="text" class="form-control" formControlName="lastUse" />
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="modifyITInventoryForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Issue Inventory -->
+          <div class="tab-pane fade show"
+            [ngClass]="{active: shouldShowIssueForm() && userRights.ITDepartment.ITInventory.manage === 0 }" id="issue"
+            role="tabpanel" aria-labelledby="issue-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="issueITInventoryForm" (ngSubmit)="submitITIssueInventory()">
+                <div class="row">
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Issued Date <span class="required">*</span></label>
+                    <input type="date" class="form-control" formControlName="issuedDate">
+                    <div class="error-message">
+                      <small
+                        *ngIf="issueITInventoryForm.controls['issuedDate'].errors?.['required'] && issueITInventoryForm.controls['issuedDate'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Issue To <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="issuedTo">
+                      <option *ngFor="let user of filteredUsers " value="{{user._id}}">
+                        {{user.firstName}} {{user.lastName}}</option>
+                    </select> -->
+                    <ng-select formControlName="issuedTo" [searchable]="true" placeholder="Select User">
+                      <ng-container *ngFor="let user of filteredUsers">
+                        <ng-option [value]="user._id">
+                          {{user.firstName}} {{user.lastName}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="issueITInventoryForm.controls['issuedTo'].errors?.['required'] && issueITInventoryForm.controls['issuedTo'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="issueITInventoryForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Return Inventory -->
+          <div class="tab-pane fade show" [ngClass]="{active: shouldShowReturnForm()}" id="return" role="tabpanel"
+            aria-labelledby="return-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="returnITInventoryForm" (ngSubmit)="submitReturnInventory()">
+                <div class="row">
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Returned Date <span class="required">*</span></label>
+                    <input type="date" class="form-control" formControlName="returnedDate">
+                    <div class="error-message">
+                      <small
+                        *ngIf="returnITInventoryForm.controls['returnedDate'].errors?.['required'] && returnITInventoryForm.controls['returnedDate'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="returnITInventoryForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Change Inventory Status -->
+          <div class="tab-pane fade show" id="status" role="tabpanel" aria-labelledby="status-tab"
+            *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <b>Change Inventory Status</b>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label class="form-label">Change Status</label>
+                  <select class="form-control form-select" id="status" [(ngModel)]="ITInventoryStatus">
+                    <option value="0">Working</option>
+                    <option value="1" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Dead</option>
+                    <option value="2" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Repairable</option>
+                    <option value="3" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Scrap</option>
+                    <option value="4" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Under Repair</option>
+                    <option value="5" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Under Repair AMC</option>
+                    <option value="6" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Under Maintenance</option>
+                    <option value="7" [ngClass]="{'disabled-option': currentTransactionType === 'issue'}"
+                      [attr.disabled]="currentTransactionType === 'issue' ? true : null">Under Maintenance AMC</option>
+                  </select>
+                </div>
+                <div class="col-lg-6 mb-3 form-group d-flex justify-content-center">
+                  <button type="button" class="btn btn-submit mt-4" (click)="updateStatus()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="clearSelection()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

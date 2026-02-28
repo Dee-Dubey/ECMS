@@ -1,0 +1,528 @@
+<div class="container-fluid main-container">
+  <app-navbar class="nav-height"></app-navbar>
+  <div class="row">
+    <!-- <app-notification class="notification-height"></app-notification> -->
+    <div class="row button-division">
+      <div class="col-5">
+        <div class="row row-m">
+          <div class="col-6">
+            <button type="button" class="btn inven-btn button-size" data-bs-toggle="modal"
+              data-bs-target="#newAMCModule" (click)="openCreateAMC()">
+              Add New AMC
+            </button>
+          </div>
+
+          <div class="col-6">
+            <button type="button" class="btn inven-btn button-size" data-bs-toggle="modal"
+              data-bs-target="#newServiceProviderModule">
+              Add New Service Provider
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid main-section">
+      <div class="d-flex flex-wrap h-100">
+
+        <!-- Left side (60%) -->
+        <div class="d-flex flex-column" style="width: 60%; height: 100%;">
+          <div class="flex-grow-1" style="height: 60%; margin: 2px; border: 1px solid;">
+            <p class="top-heading">Active AMC</p>
+            <app-active-amc [department]="department" [historyList]="amcHistoryList"
+              [selectedAMC]="selectedAMC" [serviceDetails]="serviceInitiatedDetailsA"
+              [providers]="providers"
+              [mapSelectedAsset]="mapSelectedAsset"
+              [repairDetails]="repairInitiatedDetailsA" [openServiceNumber]="openServiceNumber" [editAMC]="editAMC"
+              [avaiableAssets]="avaiableAssets"
+              [availableAssetIDs]="availableAssetIDs"
+              [ITSettingData]="ITSettingData" [ECSettingData]="ECSettingData"
+              (amcHistoryRequested)="getAmcHistory($event)"
+              (amcDetailRequested)="getAMCById($event)" (openItemRequested)="handleOpenItem($event)"
+              (filterChange)="onChildFilter($event)" [filteredList]="filteredList"
+              (serviceDetailsRequested)="loadServiceInitiated($event, 'A')"
+              (serviceCloseRequested)="onServiceCloseFromChild($event, 'A')"
+              (repairCloseRequested)="onRepairCloseFromChild($event, 'A')"
+              (repairDetailsRequested)="loadRepairInitiated($event, 'A')"
+              (submitServiceInitiatedRequest)="submitInitiateService($event)"
+              (submitExtendedRequested)="submitExtended($event)"
+              (submitRepairInitiatedRequest)="submitInitiateRepair($event)"></app-active-amc>
+          </div>
+          <div class="flex-grow-1" style="height: 40%; margin: 2px; border: 1px solid;">
+            <p class="top-heading">Expired AMC</p>
+            <app-expired-amc [historyList]="amcHistoryList" [selectedAMC]="selectedAMC"
+              [ITSettingData]="ITSettingData" [ECSettingData]="ECSettingData" [editAMC]="editAMC" (amcHistoryRequested)="getAmcHistory($event)"
+              (amcDetailRequested)="getAMCById($event)"
+              (openItemRequested)="getAMCAvailableAssets($event)"
+              (submitExtendedRequested)="submitExtended($event)"></app-expired-amc>
+          </div>
+        </div>
+
+        <!-- Right side (40%) -->
+        <div class="d-flex flex-column" style="width: 40%; height: 100%;">
+          <div class="flex-grow-1" style="height: 50%; margin: 2px; border: 1px solid;">
+            <p class="top-heading">Open Service Request</p>
+            <app-active-service-transaction [ITSettingData]="ITSettingData" [ECSettingData]="ECSettingData" [serviceDetails]="serviceInitiatedDetailsB"
+              [selectedService]="selectedService"
+              [openServiceNumber]="openServiceNumber"
+              (openItemRequested)="getAMCAvailableAssets($event)"
+              (amcCloseRequested)="getOpenOnlyServices($event)"
+              (serviceDetailsRequested)="loadServiceInitiated($event, 'B')"
+              (serviceCloseRequested)="onServiceCloseFromChild($event, 'B')"
+              (editServiceRequest)="updateServiceByNumber($event)"></app-active-service-transaction>
+          </div>
+          <div class="flex-grow-1" style="height: 50%; margin: 2px; border: 1px solid;">
+            <p class="top-heading">Open Repair Request</p>
+            <app-active-repair-transaction [ITSettingData]="ITSettingData" [ECSettingData]="ECSettingData" [repairDetails]="repairInitiatedDetailsB"
+              [selectedService]="selectedService"
+              [openServiceNumber]="openServiceNumber"
+              (openItemRequested)="getAMCAvailableAssets($event)"
+              (amcCloseRequested)="getOpenOnlyServices($event)"
+              (repairDetailsRequested)="loadRepairInitiated($event, 'B')"
+              (repairCloseRequested)="onRepairCloseFromChild($event, 'B')"
+              (editRepairRequest)="updateServiceByNumber($event)"></app-active-repair-transaction>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Add New AMC Module -->
+    <div class="modal modal-xl fade" id="newAMCModule" tabindex="-1" aria-labelledby="newAMCModalLabel"
+      data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="newAMCModalLabel">Add New AMC Details</h1>
+            <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+              aria-label="Close" (click)="clearInventoryCsvForm()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-container">
+              <form [formGroup]="createAMC" class="row g-3" (ngSubmit)="submitCreateAMC()">
+
+                <div class="col-md-3 form-group m-0.1">
+                  <label class="form-label">AMC Name <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="amcName">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['amcName'].errors?.['required'] && createAMC.controls['amcName'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0.1">
+                  <label class="form-label">Assets Code <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="assetsCode">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['assetsCode'].errors?.['required'] && createAMC.controls['assetsCode'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0.1">
+                  <label class="form-label">Start Date <span class="required">*</span></label>
+                  <input type="date" class="form-control" formControlName="startDate" min="1">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['startDate'].errors?.['required'] && createAMC.controls['startDate'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0.1">
+                  <label class="form-label">End Date <span class="required">*</span></label>
+                  <input type="date" class="form-control" formControlName="endDate" min="1">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['endDate'].errors?.['required'] && createAMC.controls['endDate'].touched">
+                      This field is required.
+                    </small>
+
+                    <small *ngIf="createAMC.errors?.['dateRangeInvalid']">
+                      End Date must be greater than Start Date.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Service Provider <span class="required">*</span></label>
+                  <!-- <input type="text" class="form-control" formControlName="serviceProvider"> -->
+                  <ng-select [items]="providers" bindLabel="name" bindValue="_id" formControlName="serviceProvider"
+                    [searchable]="true" [addTag]="true" placeholder="Select Service Provider">
+                  </ng-select>
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['serviceProvider'].errors?.['required'] && createAMC.controls['serviceProvider'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">AMC Type <span class="required">*</span></label>
+                  <ng-select [items]="amcType" bindLabel="name" bindValue="_id" formControlName="amcType"
+                    [searchable]="true" [addTag]="true" placeholder="Select AMC Type">
+                  </ng-select>
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['amcType'].errors?.['required'] && createAMC.controls['amcType'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">AMC Frequency <span class="required">*</span></label>
+                  <ng-select [items]="amcFrequency" bindLabel="name" bindValue="_id" formControlName="frequency"
+                    [searchable]="true" [addTag]="true" placeholder="Select AMC Frequency">
+                  </ng-select>
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['frequency'].errors?.['required'] && createAMC.controls['frequency'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Additional Notes</label>
+                  <input type="text" class="form-control" formControlName="additionalNotes">
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Invoice Number<span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="invoiceNumber">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['invoiceNumber'].errors?.['required'] && createAMC.controls['invoiceNumber'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Cost <span class="required">*</span></label>
+                  <input type="number" class="form-control" formControlName="cost" min="1">
+                  <div class="error-message">
+                    <small
+                      *ngIf="createAMC.controls['cost'].errors?.['required'] && createAMC.controls['cost'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Payment Mode</label>
+                  <input type="text" class="form-control" formControlName="paymentMode">
+                </div>
+
+                <div class="col-md-3 form-group m-0">
+                  <label class="form-label">Payment Information</label>
+                  <input type="text" class="form-control" formControlName="paymentInfo">
+                </div>
+
+                <div class="col-md-12 form-group m-0">
+                  <hr>
+                  <div class="">
+                    <div class="card-header"> Add Covered Assets </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="card col-4" style="width: 12rem;">
+                          <div class="card-body p-0">
+                            <h5 class="card-title">Filter</h5>
+                            <hr>
+
+                            <div class="table-scroll">
+                              <div class="col-12 form-group m-0.1">
+                                <label class="form-label"> Department </label>
+                                <ng-select [items]="department" [searchable]="true" [(ngModel)]="filter.department"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Department"
+                                  (change)="onDepartmentChange()">
+                                </ng-select>
+                              </div>
+
+                              <div class="col-12 form-group m-0.1">
+                                <label class="form-label"> Category </label>
+                                <ng-select [items]="category" bindLabel="name" bindValue="_id" [searchable]="true"
+                                  [(ngModel)]="filter.category" [ngModelOptions]="{standalone: true}"
+                                  placeholder="Select Category">
+                                </ng-select>
+                              </div>
+
+                              <div *ngIf="filter.department === 'IT Department'" class="col-12 form-group m-0.1">
+                                <label class="form-label"> Sub Category </label>
+                                <ng-select [items]="subcategory" bindLabel="subCategoryName" bindValue="_id"
+                                  [searchable]="true" [(ngModel)]="filter.subcategory"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Sub Category">
+                                </ng-select>
+                              </div>
+
+                              <div class="col-12 form-group m-0.1">
+                                <label class="form-label"> Manufacturer </label>
+                                <ng-select [items]="manufacturer" bindLabel="name" bindValue="_id" [searchable]="true"
+                                  [(ngModel)]="filter.manufacturer" [ngModelOptions]="{standalone: true}"
+                                  placeholder="Select Manufacture">
+                                </ng-select>
+                              </div>
+
+                              <div *ngIf="filter.department === 'Electronic Component'"
+                                class="col-12 form-group m-0.1">
+                                <label class="form-label"> Manufacturer Part Number</label>
+                                <input type="text" class="form-control" [(ngModel)]="filter.manufacturerPartNumber"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Manufacturer Part Number">
+                              </div>
+                              <button type="button" class="btn btn-primary" (click)="applyParentFilter()">Filter</button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card col-4" style="width: 28rem;">
+                          <div class="card-body p-0">
+                            <h5 class="card-title">List Of Filtered</h5>
+                            <hr>
+
+                            <div class="table-scroll">
+                              <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Select</th>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Assets ID</th>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Category</th>
+                                    <th *ngIf="filter.department === 'IT Department'" scope="col">Sub Category</th>
+                                    <th *ngIf="filter.department === 'Electronic Component'" scope="col">Manufacturer
+                                      Part No </th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  <tr *ngFor="let item of filteredList">
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                      <input type="checkbox" [checked]="isSelected(item)" (change)="moveAssetToAMC($event, item)">
+                                    </th>
+                                    <td
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                      {{getAssetCode(item)}} </td>
+                                    <td *ngIf="filter.department === 'IT Department'"> {{
+                                      ITSettingData.categoryMap[item.categoryName] }} </td>
+                                    <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                      ECSettingData.categoryMap[item.categoryName] }} </td>
+                                    <td *ngIf="filter.department === 'IT Department'"> {{
+                                      ITSettingData.subCategoryMap[item.subCategoryName] }} </td>
+                                    <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                      item.manufacturerPartNumber }} </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="card col-4" style="width: 28rem;">
+                          <div class="card-body p-0">
+                            <h5 class="card-title">List of Selection</h5>
+                            <hr>
+                            <div class="table-scroll">
+                              <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Select</th>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Assets ID</th>
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      scope="col">Category</th>
+                                    <th *ngIf="filter.department === 'IT Department'" scope="col">Sub Category</th>
+                                    <th *ngIf="filter.department === 'Electronic Component'" scope="col">Manufacturer
+                                      Part No </th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  <tr *ngFor="let item of selectedBucket">
+                                    <th
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                      th scope="row"><input type="checkbox" checked (change)="removeFromSelected($event, item)"></th>
+                                    <td
+                                      *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                      {{getAssetCode(item)}} </td>
+                                    <td *ngIf="filter.department === 'IT Department'"> {{
+                                      ITSettingData.categoryMap[item.categoryName] }} </td>
+                                    <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                      ECSettingData.categoryMap[item.categoryName] }} </td>
+                                    <td *ngIf="filter.department === 'IT Department'"> {{
+                                      ITSettingData.subCategoryMap[item.subCategoryName] }} </td>
+                                    <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                      item.manufacturerPartNumber }} </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn" [disabled]="createAMC.invalid" type="submit">Submit </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add New Service Provider -->
+    <div class="modal modal-lg fade" id="newServiceProviderModule" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Service Provider</h5>
+            <button type="button" id="closeModalCreate7" class="btn-close btn-close-white" data-bs-dismiss="modal"
+              aria-label="Close" (click)="closeServiceProviderPopup()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="card col-8 table-container">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th class="align-middle background-dark col-1">#</th>
+                      <th class="align-middle background-dark col-6">Service Provider Name</th>
+                      <th class="align-middle background-dark col-4">Contact Info</th>
+                      <th class="align-middle background-dark col-1">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="value-row" *ngFor="let item of providers; let i = index">
+                      <th class="align-middle col-1">{{i+1}}</th>
+                      <th class="align-middle col-1">{{item.name}}</th>
+                      <td class="align-middle col-6">{{item.contact}}</td>
+                      <td class="align-middle col-1">
+                        <img src="../../../assets/icons/edit.svg" alt="edit icons" class="icons" (click)="editServiceProviderForm(item)">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card col-4">
+                <div class="card-body p-2" *ngIf="edit === false">
+                  <h5 class="card-title">New Service Provider</h5>
+                  <hr>
+                  <div class="create-form-container">
+                    <form [formGroup]="createServiceProvider" (ngSubmit)="submitServiceProvider()">
+                      <div class="col-12 form-group">
+                        <label>Service Provider Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" formControlName="serviceProviderName">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['serviceProviderName'].errors?.['required'] && createServiceProvider.controls['serviceProviderName'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['serviceProviderName'].errors?.['notUnique']">Supplier
+                          name is already exist!</small>
+                      </div>
+
+                      <div class="col-12 form-group">
+                        <label>Contact Info </label>
+                        <input type="text" class="form-control" formControlName="contactInfo">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['contactInfo'].errors?.['required'] && createServiceProvider.controls['contactInfo'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['contactInfo'].errors?.['notUnique']">Supplier name is
+                          already exist!</small>
+                      </div>
+
+                      <div class="col-12 form-group">
+                        <label>Address </label>
+                        <input type="text" class="form-control" formControlName="address">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['address'].errors?.['required'] && createServiceProvider.controls['address'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['address'].errors?.['notUnique']">Supplier name is
+                          already exist!</small>
+                      </div>
+
+
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit" data-bs-dismiss="modal"
+                          [disabled]="createServiceProvider.invalid">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <div class="card-body p-2" *ngIf="edit === true">
+                  <h5 class="card-title">Edit Service Provider</h5>
+                  <hr>
+                  <div class="create-form-container">
+                    <form [formGroup]="editServiceProvider" (ngSubmit)="submitEditServiceProvider()">
+                      <div class="col-12 form-group">
+                        <label>Service Provider Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" formControlName="serviceProviderName">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['serviceProviderName'].errors?.['required'] && createServiceProvider.controls['serviceProviderName'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['serviceProviderName'].errors?.['notUnique']">Supplier
+                          name is already exist!</small>
+                      </div>
+
+                      <div class="col-12 form-group">
+                        <label>Contact Info </label>
+                        <input type="text" class="form-control" formControlName="contactInfo">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['contactInfo'].errors?.['required'] && createServiceProvider.controls['contactInfo'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['contactInfo'].errors?.['notUnique']">Supplier name is
+                          already exist!</small>
+                      </div>
+
+                      <div class="col-12 form-group">
+                        <label>Address </label>
+                        <input type="text" class="form-control" formControlName="address">
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['address'].errors?.['required'] && createServiceProvider.controls['address'].touched">This
+                          field is Required</small>
+                        <small class="error-message"
+                          *ngIf="createServiceProvider.controls['address'].errors?.['notUnique']">Supplier name is
+                          already exist!</small>
+                      </div>
+
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit" data-bs-dismiss="modal" [disabled]="editServiceProvider.invalid">Update</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer p-1">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeServiceProviderPopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

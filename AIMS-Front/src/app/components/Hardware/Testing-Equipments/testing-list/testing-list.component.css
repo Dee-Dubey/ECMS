@@ -1,0 +1,18 @@
+.inven-btn {
+  width: 11rem;
+}
+
+.background-dark {
+  background-color: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+thead {
+  position: sticky;
+  top: 0px;
+}
+
+th,
+td {
+  text-align: center;
+}

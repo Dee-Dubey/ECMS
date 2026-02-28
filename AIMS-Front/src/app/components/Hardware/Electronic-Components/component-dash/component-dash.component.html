@@ -1,0 +1,1225 @@
+<div class="dashboard-container">
+  <div class="row align-items-center">
+    <div class="col-md-9">
+      <div class="row mb-3 align-items-end">
+        <div class="col-lg-3">
+          <label class="form-label"><b>Category</b></label>
+          <ng-select class="ng-select-filter" [items]="categoryList" bindLabel="name" bindValue="_id"
+            [(ngModel)]="selectedCategory" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="col-lg-3">
+          <label class="form-label"><b>Manufacturer</b></label>
+          <ng-select class="ng-select-filter" [items]="manufacturerList" bindLabel="name" bindValue="_id"
+            [(ngModel)]="selectedManufacturer" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+
+        <div class="col-lg-3">
+          <label class="form-label"><b>Project</b></label>
+          <ng-select class="ng-select-filter" [items]="projectList" bindLabel="name" bindValue="_id"
+            [(ngModel)]="selectedProject" placeholder="All" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <button class="btn search-btn" (click)="applyFilter()">Apply</button>
+        </div>
+
+
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group input-group-sm">
+        <input type="text" class="form-control search-input" placeholder="search..." [(ngModel)]="searchedText"
+          (input)="getAllcomponent()">
+        <button class="btn search-btn" (click)="filterSearchedComponent()">Search</button>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="component-container">
+    <table class="table table-responsive table-striped">
+      <colgroup>
+        <col style="width: 5%">
+        <col style="width: 15%">
+        <col style="width: 15%">
+        <col style="width: 10%">
+        <col style="width: 30%">
+        <col style="width: 10%">
+        <col style="width: 5%">
+        <col style="width: 5%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col" class="align-middle background-dark">#</th>
+          <th scope="col" class="align-middle background-dark">Manufacturer Part No.</th>
+          <th scope="col" class="align-middle background-dark">Manufacturer</th>
+          <!-- <th scope="col" class="align-middle background-dark">Package</th> -->
+          <th scope="col" class="align-middle background-dark">Category</th>
+          <!-- <th scope="col" class="align-middle background-dark">Component Id</th> -->
+          <th scope="col" class="align-middle background-dark">Description</th>
+          <th scope="col" class="align-middle background-dark">{{selectedProject !== null ? 'Project Stock' : 'In-Stock'}}
+          </th>
+          <th scope="col" class="align-middle background-dark" colspan="3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="value-row" *ngFor="let component of componentsList; let i = index">
+          <th class="align-middle col" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">{{limit *(currentPage-1)+(i+1)}}</th>
+          <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">{{component.manufacturerPartNumber}}</td>
+          <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">{{ manufacturerNameList[component.manufacturer]}}</td>
+          <!-- <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails" (click)="selectComponent(component)">{{component.package}}</td> -->
+          <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">{{categoryNameList[component.categoryName]}}</td>
+          <!-- <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails" (click)="selectComponent(component)">{{component.id !== null || undefined || "" ? component.id : '--'}}</td> -->
+          <td class="align-middle col-2" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">{{component.description !== null || undefined || "" ?
+            component.description : '--'}}</td>
+          <td class="align-middle col-1" data-bs-toggle="modal" data-bs-target="#componentDetails"
+            (click)="selectComponent(component)">
+            <span *ngIf="selectedProject === null">{{component.totalQuantity}}</span>
+            <span *ngFor="let project of component.stockDetails"><span
+                *ngIf="project.projectName === selectedProject">{{project.quantity}}</span></span>
+          </td>
+          <td class="align-middle col-1"><button class="btn btn-action" data-bs-toggle="modal"
+              *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1 || userRights.hardwareDepartment.electronicDevice.issue === 1 || userRights.hardwareDepartment.electronicDevice.return === 1"
+              data-bs-target="#componentEdit" (click)="selectComponentEdit(component)">Edit</button></td>
+          <td class="align-middle col-1"><button type="button" data-bs-toggle="modal" data-bs-target="#stockHistory"
+              (click)="getComponentStockHistory(component)" class="btn btn-action">History</button></td>
+        </tr>
+      </tbody>
+
+
+    </table>
+    <div *ngIf="componentsList.length === 0">
+      <span colspan="10" class="text-center no-data-row">
+        No data found for "{{ searchedText }}"
+      </span>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-6">
+      <div class="select-pageNo">
+        <label class="form-label"><b>Results per page</b></label>
+        <select class="form-select form-select-sm" aria-label="Small select example" [(ngModel)]="limit"
+          (change)="changeDataLimit()">
+          <option value="10">10</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <nav aria-label="Page navigation" class="pagination">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToFirstPage()">{{"|<"}}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage <= 3">
+            <button class="page-link" (click)="previousPage()">{{"<<"}}</button>
+          </li>
+          <li *ngFor="let page of getPagesToShow()" class="page-item" [class.active]="currentPage === page">
+            <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage + 3 > totalPages">
+            <button class="page-link" (click)="nextPage()">{{">>"}}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToLastPage()">{{">|"}}</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<!-- Details Modal -->
+<div class="modal modal-xl fade" id="componentDetails" tabindex="-1" aria-labelledby="componentDetailsLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header justify-content-between">
+        <h5 class="modal-title">{{selectedComponent.manufacturerPartNumber}}</h5>
+
+        <div class="right-btns">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearSelection()"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row-detail">
+          <div class="text-container">
+            <p class="detailsHeading">Manufacturer Part Number</p>
+            <p class="detailsValue">{{selectedComponent.manufacturerPartNumber}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Manufacturer:</p>
+            <p class="detailsValue">{{manufacturerNameList[selectedComponent.manufacturer]}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Category Name:</p>
+            <p class="detailsValue">{{categoryNameList[selectedComponent.categoryName]}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Component ID:</p>
+            <p class="detailsValue">{{selectedComponent.id !== null || undefined || "" ? selectedComponent.id : '--'}}
+            </p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Package:</p>
+            <p class="detailsValue">{{selectedComponent.package}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Comment:</p>
+            <p class="detailsValue">{{selectedComponent.comment}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">In-Stock Quantity:</p>
+            <p class="detailsValue">{{selectedComponent.totalQuantity}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Description</p>
+            <p class="detailsValue">{{selectedComponent.description}}</p>
+          </div>
+
+        </div>
+        <div class="row">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="align-middle background-dark">#</th>
+                <th scope="col" class="align-middle background-dark">Project Name</th>
+                <th scope="col" class="align-middle background-dark">Qunatity</th>
+                <th scope="col" class="align-middle background-dark">Shelf Name</th>
+                <th scope="col" class="align-middle background-dark">Box Name</th>
+                <th scope="col" class="align-middle background-dark">Notification Alert</th>
+                <th scope="col" class="align-middle background-dark">Last Modified</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="value-row" *ngFor="let stock of selectedComponent.stockDetails; let i = index">
+                <th scope="row" class="align-middle">{{i+1}}</th>
+                <td class="align-middle">{{projectNameList[stock.projectName]}}</td>
+                <td class="align-middle">{{stock.quantity}}</td>
+                <td class="align-middle">{{stock.locationDetail?.shelfName && stock.locationDetail.shelfName !== "" ?
+                  shelfLocationNameList[stock.locationDetail.shelfName]?.shelfName : '--'}}</td>
+                <td class="align-middle">
+                  {{stock.locationDetail?.boxNames && stock.locationDetail.boxNames !== "" ?
+                  shelfLocationNameList[stock.locationDetail.shelfName]?.boxNames[stock.locationDetail.boxNames] :
+                  '--'}}
+                </td>
+                <td class="align-middle">{{stock.notificationQuantity ? stock.notificationQuantity : '0' }}</td>
+                <td class="align-middle">{{stock.modifiedDate | date:'dd MMM yyyy - hh:mm a'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stock History Model  -->
+<div class="modal modal-xl fade" id="stockHistory" tabindex="-1" aria-labelledby="stockHistoryLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{selectedComponent.manufacturerPartNumber}}</h5>
+        <div class="color-cot">
+
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="all" [(ngModel)]="selectedFilterStockHistory"
+              (change)="applyFilterOnStockHistory(selectedComponent)">
+            All
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="create"
+              [(ngModel)]="selectedFilterStockHistory" (change)="applyFilterOnStockHistory(selectedComponent)">
+            <div class="create box"></div>
+            Add/Create
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="issue"
+              [(ngModel)]="selectedFilterStockHistory" (change)="applyFilterOnStockHistory(selectedComponent)">
+            <div class="issue box"></div>
+            Issue
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="consumed"
+              [(ngModel)]="selectedFilterStockHistory" (change)="applyFilterOnStockHistory(selectedComponent)">
+            <div class="consumed box"></div>
+            Consumed
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="returned"
+              [(ngModel)]="selectedFilterStockHistory" (change)="applyFilterOnStockHistory(selectedComponent)">
+            <div class="return box"></div>
+            Returned
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" value="move"
+              [(ngModel)]="selectedFilterStockHistory" (change)="applyFilterOnStockHistory(selectedComponent)">
+            <div class="move box"></div>
+            Move
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+          (click)="clearSelection()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="stockHistoryTable-container">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="col-header align-middle background-dark">#</th>
+                <th scope="col" class="col-header align-middle background-dark">Date</th>
+                <th scope="col" class="col-header align-middle background-dark">Transaction</th>
+                <th scope="col" class="col-header align-middle background-dark">Project Name</th>
+                <th scope="col" class="col-header align-middle background-dark">Quantity</th>
+                <th scope="col" class="col-header align-middle background-dark">User</th>
+                <th scope="col" class="col-header align-middle background-dark">Issued To</th>
+                <th scope="col" class="col-header align-middle background-dark">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let stockHistory of stockHistories; let i = index">
+                <tr
+                  [ngClass]="{
+                  'table-active': selectedRow === i,
+                 'cursor-pointer': stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add' || stockHistory.transactionType === 'move' }"
+                  (click)="toggleCollapse(i)">
+                  <th scope="row" class="align-middle col-data">{{i + 1}}</th>
+                  <td class="align-middle col-data">{{stockHistory.date | date:'dd MMM yyyy' }} - {{stockHistory.date |
+                    date:'shortTime' }}</td>
+                  <td class="align-middle col-data transaction" [ngClass]="{
+                    green: stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add',
+                    red: stockHistory.transactionType === 'consumed',
+                    orange: stockHistory.transactionType === 'issue',
+                    violet: stockHistory.transactionType === 'returned',
+                    brown: stockHistory.transactionType === 'move'
+                  }">{{stockHistory.transactionType}}</td>
+                  <td class="align-middle col-data">{{projectNameList[stockHistory.projectName]}}</td>
+                  <td class="align-middle col-data" [ngClass]="{
+                    green: stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add',
+                    red: stockHistory.transactionType === 'consumed',
+                    orange: stockHistory.transactionType === 'issue',
+                    violet: stockHistory.transactionType === 'returned',
+                    brown: stockHistory.transactionType === 'move'
+                  }">{{stockHistory.quantity}}</td>
+                  <td class="align-middle col-data">{{stockHistory.inventoryHandler}}</td>
+                  <td class="align-middle col-data">{{stockHistory.issuedTo?.employeeCode ?
+                    stockHistory.issuedTo?.employeeCode : '--'}} [{{ stockHistory.issuedTo?.loginId ?
+                    stockHistory.issuedTo?.loginId : '--' }}]</td>
+                  <td class="align-middle col-data">{{stockHistory.note ? stockHistory.note : '--'}}</td>
+                </tr>
+                <tr *ngIf="selectedRow === i">
+                  <td colspan="8" class="p-0 border-0">
+                    <div [id]="'collapse' + i" class="accordion-collapse collapse"
+                      [ngClass]="{show: stockHistory.transactionType ==='create' || stockHistory.transactionType ==='add' || stockHistory.transactionType === 'move' }">
+                      <div class="accordion-body" *ngIf="stockHistory?.supplierName !== null">
+                        <table class="table table-responsive m-0">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="col-header align-middle background-dark">Supplier Name</th>
+                              <th scope="col" class="col-header align-middle background-dark">Supplier Part No.</th>
+                              <th scope="col" class="col-header align-middle background-dark">Supplier Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{stockHistory?.supplierName?.name !== null || undefined || "" ?
+                                stockHistory?.supplierName?.name : '--'}}</td>
+                              <td>{{stockHistory?.supplierPartNo !== null || undefined || "" ?
+                                stockHistory?.supplierPartNo
+                                : '--'}}</td>
+                              <td>{{ stockHistory?.supplierName?.type !== null || undefined || "" ?
+                                stockHistory?.supplierName?.type : '--' }}</td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="accordion-body"
+                        *ngIf="stockHistory?.supplierName === null && stockHistory.transactionType === 'move'">
+                        <table class="table table-responsive m-0">
+                          <tbody>
+                            <tr>
+                              <th scope="row">Component Stock Is Moved from
+                                {{projectNameList[stockHistory.movedFromProjectName]}} to
+                                {{projectNameList[stockHistory.projectName]}}</th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Edit Modal -->
+<div class="modal modal-xl fade" id="componentEdit" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" style="--bs-modal-width: 1200px;">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{selectedComponent.manufacturerPartNumber}}</h1>
+        <button type="button" id="closeEditModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="clearSelection()"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <!-- Modify tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <button class="nav-link active" id="modify-tab" data-bs-toggle="tab" data-bs-target="#modify" type="button"
+              role="tab" aria-controls="modify" aria-selected="true">Modify</button>
+          </li>
+          <!-- Location Tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location" type="button"
+              role="tab" aria-controls="location" aria-selected="false">Change Location</button>
+          </li>
+          <!-- Add tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#add" type="button" role="tab"
+              aria-controls="add" aria-selected="false">Add Stock</button>
+          </li>
+          <!-- Issue Tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.issue === 1">
+            <button class="nav-link"
+              [ngClass]="{active: (userRights.hardwareDepartment.electronicDevice.manage === 0 && userRights.hardwareDepartment.electronicDevice.return === 0) || userRights.hardwareDepartment.electronicDevice.manage === 0 }"
+              id="issue-tab" data-bs-toggle="tab" data-bs-target="#issue" type="button" role="tab" aria-controls="issue"
+              aria-selected="false">Issue Stock</button>
+          </li>
+          <!-- Return tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.return === 1">
+            <button class="nav-link"
+              [ngClass]="{active: userRights.hardwareDepartment.electronicDevice.manage === 0 && userRights.hardwareDepartment.electronicDevice.issue === 0 }"
+              id="return-tab" data-bs-toggle="tab" data-bs-target="#return" type="button" role="tab"
+              aria-controls="return" aria-selected="false">Return Stock</button>
+          </li>
+          <!-- consumption tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.return === 1">
+            <button class="nav-link" id="consumption-tab" data-bs-toggle="tab" data-bs-target="#consumption"
+              type="button" role="tab" aria-controls="consumption" aria-selected="false">Report Consumption</button>
+          </li>
+          <!-- Notification tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification"
+              type="button" role="tab" aria-controls="notification" aria-selected="false">Add Notification
+              Quantity</button>
+          </li>
+          <!-- Moved tab -->
+          <li class="nav-item" role="presentation" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <button class="nav-link" id="move-tab" data-bs-toggle="tab" data-bs-target="#move" type="button" role="tab"
+              aria-controls="move" aria-selected="false" [disabled]="selectedComponentProjectList.length <= 1">Move
+              Stock</button>
+          </li>
+
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <!-- Modify Form -->
+          <div class="tab-pane fade show active" id="modify" role="tabpanel" aria-labelledby="modify-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="modifyComponentForm" (ngSubmit)="submitModifyComponent()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Manufacturer <span class="required">*</span></label>
+                    <ng-select [items]="manufacturerList" bindLabel="name" bindValue="_id"
+                      formControlName="manufacturerName" [searchable]="true" placeholder="Select manufacturer">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyComponentForm.controls['manufacturerName'].errors?.['required'] && modifyComponentForm.controls['manufacturerName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Manufacturer Part Number <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="manufacturerPartNumber"
+                      [ngClass]="{'error-bg': modifyComponentForm.controls['manufacturerPartNumber'].errors}"
+                      (input)="checkModifiedManufacturerPartNo()">
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyComponentForm.controls['manufacturerPartNumber'].errors?.['required'] && modifyComponentForm.controls['manufacturerPartNumber'].touched">This
+                        Field is required
+                      </small>
+                      <small
+                        *ngIf="modifyComponentForm.controls['manufacturerPartNumber'].errors?.['notUnique'] && modifyComponentForm.controls['manufacturerPartNumber'].touched">
+                        Manufacturer part number is already exist!
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Package <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="package"
+                      [ngClass]="{'error-bg': modifyComponentForm.controls['package'].errors}">
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyComponentForm.controls['package'].errors?.['required'] && modifyComponentForm.controls['package'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Description <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="description"
+                      [ngClass]="{'error-bg': modifyComponentForm.controls['description'].errors}">
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyComponentForm.controls['description'].errors?.['required'] && modifyComponentForm.controls['description'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Comment </label>
+                    <input type="text" class="form-control" formControlName="comment"
+                      [ngClass]="{'error-bg': modifyComponentForm.controls['comment'].errors}">
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyComponentForm.controls['comment'].errors?.['required'] && modifyComponentForm.controls['comment'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">In-Stock Quantity <span class="required">*</span></label>
+                    <input type="text" class="form-control" disabled value="{{newTotalQuantity}}">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="modifyComponentForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Change Location Of Project Stock -->
+          <div class="tab-pane fade show" id="location" role="tabpanel" aria-labelledby="location-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="changeLocationForm" (ngSubmit)="submitChangeLocationForm()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <ng-select (change)="alertChangeProjectName($event)" formControlName="projectName"
+                      [searchable]="true" placeholder="Select Project">
+                      <ng-container *ngFor="let project of selectedComponent.stockDetails; let i = index">
+                        <ng-option [value]="i">
+                          {{ projectNameList[project.projectName] }}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+
+                    <div class="error-message">
+                      <small
+                        *ngIf="changeLocationForm.controls['projectName'].errors?.['required'] && changeLocationForm.controls['projectName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Shelf Name </label>
+                    <!-- <select class="form-select" formControlName="shelfName" (change)="changeShelfValueLocation()">
+                      <option *ngFor="let shelf of shelfList" value="{{shelf._id}}">{{shelf.shelfName}}</option>
+                    </select> -->
+                    <ng-select [items]="shelfList" bindLabel="shelfName" formControlName="shelfName"
+                      placeholder="Select Shelf" [searchable]="true" [clearable]="true"
+                      (change)="changeShelfValueLocation($event, changeLocationForm)">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="changeLocationForm.controls['shelfName'].errors?.['required'] && changeLocationForm.controls['shelfName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Box Name</label>
+                    <!-- <select class="form-select" formControlName="boxNames">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let boxName of boxNames" value="{{boxName._id}}">{{boxName.name}}</option>
+                    </select> -->
+                    <ng-select [items]="boxNames" bindLabel="name" bindValue="_id" formControlName="boxNames"
+                      placeholder="Select Box" [searchable]="true">
+                    </ng-select>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="changeLocationForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Add Stock -->
+          <div class="tab-pane fade show" id="add" role="tabpanel" aria-labelledby="add-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="new-project-tab" data-bs-toggle="tab"
+                    data-bs-target="#new-project" type="button" role="tab" aria-controls="new-project"
+                    aria-selected="true">Add New Project</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="exist-project-tab" data-bs-toggle="tab" data-bs-target="#exist-project"
+                    type="button" role="tab" aria-controls="exist-project" aria-selected="false">Add Existing
+                    Project</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <!-- New Project -->
+                <div class="tab-pane fade show active" id="new-project" role="tabpanel"
+                  aria-labelledby="new-project-tab">
+                  <div class="form-container mt-2 mb-3">
+
+                    <form [formGroup]="newProjectForm" (ngSubmit)="submitNewProjectForm()">
+                      <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Project Name <span class="required">*</span></label>
+                          <!-- <select class="form-select form-control" formControlName="projectName">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let project of projectList" value="{{project._id}}"
+                              [hidden]="selectedComponentProjectList.includes(project._id)">{{project.name}}</option>
+                          </select> -->
+                          <ng-select bindLabel="name" bindValue="_id" formControlName="projectName" [searchable]="true"
+                            placeholder="----Select----">
+                            <ng-container *ngFor="let project of projectList">
+                              <ng-option *ngIf="!selectedComponentProjectList.includes(project._id)"
+                                [value]="project._id">
+                                {{ project.name }}
+                              </ng-option>
+                            </ng-container>
+                          </ng-select>
+                          <div *ngIf="newProjectForm.controls['projectName'].touched">
+                            <div class="error-message">
+                              <small *ngIf="newProjectForm.controls['projectName'].errors?.['required']">
+                                This field is required
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" min="1" formControlName="quantity"
+                            [ngClass]="{'error-bg': newProjectForm.controls['quantity'].touched && newProjectForm.controls['quantity'].errors}">
+
+                          <div *ngIf="newProjectForm.controls['quantity'].touched">
+                            <div class="error-message">
+                              <small *ngIf="newProjectForm.controls['quantity'].errors?.['required']">
+                                This field is required
+                              </small>
+                              <small
+                                *ngIf="!newProjectForm.controls['quantity'].errors?.['required'] && newProjectForm.controls['quantity'].errors?.['nonZeroPositiveInteger']">
+                                Quantity must be greater than 0 and not in decimal
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Supplier Name <span class="required">*</span></label>
+                          <!-- <select class="form-select" formControlName="supplierName">
+                            <option *ngFor="let supplier of supplierList" value="{{supplier._id}}">{{supplier.name}}
+                            </option>
+                          </select> -->
+                          <ng-select [items]="supplierList" bindLabel="name" bindValue="_id"
+                            formControlName="supplierName" placeholder="Select Supplier" [searchable]="true">
+                          </ng-select>
+                          <div *ngIf="newProjectForm.controls['supplierName'].touched">
+                            <div class="error-message">
+                              <small *ngIf="newProjectForm.controls['supplierName'].errors?.['required']">
+                                This field is required
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Supplier Part Number</label>
+                          <input type="text" class="form-control" formControlName="supplierPartNumber">
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Note</label>
+                          <input type="text" class="form-control" formControlName="note">
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Shelf Name</label>
+                          <!-- <select class="form-select" formControlName="shelfName" (change)="changeShelfValue()">
+                            <option *ngFor="let shelf of shelfList" value="{{shelf._id}}">{{shelf.shelfName}}
+                            </option>
+                          </select> -->
+                          <ng-select [items]="shelfList" bindLabel="shelfName" bindValue="_id"
+                            (change)="changeShelfValueLocation($event, newProjectForm)" formControlName="shelfName"
+                            placeholder="Select Shelf" [searchable]="true">
+                          </ng-select>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Box Name</label>
+                          <!-- <select class="form-select" formControlName="boxNames">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let boxName of boxNames" value="{{boxName._id}}">{{boxName.name}}</option>
+                          </select> -->
+                          <ng-select [items]="boxNames" bindLabel="name" bindValue="_id" formControlName="boxNames"
+                            placeholder="Select Box" [searchable]="true">
+                          </ng-select>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Notification quantity</label>
+                          <input type="number" class="form-control" min="0" formControlName="notificationQuantity">
+
+                          <div class="error-message">
+
+                            <small *ngIf="newProjectForm.errors?.['greaterThanQuantity'] && newProjectForm.touched">
+                              Ensure Notification Quantity does not exceed Quantity and not less than 0.
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-submit mt-4"
+                        [disabled]="newProjectForm.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+                <!-- Existing Project -->
+                <div class="tab-pane fade" id="exist-project" role="tabpanel" aria-labelledby="exist-project-tab">
+                  <div class="form-container mt-2 mb-3">
+                    <form [formGroup]="editProjectForm" (ngSubmit)="submitEditProject()">
+                      <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Project Name <span class="required">*</span></label>
+                          <!-- <select class="form-select form-control" formControlName="projectName"
+                            (change)="changeProjectName(editProjectForm)">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let project of selectedComponentProjectList" value="{{project}}">
+                              {{projectNameList[project]}}
+                            </option>
+                          </select> -->
+                          <ng-select formControlName="projectName" [searchable]="true" placeholder="Select Project">
+                            <ng-container *ngFor="let project of selectedComponentProjectList">
+                              <ng-option [value]="project">
+                                {{ projectNameList[project] }}
+                              </ng-option>
+                            </ng-container>
+                          </ng-select>
+                          <div *ngIf="editProjectForm.controls['projectName'].touched">
+                            <div class="error-message">
+                              <small *ngIf="editProjectForm.controls['projectName'].errors?.['required']">
+                                This field is required
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" min="1" formControlName="quantity"
+                            [ngClass]="{'error-bg': editProjectForm.controls['quantity'].touched && editProjectForm.controls['quantity'].errors}"
+                            (change)="changeQuantity()">
+
+                          <div *ngIf="editProjectForm.controls['quantity'].touched">
+                            <div class="error-message">
+                              <small *ngIf="editProjectForm.controls['quantity'].errors?.['required']">
+                                This field is required
+                              </small>
+                              <small
+                                *ngIf="!editProjectForm.controls['quantity'].errors?.['required'] && editProjectForm.controls['quantity'].errors?.['nonZeroPositiveInteger']">
+                                Quantity must be greater than 0 and not in decimal
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Supplier Name <span class="required">*</span></label>
+                          <!-- <select class="form-select" formControlName="supplierName">
+                            <option *ngFor="let supplier of supplierList" value="{{supplier._id}}">{{supplier.name}}
+                            </option>
+                          </select> -->
+                          <ng-select [items]="supplierList" bindLabel="name" bindValue="_id"
+                            formControlName="supplierName" placeholder="Select Supplier" [searchable]="true">
+                          </ng-select>
+                          <div *ngIf="editProjectForm.controls['supplierName'].touched">
+                            <div class="error-message">
+                              <small *ngIf="editProjectForm.controls['supplierName'].errors?.['required']">
+                                This field is required
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Supplier Part Number</label>
+                          <input type="text" class="form-control" formControlName="supplierPartNumber">
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Note</label>
+                          <input type="text" class="form-control" formControlName="note">
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                          <label class="form-label">Total Quantity</label>
+                          <input type="text" class="form-control" disabled value="{{newTotalQuantity}}">
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-submit mt-4"
+                        [disabled]="editProjectForm.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Issue Stock -->
+          <div class="tab-pane fade show"
+            [ngClass]="{active: (userRights.hardwareDepartment.electronicDevice.manage === 0 && userRights.hardwareDepartment.electronicDevice.return === 0) || userRights.hardwareDepartment.electronicDevice.manage === 0 }"
+            id="issue" role="tabpanel" aria-labelledby="issue-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.issue === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="issueComponentForm" (ngSubmit)="submitIssueComponent()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="projectName"
+                      (change)="changeProjectName(issueComponentForm)">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let project of selectedComponentProjectList" [value]="project">
+                        {{projectNameList[project]}}
+                      </option>
+                    </select> -->
+
+                    <ng-select formControlName="projectName" (change)="changeProjectName(issueComponentForm)"
+                      [searchable]="true" placeholder="Project Name">
+                      <ng-container *ngFor="let project of selectedComponentProjectList">
+                        <ng-option [value]="project">
+                          {{ projectNameList[project] }}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="issueComponentForm.controls['projectName'].touched">
+                      <div class="error-message">
+                        <small *ngIf="issueComponentForm.controls['projectName'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Total Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="newTotalIssuedQuantity">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Available Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="availableIssueQuantity">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Issue Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" min="1" formControlName="issueQuantity"
+                      [ngClass]="{disabled: issueComponentForm.controls['projectName'].invalid, 'error-bg': (issueComponentForm.controls['issueQuantity'].touched && issueComponentForm.controls['issueQuantity'].errors)}">
+                    <div *ngIf="issueComponentForm.controls['issueQuantity'].touched">
+                      <div class="error-message">
+                        <small *ngIf="issueComponentForm.controls['issueQuantity'].errors?.['required']">
+                          This field is required
+                        </small>
+                        <small
+                          *ngIf="!issueComponentForm.controls['issueQuantity'].errors?.['required'] && issueComponentForm.controls['issueQuantity'].errors?.['range']">
+                          Issue Quantity must be greater than 0 or not exceed available quantity.
+                        </small>
+                        <small
+                          *ngIf="!issueComponentForm.controls['issueQuantity'].errors?.['required'] && issueComponentForm.controls['issueQuantity'].errors?.['notInteger']">
+                          Issue quantity is not in decimal.
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Issued To <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="issuedPerson">
+                      <option *ngFor="let employee of filteredEmployees" value="{{employee._id}}">
+                        {{employee.firstName}} {{employee.lastName}}</option>
+                    </select> -->
+                    <ng-select formControlName="issuedPerson" [searchable]="true" placeholder="Issued Person">
+                      <ng-container *ngFor="let employee of filteredEmployees">
+                        <ng-option [value]="employee._id">
+                          {{employee.firstName}} {{employee.lastName}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="issueComponentForm.controls['issuedPerson'].touched">
+                      <div class="error-message">
+                        <small *ngIf="issueComponentForm.controls['issuedPerson'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="issueComponentForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Return -->
+          <div class="tab-pane fade show"
+            [ngClass]="{active: userRights.hardwareDepartment.electronicDevice.manage === 0 && userRights.hardwareDepartment.electronicDevice.issue === 0 }"
+            id="return" role="tabpanel" aria-labelledby="return-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.return === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="returnComponentForm" (ngSubmit)="submitReturnComponent()">
+                <!-- <form> -->
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Employee Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="returnedPerson"
+                      (change)="changeEmployeeName()">
+                      <option *ngFor="let employee of filteredEmployees" value="{{employee._id}}">
+                        {{employee.firstName}} {{employee.lastName}}</option>
+                    </select> -->
+
+                    <ng-select formControlName="returnedPerson" (change)="changeEmployeeName()" [searchable]="true"
+                      placeholder="Retured By">
+                      <ng-container *ngFor="let employee of filteredEmployees">
+                        <ng-option [value]="employee._id">
+                          {{employee.firstName}} {{employee.lastName}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="returnComponentForm.controls['returnedPerson'].touched">
+                      <div class="error-message">
+                        <small *ngIf="returnComponentForm.controls['returnedPerson'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="projectName"
+                      (change)="displayAvailableReturnQuantity()">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let entry of returnHistoryList; let i = index" [value]="i">
+                        {{projectNameList[entry.projectName]}}
+                      </option>
+                    </select> -->
+                    <ng-select formControlName="projectName" (change)="displayAvailableReturnQuantity()"
+                      [searchable]="true" placeholder="Retured By">
+                      <ng-container *ngFor="let entry of returnHistoryList; let i = index">
+                        <ng-option [value]="i">
+                          {{projectNameList[entry.projectName]}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="returnComponentForm.controls['projectName'].touched">
+                      <div class="error-message">
+                        <small *ngIf="returnComponentForm.controls['projectName'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Issued Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="availableReturnsForEmployee">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Return Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" min="1" formControlName="returnedQuantity"
+                      [ngClass]="{disabled: returnComponentForm.controls['projectName'].invalid, 'error-bg': (returnComponentForm.controls['returnedQuantity'].touched && returnComponentForm.controls['returnedQuantity'].errors)} ">
+                    <div *ngIf="returnComponentForm.controls['returnedQuantity'].touched">
+                      <div class="error-message">
+                        <small *ngIf="returnComponentForm.controls['returnedQuantity'].errors?.['required']">
+                          This field is required
+                        </small>
+                        <small
+                          *ngIf="!returnComponentForm.controls['returnedQuantity'].errors?.['required'] && returnComponentForm.controls['returnedQuantity'].errors?.['range']">
+                          Return Quantity must be greater than 0 or not exceed Issued Quantity
+                        </small>
+                        <small
+                          *ngIf="!returnComponentForm.controls['returnedQuantity'].errors?.['required'] && returnComponentForm.controls['returnedQuantity'].errors?.['notInteger']">
+                          Return Quantity is not in decimal.
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+                </div>
+                <div class="error-message">
+                  <small
+                    *ngIf="returnComponentForm.controls['returnedPerson'].touched && returnComponentForm.controls['returnedPerson'].value !== '' && returnHistoryList.length < 1">
+                    This component is not issued to the selected person
+                  </small>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="returnComponentForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Report Consumption -->
+          <div class="tab-pane fade show" id="consumption" role="tabpanel" aria-labelledby="consumption-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.return === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="consumptionComponentForm" (ngSubmit)="submitConsumptionForm()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Employee Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="consumedBy"
+                      (change)="changeConsumptionEmployeeName()">
+                      <option *ngFor="let employee of filteredEmployees" value="{{employee._id}}">
+                        {{employee.firstName}} {{employee.lastName}}</option>
+                    </select> -->
+                    <ng-select formControlName="consumedBy" (change)="changeConsumptionEmployeeName()"
+                      [searchable]="true" placeholder="Consumed By">
+                      <ng-container *ngFor="let employee of filteredEmployees">
+                        <ng-option [value]="employee._id">
+                          {{employee.firstName}} {{employee.lastName}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="consumptionComponentForm.controls['consumedBy'].touched">
+                      <div class="error-message">
+                        <small *ngIf="consumptionComponentForm.controls['consumedBy'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="projectName"
+                      (change)="displayAvailableConsumptionQuantity()">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let entry of consumptionHistoryList; let i = index" [value]="i">
+                        {{projectNameList[entry.projectName]}}</option>
+                    </select> -->
+                    <ng-select formControlName="projectName" (change)="displayAvailableConsumptionQuantity()"
+                      [searchable]="true" placeholder="Project Name">
+                      <ng-container *ngFor="let entry of consumptionHistoryList; let i = index">
+                        <ng-option [value]="i">
+                          {{projectNameList[entry.projectName]}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="consumptionComponentForm.controls['projectName'].touched">
+                      <div class="error-message">
+                        <small *ngIf="consumptionComponentForm.controls['projectName'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Issued Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="availableConsumptionForEmployee">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Consumed Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" min="1" formControlName="consumedQuantity"
+                      [ngClass]="{disabled: consumptionComponentForm.controls['projectName'].invalid, 'error-bg': (consumptionComponentForm.controls['consumedQuantity'].touched && consumptionComponentForm.controls['consumedQuantity'].errors)} ">
+                    <div *ngIf="consumptionComponentForm.controls['consumedQuantity'].touched">
+                      <div class="error-message">
+                        <small *ngIf="consumptionComponentForm.controls['consumedQuantity'].errors?.['required']">
+                          This field is required
+                        </small>
+                        <small
+                          *ngIf="!consumptionComponentForm.controls['consumedQuantity'].errors?.['required'] && consumptionComponentForm.controls['consumedQuantity'].errors?.['range']">
+                          Consumed Quantity must be greater than 0 or not exceed Issued Quantity
+                        </small>
+                        <small
+                          *ngIf="!consumptionComponentForm.controls['consumedQuantity'].errors?.['required'] && consumptionComponentForm.controls['consumedQuantity'].errors?.['notInteger']">
+                          Consumed Quantity is not in decimal.
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+                </div>
+                <div class="error-message">
+                  <small
+                    *ngIf="consumptionComponentForm.controls['consumedBy'].touched && consumptionComponentForm.controls['consumedBy'].value !== '' && consumptionHistoryList.length < 1">
+                    This component is not issued to the selected person
+                  </small>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="consumptionComponentForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Notification Quantity  -->
+          <div class="tab-pane fade show" id="notification" role="tabpanel" aria-labelledby="notification-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="notificationQtyForm" (ngSubmit)="submitNotificationQtyForm()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="projectName"
+                      (change)="changeProjectName(notificationQtyForm)">
+                      <option value="">select</option>
+                      <option *ngFor="let project of selectedComponentProjectList; let i = index" [value]="project">
+                        {{projectNameList[project]}}
+                      </option>
+                    </select> -->
+                    <ng-select formControlName="projectName" (change)="changeProjectName(notificationQtyForm)"
+                      [searchable]="true" placeholder="Project Name">
+                      <ng-container *ngFor="let project of selectedComponentProjectList; let i = index">
+                        <ng-option [value]="project">
+                          {{projectNameList[project]}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div *ngIf="notificationQtyForm.controls['projectName'].touched">
+                      <div class="error-message">
+                        <small *ngIf="notificationQtyForm.controls['projectName'].errors?.['required']">
+                          This field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Available Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="availableNotificationQty">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Notification Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" formControlName="notificationQuantity"
+                      [ngClass]="{disabled: notificationQtyForm.controls['projectName'].invalid, 'error-bg': (notificationQtyForm.controls['notificationQuantity'].touched && notificationQtyForm.controls['notificationQuantity'].errors)}">
+                    <div *ngIf="notificationQtyForm.controls['notificationQuantity'].touched">
+                      <div class="error-message">
+                        <small *ngIf="notificationQtyForm.controls['notificationQuantity'].errors?.['required']">
+                          This field is required
+                        </small>
+                        <small
+                          *ngIf="!notificationQtyForm.controls['notificationQuantity'].errors?.['required'] && notificationQtyForm.controls['notificationQuantity'].errors?.['range']">
+                          Notification quantity must be greater than 0 and less than the available quantity.
+                        </small>
+                        <small
+                          *ngIf="!notificationQtyForm.controls['notificationQuantity'].errors?.['required'] && notificationQtyForm.controls['notificationQuantity'].errors?.['notInteger']">
+                          Notification quantity is not in decimal.
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="notificationQtyForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Move Stock -->
+          <div class="tab-pane fade show" id="move" role="tabpanel" aria-labelledby="move-tab"
+            *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="movedComponentForm" (ngSubmit)="submitMovedStock()">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="movedFromProjectName"
+                      (change)="changeProjectName(movedComponentForm)">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let project of selectedComponentProjectList" [value]="project">
+                        {{projectNameList[project]}}
+                      </option>
+                    </select> -->
+                    <ng-select formControlName="movedFromProjectName" (change)="changeProjectName(movedComponentForm)"
+                      [searchable]="true" placeholder="Project Name">
+                      <ng-container *ngFor="let project of selectedComponentProjectList">
+                        <ng-option [value]="project">
+                          {{projectNameList[project]}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="movedComponentForm.controls['movedFromProjectName'].errors?.['required'] && movedComponentForm.controls['movedFromProjectName'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Available Quantity</label>
+                    <input type="text" class="form-control" disabled [value]="available">
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Moved to <span class="required">*</span></label>
+                    <!-- <select class="form-select form-control" formControlName="movedToProjectName">
+                      <option value="">----Select----</option>
+                      <option *ngFor="let project of OtherProjectNames" [value]="project">
+                        {{projectNameList[project]}}
+                      </option>
+                    </select> -->
+                    <ng-select formControlName="movedToProjectName" [searchable]="true" placeholder="Project Name">
+                      <ng-container *ngFor="let project of OtherProjectNames">
+                        <ng-option [value]="project">
+                          {{projectNameList[project]}}
+                        </ng-option>
+                      </ng-container>
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="movedComponentForm.controls['movedToProjectName'].errors?.['required'] && movedComponentForm.controls['movedToProjectName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Moved Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" min="1" formControlName="movedQuantity"
+                      [ngClass]="{disabled: movedComponentForm.controls['movedFromProjectName'].invalid, 'error-bg': (movedComponentForm.controls['movedQuantity'].touched && movedComponentForm.controls['movedQuantity'].errors)} ">
+                    <div claas="error-message">
+                      <small
+                        *ngIf="movedComponentForm.controls['movedQuantity'].touched && movedComponentForm.controls['movedQuantity']?.errors?.['range']">
+                        Moved Quantity must be greater than 0 or not exceed available quantity.
+                      </small>
+                      <small
+                        *ngIf="movedComponentForm.controls['movedQuantity'].touched && movedComponentForm.controls['movedQuantity']?.errors?.['notInteger']">
+                        Moved Quantity is not in decimal.
+                      </small>
+                      <div class="error-message">
+                        <small
+                          *ngIf="movedComponentForm.controls['movedQuantity'].errors?.['required'] && movedComponentForm.controls['movedQuantity'].touched">This
+                          Field is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 mt-3">
+                    <label class="form-label">Note</label>
+                    <input type="text" class="form-control" formControlName="note">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-submit mt-4"
+                  [disabled]="movedComponentForm.invalid">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="clearSelection()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

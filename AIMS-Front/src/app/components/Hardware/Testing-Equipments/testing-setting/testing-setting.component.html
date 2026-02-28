@@ -1,0 +1,573 @@
+<div class="single-container">
+  <div class="heading">
+    <h4>Testing Equipments</h4>
+  </div>
+  <div class="single-btn-container">
+
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal6">Categorization</button>
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal7">Supplier</button>
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal8">Manufacturer</button>
+  </div>
+</div>
+
+<!-- Modal1  Category-->
+<!-- <div class="modal modal-xl fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">CATEGORIZATION</h5>
+        <button type="button" id="closeModalCreate6" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="pageRefresh()"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#category"
+              type="button" role="tab" aria-controls="category" aria-selected="true">Category</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="subCategory-tab" data-bs-toggle="tab" data-bs-target="#subCategory"
+              type="button" role="tab" aria-controls="subCategory" aria-selected="false">Sub
+              Category</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="category" role="tabpanel" aria-labelledby="category-tab">
+            <div class="row">
+              <div class="col-md-6 table-container">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="align-middle background-dark">#</th>
+                      <th scope="col" class="align-middle background-dark">Name</th>
+                      <th scope="col" class="align-middle text-center background-dark">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="value-row" *ngFor="let category of inCategoriesList; let i = index">
+                      <th scope="row" class="align-middle col">{{i+1}}</th>
+                      <td class="align-middle col">{{category.name}}</td>
+                      <td class="align-middle text-center col">
+                        <img src="../../../assets/icons/edit.svg" alt="edit icons" class="icons"
+                          (click)="editCategory(category)">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <div class="create-form-container" *ngIf="edit == false">
+                  <form [formGroup]="createITCategoryForm" (submit)="submitITCategory()">
+                    <div class="form-group">
+                      <label for="categoryname" class="form-label">Name <span class="required">*</span></label>
+                      <input type="text" class="form-control" formControlName="name" (blur)="checkITCategoryname()">
+                      <small
+                        *ngIf="createITCategoryForm.controls['name'].errors?.['required'] && createITCategoryForm.controls['name'].touched"
+                        class="error-message">This field is required</small>
+                      <small
+                        *ngIf="createITCategoryForm.controls['name'].errors?.['notUnique'] && createITCategoryForm.controls['name'].touched"
+                        class="error-message">Name already exists!</small>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-submit"
+                        [disabled]="createITCategoryForm.invalid">Submit</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="edit-form-container" *ngIf="edit == true">
+                  <form [formGroup]="editCategoryForm" (submit)="submitEditCategory()">
+                    <div class="form-group">
+                      <label for="">Edit Name <span class="required">*</span></label>
+                      <input type="text" class="form-control" formControlName="name" (blur)="checkEditCategoryName()">
+                      <small
+                        *ngIf="editCategoryForm.controls['name'].errors?.['required'] && editCategoryForm.controls['name'].touched"
+                        class="error-message">This field is required</small>
+                      <small
+                        *ngIf="editCategoryForm.controls['name'].errors?.['notUnique'] && editCategoryForm.controls['name'].touched"
+                        class="error-message">Name already exists!</small>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-submit" [disabled]="editCategoryForm.invalid">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="subCategory" role="tabpanel" aria-labelledby="subCategory-tab">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6 table-container">
+                  <table class="table table-responsive table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="align-middle background-dark">#</th>
+                        <th scope="col" class="align-middle background-dark">Category</th>
+                        <th scope="col" class="align-middle background-dark">Sub-category</th>
+                        <th scope="col" colspan="2" class="align-middle background-dark">Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="value-row" *ngFor="let subcategory of subcategories; let i = index">
+                        <th scope="row" class="align-middle col-1">{{i+1}}</th>
+                        <td class="align-middle col-4">{{subcategory.categoryName.name}}</td>
+                        <td class="align-middle col-4">{{subcategory.subCategoryName}}</td>
+                        <td class="align-middle col-1">
+                          <img src="../../../assets/icons/edit.svg" alt="edit icons" class="icons"
+                            (click)="editSubCategory(subcategory)">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-lg-6">
+                  <div class="create-form-container" *ngIf="edit === false">
+                    <form [formGroup]="createSubCategoryForm" (ngSubmit)="submitSubCategory()">
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Category <span class="required">*</span></label>
+                            <select class="form-select" formControlName="categoryName">
+                              <option *ngFor="let category of inCategoriesList" value="{{category._id}}">
+                                {{category.name}}</option>
+                            </select>
+                            <small class="error-message"
+                              *ngIf="createSubCategoryForm.get('categoryName')?.errors?.['required'] && createSubCategoryForm.get('categoryName')?.touched">This
+                              field is Required</small>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Sub-category <span class="required">*</span></label>
+                            <input type="text" class="form-control" formControlName="subCategoryName"
+                              (blur)="checkSubCategoryName()">
+                            <small class="error-message"
+                              *ngIf="createSubCategoryForm.get('subCategoryName')?.errors?.['required'] && createSubCategoryForm.get('subCategoryName')?.touched">This
+                              field is Required</small>
+                            <small class="error-message"
+                              *ngIf="createSubCategoryForm.controls['subCategoryName'].errors?.['notUnique']">Sub-category
+                              name is already exist!</small>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Abbreviated Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" formControlName="abbreviatedName"
+                              (blur)="checkITAbbreviatedName()">
+                            <small class="error-message"
+                              *ngIf="createSubCategoryForm.get('abbreviatedName')?.errors?.['required'] && createSubCategoryForm.get('abbreviatedName')?.touched">This
+                              field is Required</small>
+                            <small class="error-message"
+                              *ngIf="createSubCategoryForm.get('abbreviatedName')?.errors?.['notUnique']">Abbreviated
+                              name is already exist!</small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="info-text">
+                        <h6>Please select the checkbox below for the sub-category you wish to
+                          view.</h6>
+                      </div>
+                      <div class="form-check select-all">
+                        <input type="checkbox" class="form-check-input" formControlName="checkedAll">
+                        <label class="form-check-label"><b>Select All</b></label>
+                      </div>
+                      <div class="check-grid">
+
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="cpu">
+                          <label class="form-check-label">CPU</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="description">
+                          <label class="form-check-label">Description</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="drive">
+                          <label class="form-check-label">HDD/SSD</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="inputVoltage">
+                          <label class="form-check-label">Input voltage</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="internetAccess">
+                          <label class="form-check-label">Internet Access</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="ipAddress">
+                          <label class="form-check-label">IP Address</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="key">
+                          <label class="form-check-label">Key</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="lastUse">
+                          <label class="form-check-label">Last Use</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="licenseInEff">
+                          <label class="form-check-label">License in Effect</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="modelNo">
+                          <label class="form-check-label">Model no.</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="msEffect">
+                          <label class="form-check-label">MS 365 in Effect</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="purchaseDate">
+                          <label class="form-check-label">Purchase Date</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="ram">
+                          <label class="form-check-label">RAM</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="serialNo">
+                          <label class="form-check-label">Serial No.</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="softwareInstalled">
+                          <label class="form-check-label">Software Installed</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="subscriptionEnd">
+                          <label class="form-check-label">Subscription End</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="subscriptionStart">
+                          <label class="form-check-label">Subscription Start</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="systemConfig">
+                          <label class="form-check-label">System Configuration</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="warrantyDate">
+                          <label class="form-check-label">Warranty Date</label>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit"
+                          [disabled]="createSubCategoryForm.invalid">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="create-form-container" *ngIf="edit === true">
+                    <form [formGroup]="editSubCategoryForm" (ngSubmit)="submitEditSubCategory()">
+                      <div class="row"></div>
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Edit Category <span class="required">*</span></label>
+                            <select class="form-select" formControlName="categoryName">
+                              <option *ngFor="let category of inCategoriesList" value="{{category._id}}">
+                                {{category.name}}</option>
+                            </select>
+                            <small class="error-message"
+                              *ngIf="editSubCategoryForm.get('categoryName')?.errors?.['required'] && editSubCategoryForm.get('categoryName')?.touched">This
+                              field is Required
+                            </small>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Edit Sub-Category <span class="required">*</span></label>
+                            <input type="text" class="form-control" formControlName="subCategoryName"
+                              (blur)="checkEditSubCategoryName()">
+                            <small class="error-message"
+                              *ngIf="editSubCategoryForm.get('subCategoryName')?.errors?.['required'] && editSubCategoryForm.get('subCategoryName')?.touched">This
+                              field is Required</small>
+                            <small class="error-message"
+                              *ngIf="editSubCategoryForm.controls['subCategoryName'].errors?.['notUnique']">Sub-category
+                              name is already exist!</small>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="">Edit Abbreviated Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" formControlName="abbreviatedName"
+                              (blur)="checkEditITAbbreviatedName()">
+                            <small class="error-message"
+                              *ngIf="editSubCategoryForm.get('abbreviatedName')?.errors?.['required'] && editSubCategoryForm.get('abbreviatedName')?.touched">This
+                              field is Required</small>
+                            <small class="error-message"
+                              *ngIf="editSubCategoryForm.get('abbreviatedName')?.errors?.['notUnique']">Abbreviated
+                              name is already exist!</small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="info-text">
+                        <h6>Please select the checkbox below for the sub-category you wish to
+                          view.</h6>
+                      </div>
+                      <div class="form-check select-all">
+                        <input type="checkbox" class="form-check-input" formControlName="checkedAll">
+                        <label class="form-check-label"><b>Select All</b></label>
+                      </div>
+                      <div class="check-grid">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="cpu">
+                          <label class="form-check-label">CPU</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="description">
+                          <label class="form-check-label">Description</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="drive">
+                          <label class="form-check-label">HDD/SSD</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="inputVoltage">
+                          <label class="form-check-label">Input voltage</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="internetAccess">
+                          <label class="form-check-label">Internet Access</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="ipAddress">
+                          <label class="form-check-label">IP Address</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="key">
+                          <label class="form-check-label">Key</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="lastUse">
+                          <label class="form-check-label">Last Use</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="licenseInEff">
+                          <label class="form-check-label">License in Effect</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="modelNo">
+                          <label class="form-check-label">Model no.</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="msEffect">
+                          <label class="form-check-label">MS 365 in Effect</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="purchaseDate">
+                          <label class="form-check-label">Purchase Date</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="ram">
+                          <label class="form-check-label">RAM</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="serialNo">
+                          <label class="form-check-label">Serial No.</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="softwareInstalled">
+                          <label class="form-check-label">Software Installed</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="subscriptionEnd">
+                          <label class="form-check-label">Subscription End</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="subscriptionStart">
+                          <label class="form-check-label">Subscription Start</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="systemConfig">
+                          <label class="form-check-label">System Configuration</label>
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" formControlName="warrantyDate">
+                          <label class="form-check-label">Warranty Date</label>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit"
+                          [disabled]="editSubCategoryForm.invalid">Update</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<!-- Modal2 Supplier -->
+<!-- <div class="modal modal-lg fade" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">SUPPLIER</h5>
+        <button type="button" id="closeModalCreate7" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="pageRefresh()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6 table-container">
+            <table class="table table-responsive table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="align-middle background-dark">#</th>
+                  <th scope="col" class="align-middle background-dark">Name</th>
+                  <th scope="col" colspan="2" class="align-middle background-dark">Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="value-row" *ngFor="let supplier of suppliers; let i = index;">
+                  <th scope="row" class="align-middle col-1">{{i+1}}</th>
+                  <td class="align-middle col-4">{{supplier.supplierName}}</td>
+                  <td class="align-middle col-1">
+                    <img src="../../../assets/icons/edit.svg" alt="edit icons" class="icons"
+                      (click)="editSupplier(supplier)">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-6">
+            <div class="create-form-container" *ngIf="edit === false">
+              <form [formGroup]="createSupplier" (ngSubmit)="submitSupplier()">
+                <div class="form-group">
+                  <label>Name <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="supplierName" (blur)="checkSupplier()">
+                  <small class="error-message"
+                    *ngIf="createSupplier.controls['supplierName'].errors?.['required'] && createSupplier.controls['supplierName'].touched">This
+                    field is Required</small>
+                  <small class="error-message"
+                    *ngIf="createSupplier.controls['supplierName'].errors?.['notUnique']">Supplier
+                    name is already exist!</small>
+
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-submit" [disabled]="createSupplier.invalid">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div class="create-form-container" *ngIf="edit === true">
+              <form [formGroup]="editSupplierForm" (ngSubmit)="submitEditSupplier()">
+                <div class="form-group">
+                  <label>Edit Name <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="supplierName" (blur)="checkEditSupplier()">
+                  <small class="error-message"
+                    *ngIf="editSupplierForm.get('supplierName')?.errors?.['required'] && editSupplierForm.get('supplierName')?.touched">This
+                    field is Required</small>
+                  <small class="error-message"
+                    *ngIf="editSupplierForm.controls['supplierName'].errors?.['notUnique']">Supplier
+                    name is already exist!</small>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-submit" [disabled]="editSupplierForm.invalid">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal" (click)="pageRefresh()">Close</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<!-- Modal3 Manufacturer-->
+<!-- <div class="modal modal-lg fade" id="exampleModal8" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">MANUFACTURER</h5>
+        <button type="button" id="closeModalCreate8" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="pageRefresh()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-6 table-container">
+            <table class="table table-responsive table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="align-middle background-dark">#</th>
+                  <th scope="col" class="align-middle background-dark">Name</th>
+                  <th scope="col" colspan="2" class="align-middle background-dark">Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="value-row" *ngFor="let manufacturer of manufacturers; let i = index">
+                  <th scope="row" class="align-middle col-1">{{i+1}}</th>
+                  <td class="align-middle col-4">{{manufacturer.manufacturerName}}</td>
+                  <td class="align-middle col-1">
+                    <img src="../../../assets/icons/edit.svg" alt="edit icons" class="icons"
+                      (click)="editManufacturer(manufacturer)">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-6">
+            <div class="create-form-container" *ngIf="edit === false">
+              <form [formGroup]="createManufacturer" (ngSubmit)="submitManufacturer()">
+                <div class="form-group">
+                  <label>Name <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="manufacturerName"
+                    (blur)="checkManufacturer()">
+                  <small class="error-message"
+                    *ngIf="createManufacturer.controls['manufacturerName'].errors?.['required'] && createManufacturer.controls['manufacturerName'].touched">This
+                    field is Required</small>
+                  <small class="error-message"
+                    *ngIf="createManufacturer.controls['manufacturerName'].errors?.['notUnique']">Manufacturer
+                    name is already exist!</small>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-submit" [disabled]=" createManufacturer.invalid">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div class="create-form-container" *ngIf="edit ===  true">
+              <form [formGroup]="editManufacturerForm" (ngSubmit)="submitEditManufacturer()">
+                <div class="form-group">
+                  <label>Edit Name <span class="required">*</span></label>
+                  <input type="text" class="form-control" formControlName="manufacturerName"
+                    (blur)="checkEditManufacturer()">
+                  <small class="error-message"
+                    *ngIf="editManufacturerForm.controls['manufacturerName'].errors?.['required'] && editManufacturerForm.controls['manufacturerName'].touched">This
+                    field is Required</small>
+                  <small class="error-message"
+                    *ngIf="editManufacturerForm.controls['manufacturerName'].errors?.['notUnique']">Manufacturer
+                    name is already exist!</small>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-submit" [disabled]="editManufacturerForm.invalid">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal" (click)="pageRefresh()">Close</button>
+      </div>
+    </div>
+  </div>
+</div> -->

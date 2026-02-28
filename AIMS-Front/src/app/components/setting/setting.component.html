@@ -1,0 +1,36 @@
+<!-- <p>setting works!</p> -->
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <!-- <app-notification></app-notification> -->
+  <div class="row">
+    <!-- <div
+      *ngIf="activeList === 'IT Department' && (userType === '0' || staffType === '0') && userRights.ITDepartment.ITInventory.manage === 1"
+      class="col-lg-5 col-md-6 col-sm-12 single-column"> -->
+    <div
+      *ngIf="activeList === 'IT Department' && (userType === '0' || staffType === '0')">
+      <app-inventory-setting></app-inventory-setting>
+    </div>
+
+    <div
+      *ngIf="activeList === 'Electronic Components' && (userType === '0' || staffType === '0')">
+      <app-component-setting></app-component-setting>
+    </div>
+
+    <div
+      *ngIf="activeList === 'Testing Equipments' && (userType === '0' || staffType === '0')">
+      <app-testing-setting></app-testing-setting>
+    </div>
+
+    <div
+      *ngIf="activeList === 'Fixed Asset' && (userType === '0' || staffType === '0')">
+      <app-fixed-setting></app-fixed-setting>
+    </div>
+
+    <div
+      *ngIf="activeList === 'Consumable' && (userType === '0' || staffType === '0')">
+      <app-consumable-setting></app-consumable-setting>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

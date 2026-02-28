@@ -1,0 +1,404 @@
+@font-face {
+  font-family: 'litera-serial-regular';
+  src: url(./assets/font/Litera-Serial-Regular.ttf);
+}
+
+/* You can add global styles to this file, and also import other style files */
+:root {
+  box-sizing: border-box;
+
+  /* Font Color Variables */
+  /* --red: #ff0038; */
+  --red: #0d6efd;
+  --red-dark: rgb(156, 5, 38);
+  --black: #1f1f1f;
+  --white: #fff;
+  --green: #5cb85c;
+  --orange: #ffda6cac;
+  --dark-orange: #ff9900;
+  --brown: #a52a2a;
+  --gray: #f4f4f4;
+
+
+  /* Background Color Variables */
+  /* --bg-red: #ff0038; */
+  --bg-red: #0d6efd;
+  --bg-light-red1: #fe1b4c;
+  --bg-light-red2: #ff9cb2;
+  --bg-light-red3: #f1d1d8;
+  --bg-black: #1f1f1f;
+  --bg-white: #fff;
+  --bg-dark-gray1: #4a4b4b;
+  --bg-dark-gray2: #6f6f6f;
+  --bg-dark-gray3: #9b9b9b;
+  --bg-dark-gray4: #a9a9a9;
+  --bg-light-gray1: #a4a4a4;
+  --bg-light-gray2: #BABCBC;
+  --bg-light-gray3: #f4f4f4;
+  --bg-light-orange-dark: #f7bd00;
+  --bg-light-orange1: #fac72e;
+  --bg-light-orange2: #ffda6cac;
+  --bg-light-blue: #01A4EF;
+  --bg-light-blue2: #007bff;
+  --bg-green: #03e203;
+  --bg-blueviolet: #8a2be2;
+  --bg-brown: #a52a2a;
+}
+
+
+body {
+  background-color: var(--bg-light-gray3);
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.hero {
+  overflow: hidden;
+  flex: 1;
+  padding: 0 0.7rem;
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.info-container {
+  background: var(--bg-light-gray1);
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.primary-container {
+  background: var(--bg-light-gray3);
+  padding: 1rem 1rem 0 1rem;
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+/* .dashboard-container{ */
+.component-container {
+  width: 100%;
+  /* height: calc(100vh - 4.6rem - 9vh); */
+  height: calc(91vh - 12.5rem);
+  overflow-y: overlay;
+}
+
+.inventory-container {
+  width: 100%;
+  /* height: calc(100vh - 4.6rem - 9vh); */
+  height: calc(91vh - 12.5rem);
+  overflow-y: overlay;
+}
+
+.btn {
+  background: var(--bg-red);
+  color: var(--white);
+  border: none;
+  width: 14ch;
+}
+
+.btn:disabled {
+  background-color: var(--bg-black) !important;
+  color: var(--white);
+}
+
+
+.btn-action {
+  background: var(--bg-dark-gray1);
+  width: 5rem;
+  cursor: pointer;
+  color: var(--white);
+}
+
+.btn-action:hover {
+  background-color: var(--bg-light-orange-dark) !important;
+  z-index: 10;
+  color: var(--black) !important;
+  font-weight: 700;
+  transform: scale(1.05);
+  box-shadow: 0.2rem 0.2rem 0.5rem var(--bg-black);
+  /* border: 0.1rem solid var(--bg-dark-gray1); */
+}
+
+.btn:hover {
+  background: var(--bg-light-red1);
+  color: var(--white);
+}
+
+
+.statistics {
+  background-color: var(--bg-light-gray3);
+  padding: 1rem;
+  border-radius: 2rem;
+}
+
+hr {
+  margin: 0.2rem 0;
+}
+
+
+.error-message {
+  margin-top: 0.5rem;
+  color: var(--red-dark);
+}
+
+.success-message {
+  color: var(--green);
+}
+
+.test {
+  height: 200vh;
+  width: 75ch;
+  background-color: #fac72e;
+}
+
+.test2 {
+  height: 15vh;
+  width: 10ch;
+  background-color: #7c2efa;
+}
+
+/* form section design  */
+
+.form-control:focus {
+  border-color: var(--bg-light-orange1) !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--bg-light-orange2);
+}
+
+.form-check-input:focus {
+  border-color: var(--bg-light-orange1) !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--bg-light-orange2);
+}
+
+.form-check-input:checked {
+  border-color: var(--bg-light-orange1) !important;
+  background-color: var(--bg-light-orange1);
+
+}
+
+
+.form-select:focus {
+  border-color: var(--bg-light-orange1);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--bg-light-orange2);
+}
+
+
+.alert-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffecb5;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+.alert {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.alert.ng-trigger,
+.alert.ng-star-inserted {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* form section design  */
+
+.required {
+  color: var(--red);
+}
+
+.currency {
+  margin: 0;
+  padding: 0;
+}
+
+.currency-selector {
+  height: 100%;
+  border: none;
+  width: fit-content;
+}
+
+@media screen and (max-width: 1367px) {
+  * {
+    font-size: 13px;
+  }
+
+  /* .dashboard-container{ */
+  .component-container {
+    width: 100%;
+    height: calc(91vh - 16rem);
+    overflow-y: overlay;
+  }
+
+  .inventory-container {
+    width: 100%;
+    /* height: calc(100vh - 4.6rem - 11vh); */
+    height: calc(91vh - 13.5rem);
+    overflow-y: overlay;
+  }
+
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+/* scroll bar design   */
+
+.usertable-container::-webkit-scrollbar {
+  width: 0.2rem;
+  /* You can adjust this value to make it thinner or thicker */
+}
+
+.usertable-container::-webkit-scrollbar-thumb {
+  background-color: var(--bg-dark-gray2);
+  /* Color of the thumb */
+}
+
+.usertable-container::-webkit-scrollbar-track {
+  background-color: var(--bg-light-gray3);
+  /* Color of the track */
+}
+
+
+/* scroll bar design   */
+
+/* form container design */
+
+.form-group {
+  text-align: start;
+  margin-bottom: 0.4rem !important;
+}
+
+.form-control {
+  border: 1px solid var(--bg-dark-gray1);
+}
+
+.form-select {
+  border: 1px solid var(--bg-dark-gray1);
+}
+
+
+
+.check-grid {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+
+
+.form-check {
+  margin-left: 0.3rem;
+  margin-bottom: 0 !important;
+}
+
+
+.btn-submit {
+  margin-top: 0.2rem;
+  background: var(--bg-red);
+  color: var(--white);
+}
+
+.btn-submit:hover {
+  color: var(--white);
+}
+
+/* form contrainer design  */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.ng-autocomplete {
+  width: 100% !important;
+}
+
+.autocomplete-container.active {
+  border-color: var(--bg-light-orange1);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--bg-light-orange2);
+}
+
+
+.ng-select .ng-select-container {
+  border: 1px solid #4a4b4b;
+  border-radius: 0.5rem;
+}
+
+
+.ng-select.ng-select-filter .ng-select-container {
+  min-height: 2rem;
+  height: 2rem;
+}
+
+
+
+/* .ng-select.ng-select-single .ng-select-container {
+  height: 2rem;
+} */
+
+.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+  border-color: var(--bg-light-orange1) !important;
+  box-shadow: 0 0 0 0.25rem var(--bg-light-orange2) !important;
+}
+
+
+
+
+
+
+
+.font-size-pagination {
+  font-size: 1rem;
+}
+
+.table-scroll-details {
+  max-height: 200px;     /* Adjust height as needed */
+  overflow-y: auto;
+}

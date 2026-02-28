@@ -1,0 +1,1107 @@
+<div class="layout">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-header">
+      <h3>Electronic Components</h3>
+    </div>
+
+    <div class="sidebar-menu">
+
+      <div class="menu-item" [ngClass]="{active: activeSection==='category'}" (click)="activeSection='category'">
+        <span class="menu-icon">📂</span>
+        Category
+      </div>
+
+      <div class="menu-item" [ngClass]="{active: activeSection==='supplier'}" (click)="activeSection='supplier'">
+        <span class="menu-icon">🚚</span>
+        Supplier
+      </div>
+
+      <div class="menu-item" [ngClass]="{active: activeSection==='manufacturer'}"
+        (click)="activeSection='manufacturer'">
+        <span class="menu-icon">🏭</span>
+        Manufacturer
+      </div>
+
+      <div class="menu-item" [ngClass]="{active: activeSection==='project'}" (click)="activeSection='project'">
+        <span class="menu-icon">📁</span>
+        Project
+      </div>
+
+      <div class="menu-item" [ngClass]="{active: activeSection==='location'}" (click)="activeSection='location'">
+        <span class="menu-icon">📍</span>
+        Location
+      </div>
+
+      <!-- <div class="menu-item" [ngClass]="{active: activeSection==='company'}" (click)="activeSection='company'">
+        <span class="menu-icon">🏢</span>
+        Company
+      </div> -->
+
+    </div>
+
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <div class="card">
+
+      <!-- CARD HEADER -->
+      <div class="user-header shadow-sm mb-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+          <!-- LEFT SIDE -->
+          <div class="d-flex align-items-center">
+
+            <div class="header-icon-box mx-3">
+              <i class="bi" [ngClass]="getSectionIcon()"></i>
+            </div>
+
+            <div>
+              <h4 class="mb-0 fw-bold">
+                {{ activeSection | titlecase }} Management
+              </h4>
+              <small class="text-muted">
+                Manage {{ activeSection | titlecase }} records and settings
+              </small>
+            </div>
+
+          </div>
+
+          <!-- RIGHT SIDE BUTTONS -->
+          <div class="d-flex gap-2 mt-3 mt-md-0">
+
+            <!-- CREATE BUTTON -->
+            <button
+              class="btn btn-primary shadow-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#createModal"
+              [disabled]="userRights.hardwareDepartment.electronicDevice.manage === 0">
+              <i class="bi bi-plus-lg me-1"></i>
+              Create
+            </button>
+
+            <!-- EXPORT BUTTON -->
+            <button
+              class="btn btn-outline-primary shadow-sm" (click)="exportToExcel()"
+              [disabled]="userRights.hardwareDepartment.electronicDevice.manage === 0">
+              <i class="bi bi-download me-1"></i>
+              Export
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrapper">
+        <input type="text" [(ngModel)]="searchText" placeholder="Search..." />
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-scroll-wrapper">
+        <table class="custom-table">
+
+          <!-- ================= CATEGORY ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='category'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Abbreviation</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='category'">
+            <tr *ngFor="let category of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(category)"
+                    (change)="toggleRowSelection(category, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{category.name}}</td>
+              <td>{{category.abbreviation}}</td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editCategory(category)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- ================= SUPPLIER ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='supplier'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Contact</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Type</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='supplier'">
+            <tr *ngFor="let supplier of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(supplier)"
+                    (change)="toggleRowSelection(supplier, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{supplier.name}}</td>
+              <td>{{supplier.contact}}</td>
+              <td>{{supplier.email}}</td>
+              <td>{{supplier.address}}</td>
+              <td>{{supplier.type}}</td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editSupplier(supplier)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- ================= MANUFACTURER ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='manufacturer'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th>#</th>
+              <th>Name</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='manufacturer'">
+            <tr *ngFor="let manufacturer of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(manufacturer)"
+                    (change)="toggleRowSelection(manufacturer, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{manufacturer.name}}</td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editManufacturer(manufacturer)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- ================= Project ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='project'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th>#</th>
+              <th>Project Name</th>
+              <th>Client Name</th>
+              <th>Start Year</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='project'">
+            <tr *ngFor="let project of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(project)"
+                    (change)="toggleRowSelection(project, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{project.name}}</td>
+              <td>{{project.clientName}}</td>
+              <td>{{project.startYear}}</td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editProject(project)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- ================= LOCATION ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='location'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th>#</th>
+              <th>Room/Location</th>
+              <th>Cupboard ID</th>
+              <th>Box Names</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='location'">
+            <tr *ngFor="let shelf of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(shelf)"
+                    (change)="toggleRowSelection(shelf, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{shelf.shelfLocation}}</td>
+              <td>{{shelf.shelfName}}</td>
+              <td>
+                <span *ngFor="let box of shelf.boxNames; let last = last">
+                  {{box.name}}{{!last ? ', ' : ''}}
+                </span>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editShelfLocation(shelf)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- ================= COMPANY ================= -->
+          <thead class="custom-table-head" *ngIf="activeSection==='company'">
+            <tr>
+              <th class="text-center" style="width:40px;">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectAll"
+                    (change)="toggleSelectAll($event)">
+                </div>
+              </th>
+              <th scope="col" class="align-middle background-dark">#</th>
+              <th scope="col" class="align-middle background-dark">Company Name</th>
+              <th scope="col" class="align-middle background-dark">Abbreviation</th>
+              <th scope="col" class="align-middle background-dark">GST Number</th>
+              <th scope="col" class="align-middle background-dark">Address</th>
+              <th scope="col" colspan="2" class="align-middle background-dark">Action</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="activeSection==='company'">
+            <tr *ngFor="let company of filteredData; let i=index">
+              <td class="text-center">
+                <div class="form-check m-0 d-flex justify-content-center">
+                  <input class="form-check-input custom-checkbox"
+                    type="checkbox"
+                    [checked]="selectedRows.includes(company)"
+                    (change)="toggleRowSelection(company, $event)">
+                </div>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{company.companyName}}</td>
+              <td>{{company.abbreviation}}</td>
+              <td>{{company.GSTNumber}}</td>
+              <td>{{company.address}}</td>
+              <td class="text-center">
+                <button class="btn btn-submit" data-bs-toggle="modal" data-bs-target="#editModal"
+                  [ngClass]="{disabled: userRights.hardwareDepartment.electronicDevice.manage === 0}"
+                  (click)="editCompany(company)"> Edit </button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+        <div *ngIf="filteredData.length === 0">
+          <span colspan="10" class="text-center no-data-row">
+            No data found for "{{ searchText }}"
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- UNIVERSAL CREATE MODAL -->
+<div class="modal fade" id="createModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Create {{activeSection | titlecase}}
+        </h5>
+        <button type="button" class="btn-close" id="createModalCloseBtn" data-bs-dismiss="modal"> </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Manufacturer -->
+        <form *ngIf="activeSection==='manufacturer'" [formGroup]="createManufacturerForm"
+          (ngSubmit)="submitManufacturer()">
+
+          <label>Manufacturer Name <span class="required">*</span></label>
+          <input type="text" class="form-control" formControlName="name" (blur)="checkManufacturerName()">
+
+          <small
+            *ngIf="createManufacturerForm.controls['name'].errors?.['required'] && createManufacturerForm.controls['name'].touched"
+            class="error-message">This
+            field is required
+          </small>
+          <small
+            *ngIf="createManufacturerForm.controls['name']?.errors?.['maxlength'] && createManufacturerForm.controls['name']?.touched"
+            class="error-message">
+            Name cannot exceed 30 characters.
+          </small>
+          <small
+            *ngIf="createManufacturerForm.controls['name'].errors?.['notUnique'] && createManufacturerForm.controls['name'].touched"
+            class="error-message">
+            Name already exists !
+          </small>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="createManufacturerForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+        <!-- Category -->
+        <form *ngIf="activeSection==='category'" [formGroup]="createCategoryForm" (ngSubmit)="submitCategory()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Category Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkCategoryName()">
+
+              <small
+                *ngIf="createCategoryForm.controls['name'].errors?.['required'] && createCategoryForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="createCategoryForm.controls['name']?.errors?.['maxlength'] && createCategoryForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="createCategoryForm.controls['name'].errors?.['notUnique'] && createCategoryForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Abbreviation <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="abbreviation" (blur)="checkAbbreviatedName()">
+
+              <small
+                *ngIf="createCategoryForm.controls['abbreviation'].errors?.['required'] && createCategoryForm.controls['abbreviation'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="createCategoryForm.controls['abbreviation']?.errors?.['maxlength'] && createCategoryForm.controls['abbreviation']?.touched"
+                class="error-message">
+                Abbreviation Name cannot exceed 6 characters.
+              </small>
+              <small
+                *ngIf="createCategoryForm.controls['abbreviation'].touched && createCategoryForm.controls['abbreviation'].errors?.['notUnique']"
+                class="error-message">
+                Abbreviation Name already exists !
+              </small>
+            </div>
+
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-submit" [disabled]="createCategoryForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+        <!-- Supplier -->
+        <form *ngIf="activeSection==='supplier'" [formGroup]="createSupplierForm" (ngSubmit)="submitSupplier()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Supplier Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkSupplierName()">
+
+              <small
+                *ngIf="createSupplierForm.controls['name'].errors?.['required'] && createSupplierForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="createSupplierForm.controls['name']?.errors?.['maxlength'] && createSupplierForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="createSupplierForm.controls['name'].errors?.['notUnique'] && createSupplierForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Contact </label>
+              <input type="text" class="form-control" formControlName="contact">
+
+              <div
+                *ngIf="createSupplierForm.controls['contact'].touched && (createSupplierForm.controls['contact'].invalid && createSupplierForm.controls['contact'].errors?.['pattern'])"
+                class="error-message">
+                Please Enter a valid phone number
+              </div>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Email</label>
+              <input type="text" class="form-control" formControlName="email">
+
+              <div *ngIf="createSupplierForm.controls['email'].invalid && createSupplierForm.controls['email'].touched"
+                class="error-message">
+                Please enter a valid email address.
+              </div>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Address</label>
+              <input type="text" class="form-control" formControlName="address">
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Type <span class="required">*</span> </label>
+              <select class="form-select" formControlName="type">
+                <option value="Local">Local</option>
+                <option value="Imported">Imported</option>
+              </select>
+
+              <small
+                *ngIf="createSupplierForm.controls['type'].errors?.['required'] && createSupplierForm.controls['type'].touched"
+                class="error-message">
+                This field is required
+              </small>
+            </div>
+
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-submit" [disabled]="createSupplierForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+        <!-- Project -->
+        <form *ngIf="activeSection==='project'" [formGroup]="createProjectForm" (ngSubmit)="submitProject()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Project Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkProjectName()">
+
+              <small
+                *ngIf="createProjectForm.controls['name'].errors?.['required'] && createProjectForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="createProjectForm.controls['name']?.errors?.['maxlength'] && createProjectForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="createProjectForm.controls['name'].errors?.['notUnique'] && createProjectForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label> Client Name </label>
+              <input type="text" class="form-control" formControlName="clientName">
+
+              <!-- <small
+                *ngIf="createProjectForm.controls['clientName'].errors?.['required'] && createProjectForm.controls['clientName'].touched" class="error-message">This
+                field is required
+              </small>
+              <small
+                *ngIf="createProjectForm.controls['clientName']?.errors?.['maxlength'] && createProjectForm.controls['clientName']?.touched"
+                class="error-message">
+                Client Name cannot exceed 30 characters.
+              </small> -->
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Start Year</label>
+              <input type="month" placeholder="MM/YYYY" class="form-control" formControlName="startYear">
+
+              <!-- <small
+                *ngIf="createProjectForm.controls['startYear'].errors?.['required'] && createProjectForm.controls['startYear'].touched" class="error-message">
+                This field is required
+              </small> -->
+            </div>
+
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-submit" [disabled]="createProjectForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+        <!-- Location -->
+        <form *ngIf="activeSection==='location'" [formGroup]="createShelfForm" (ngSubmit)="submitShelf()">
+
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label> Room/Location </label>
+              <input type="text" class="form-control" formControlName="shelfLocation">
+
+              <small
+                *ngIf="createShelfForm.controls['shelfLocation']?.errors?.['maxlength'] && createShelfForm.controls['shelfLocation']?.touched" class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Cupboard ID <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkShelfName()">
+
+              <small
+                *ngIf="createShelfForm.controls['name'].errors?.['required'] && createShelfForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="createShelfForm.controls['name']?.errors?.['maxlength'] && createShelfForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="createShelfForm.controls['name'].errors?.['notUnique'] && createShelfForm.controls['name'].touched"
+                class="error-message">
+                Shelf Name already exists !
+              </small>
+            </div>
+
+            <div class="col-12">
+              <label>Box Names <span class="required">*</span></label>
+              <div class="input-group mb-1">
+                <input type="text" class="form-control" formControlName="boxName">
+                <button class="btn btn-add" type="button" (click)="addBoxValue()">Add</button>
+              </div>
+              <small
+                *ngIf="createShelfForm.controls['boxName']?.errors?.['duplicate'] && createShelfForm.controls['boxName']?.touched"
+                class="error-message">
+                Box name already added
+              </small>
+              <div class="error-message"
+                *ngIf="createShelfForm.controls['boxName'].touched && this.boxArray.length === 0">
+                <small>Please enter atleast one box name</small>
+              </div>
+            </div>
+            <ul class="wrapper">
+              <li *ngFor="let box of boxArray; let i = index" class="list"><img src="../../../assets/icons/cross.svg"
+                  alt="cross icon" class="cross-icon" (click)="removeBoxValue(i)"> {{box.name}}</li>
+            </ul>
+
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-submit" [disabled]="createShelfForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+        <!-- Company -->
+        <form *ngIf="activeSection==='company'" [formGroup]="createCompanyForm" (ngSubmit)="submitCompany()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Company Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="companyName">
+
+              <small class="error-message"
+                *ngIf="createCompanyForm.controls['companyName'].errors?.['required'] && createCompanyForm.controls['companyName'].touched">This
+                field is Required</small>
+              <small class="error-message"
+                *ngIf="createCompanyForm.controls['companyName'].errors?.['notUnique']">Company name is already
+                exist!</small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Abbreviation <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="abbreviation">
+
+              <small class="error-message"
+                *ngIf="createCompanyForm.controls['abbreviation'].errors?.['required'] && createCompanyForm.controls['abbreviation'].touched">This
+                field is Required</small>
+              <small class="error-message"
+                *ngIf="createCompanyForm.controls['abbreviation'].errors?.['notUnique']">Company Abbreviation is already
+                exist!</small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>GST Number</label>
+              <input type="text" class="form-control" formControlName="GSTNumber">
+
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['GSTNumber'].errors?.['required'] && createCompanyForm.controls['GSTNumber'].touched">This field is Required</small> -->
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['GSTNumber'].errors?.['notUnique']">Company name is already exist!</small> -->
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Address</label>
+              <input type="text" class="form-control" formControlName="address">
+
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['address'].errors?.['required'] && createCompanyForm.controls['address'].touched">This field is Required</small> -->
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['address'].errors?.['notUnique']">Company name is already exist!</small> -->
+            </div>
+
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-submit" [disabled]="createCompanyForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIVERSAL EDIT MODAL -->
+<div class="modal modal-sm fade" id="editModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Edit {{activeSection | titlecase}}
+        </h5>
+        <button type="button" class="btn-close" id="editModalCloseBtn" data-bs-dismiss="modal"> </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Manufacturer -->
+        <form *ngIf="activeSection==='manufacturer'" [formGroup]="editManufacturerForm"
+          (ngSubmit)="submitEditManufacturer()">
+
+          <label>Manufacturer Name <span class="required">*</span></label>
+          <input type="text" class="form-control" formControlName="name" (blur)="checkEditManufacturerName()">
+
+          <small class="error-message"
+            *ngIf="editManufacturerForm.controls['name'].errors?.['required'] && editManufacturerForm.controls['name'].touched">
+            This field is required
+          </small>
+          <small
+            *ngIf="editManufacturerForm.controls['name']?.errors?.['maxlength'] && editManufacturerForm.controls['name']?.touched"
+            class="error-message">
+            Name cannot exceed 30 characters.
+          </small>
+          <small class="error-message"
+            *ngIf="editManufacturerForm.controls['name'].errors?.['notUnique'] && editManufacturerForm.controls['name'].touched">
+            Name already exists!
+          </small>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editManufacturerForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+        <!-- Category -->
+        <form *ngIf="activeSection==='category'" [formGroup]="editCategoryForm" (ngSubmit)="submitEditCategory()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Category Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkEditCategoryName()">
+
+              <small
+                *ngIf="editCategoryForm.controls['name'].errors?.['required'] && editCategoryForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="editCategoryForm.controls['name']?.errors?.['maxlength'] && editCategoryForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="editCategoryForm.controls['name'].errors?.['notUnique'] && editCategoryForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Abbreviation <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="abbreviation"
+                (blur)="checkEditAbbreviatedName()">
+
+              <small
+                *ngIf="editCategoryForm.controls['abbreviation'].errors?.['required'] && editCategoryForm.controls['abbreviation'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="editCategoryForm.controls['abbreviation']?.errors?.['maxlength'] && editCategoryForm.controls['abbreviation']?.touched"
+                class="error-message">
+                Abbreviation Name cannot exceed 6 characters.
+              </small>
+              <small
+                *ngIf="editCategoryForm.controls['abbreviation'].touched && editCategoryForm.controls['abbreviation'].errors?.['notUnique']"
+                class="error-message">
+                Abbreviation Name already exists !
+              </small>
+            </div>
+
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editCategoryForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+        <!-- Supplier -->
+        <form *ngIf="activeSection==='supplier'" [formGroup]="editSupplierForm" (ngSubmit)="submitEditSupplier()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Supplier Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkEditSupplierName()">
+
+              <small
+                *ngIf="editSupplierForm.controls['name'].errors?.['required'] && editSupplierForm.controls['name'].touched"
+                class="error-message">
+                This field is required
+              </small>
+              <small
+                *ngIf="editSupplierForm.controls['name']?.errors?.['maxlength'] && editSupplierForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="editSupplierForm.controls['name'].errors?.['notUnique'] && editSupplierForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Contact</label>
+              <input type="text" class="form-control" formControlName="contact">
+
+              <div
+                *ngIf="editSupplierForm.controls['contact'].touched && (editSupplierForm.controls['contact'].invalid && editSupplierForm.controls['contact'].errors?.['pattern'])"
+                class="error-message">
+                Please Enter a valid phone number
+              </div>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Email</label>
+              <input type="text" class="form-control" formControlName="email">
+
+              <div *ngIf="editSupplierForm.controls['email'].invalid && editSupplierForm.controls['email'].touched"
+                class="error-message">
+                Please enter a valid email address.
+              </div>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Address</label>
+              <input type="text" class="form-control" formControlName="address">
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Type <span class="required">*</span> </label>
+              <select class="form-select" formControlName="type">
+                <option value="Local">Local</option>
+                <option value="Imported">Imported</option>
+              </select>
+
+              <small
+                *ngIf="editSupplierForm.controls['type'].errors?.['required'] && editSupplierForm.controls['type'].touched"
+                class="error-message">
+                This field is required
+              </small>
+            </div>
+
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editSupplierForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+        <!-- Project -->
+        <form *ngIf="activeSection==='project'" [formGroup]="editProjectForm" (ngSubmit)="submitEditProject()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Project Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkEditProjectName()">
+
+              <small
+                *ngIf="editProjectForm.controls['name'].errors?.['required'] && editProjectForm.controls['name'].touched"
+                class="error-message">This
+                field is required
+              </small>
+              <small
+                *ngIf="editProjectForm.controls['name']?.errors?.['maxlength'] && editProjectForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="editProjectForm.controls['name'].errors?.['notUnique'] && editProjectForm.controls['name'].touched"
+                class="error-message">
+                Name already exists !
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Client Name </label>
+              <input type="text" class="form-control" formControlName="clientName">
+
+              <!-- <small
+                *ngIf="editProjectForm.controls['clientName'].errors?.['required'] && editProjectForm.controls['clientName'].touched"
+                class="error-message">This
+                field is required
+              </small>
+              <small
+                *ngIf="editProjectForm.controls['clientName']?.errors?.['maxlength'] && editProjectForm.controls['clientName']?.touched"
+                class="error-message">
+                Client Name cannot exceed 30 characters.
+              </small> -->
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Start Year  </label>
+              <input type="month" placeholder="MM/YYYY" class="form-control" formControlName="startYear">
+
+              <!-- <small
+                *ngIf="editProjectForm.controls['startYear'].errors?.['required'] && editProjectForm.controls['startYear'].touched"
+                class="error-message">This
+                field is required
+              </small> -->
+            </div>
+
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editProjectForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+        <!-- Location -->
+        <form *ngIf="activeSection==='location'" [formGroup]="editShelfForm" (ngSubmit)="submitEditShelfLocation()">
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label>Room/Location </label>
+              <input type="text" class="form-control" formControlName="shelfLocation">
+              <small
+                *ngIf="editShelfForm.controls['shelfLocation']?.errors?.['maxlength'] && editShelfForm.controls['shelfLocation']?.touched"
+                class="error-message">
+                Location cannot exceed 30 characters.
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Cupboard ID<span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="name" (blur)="checkEditShelfName()">
+
+              <small
+                *ngIf="editShelfForm.controls['name'].errors?.['required'] && editShelfForm.controls['name'].touched"
+                class="error-message">This
+                field is required
+              </small>
+              <small
+                *ngIf="editShelfForm.controls['name']?.errors?.['maxlength'] && editShelfForm.controls['name']?.touched"
+                class="error-message">
+                Name cannot exceed 30 characters.
+              </small>
+              <small
+                *ngIf="editShelfForm.controls['name'].errors?.['notUnique'] && editShelfForm.controls['name'].touched"
+                class="error-message">
+                Shelf Name already exists !
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label> Box Names <span class="required">*</span></label>
+              <div class="input-group mb-1">
+                <input type="text" class="form-control" formControlName="boxName">
+                <button class="btn btn-add" type="button" (click)="addEditBoxValue()">Add</button>
+              </div>
+              <small
+                *ngIf="editShelfForm.controls['boxName']?.errors?.['duplicate'] && editShelfForm.controls['boxName']?.touched"
+                class="error-message">
+                Box name already added
+              </small>
+              <div class="error-message"
+                *ngIf="editShelfForm.controls['boxName'].touched && this.boxEditArray.length === 0">
+                <small>Please enter atleast one box name</small>
+              </div>
+            </div>
+
+            <ul class="wrapper">
+              <li *ngFor="let editBox of boxEditArray; let i = index" class="list"><img
+                  src="../../../assets/icons/cross.svg" alt="cross icon" class="cross-icon"
+                  (click)="removeEditBoxValue(i)"> {{editBox.name}}</li>
+            </ul>
+
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editShelfForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+        <!-- Company -->
+        <form *ngIf="activeSection==='company'" [formGroup]="editCompanyForm" (ngSubmit)="submitEditCompany()">
+
+          <div class="row">
+
+            <div class="col-6 mb-3">
+              <label>Company Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="companyName">
+
+              <small class="error-message"
+                *ngIf="editCompanyForm.controls['companyName'].errors?.['required'] && editCompanyForm.controls['companyName'].touched">
+                This field is Required
+              </small>
+              <small class="error-message" *ngIf="editCompanyForm.controls['companyName'].errors?.['notUnique']">
+                Company name is already exist!
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Abbreviation <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="abbreviation">
+
+              <small class="error-message"
+                *ngIf="editCompanyForm.controls['abbreviation'].errors?.['required'] && editCompanyForm.controls['abbreviation'].touched">
+                This field is Required
+              </small>
+              <small class="error-message" *ngIf="editCompanyForm.controls['abbreviation'].errors?.['notUnique']">
+                Company Abbreviation is already exist!
+              </small>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>GST Number</label>
+              <input type="text" class="form-control" formControlName="GSTNumber">
+
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['GSTNumber'].errors?.['required'] && createCompanyForm.controls['GSTNumber'].touched">This field is Required</small> -->
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['GSTNumber'].errors?.['notUnique']">Company name is already exist!</small> -->
+            </div>
+
+            <div class="col-6 mb-3">
+              <label>Address</label>
+              <input type="text" class="form-control" formControlName="address">
+
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['address'].errors?.['required'] && createCompanyForm.controls['address'].touched">This field is Required</small> -->
+              <!-- <small class="error-message" *ngIf="createCompanyForm.controls['address'].errors?.['notUnique']">Company name is already exist!</small> -->
+            </div>
+
+          </div>
+
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-submit" [disabled]="editCompanyForm.invalid">
+              Update
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

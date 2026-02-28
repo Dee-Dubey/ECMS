@@ -1,0 +1,202 @@
+.hero {
+  display: flex;
+  justify-content: center;
+}
+
+.scrolling-text-container {
+  display: flex;
+  align-items: center;
+  margin: 0.3rem;
+  background: var(--bg-white);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+}
+
+.notification-update {
+  padding: 3px 7px;
+  background-color: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+.btn-outline-secondary {
+  width: 30ch;
+  background-color: var(--bg-dark-gray2);
+  border: 0.1rem solid var(--bg-light-gray3);
+  padding: 0.5rem 1rem;
+}
+
+.btn-check:checked+.btn,
+.btn.active {
+  width: 30ch;
+  background-color: var(--bg-red);
+}
+
+.btn-check:checked+.btn:hover {
+  width: 30ch;
+  background-color: #0d6efd;
+}
+
+.btn-check+.btn:hover {
+  background: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+.create-btn {
+  width: 30ch;
+  border: 1px solid var(--bg-dark-gray1);
+}
+
+
+.csv-preview-table {
+  table-layout: fixed;
+  min-width: 3000px; /* important */
+}
+
+.csv-preview-table th,
+.csv-preview-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* modal design  */
+.modal-header {
+  background-color: var(--bg-dark-gray2);
+  padding: 0.5rem 1.5rem;
+}
+
+.modal-title {
+  color: var(--white);
+}
+
+.btn-close {
+  color: var(--white);
+  opacity: 1;
+}
+
+.modal-body {
+  background: var(--bg-light-gray3);
+  padding: 1rem 1.5rem;
+}
+
+.form-container {
+  margin: 1rem 0;
+}
+
+.form-group {
+  margin: 0;
+}
+
+
+.error-message {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.col-lg-8 input[type="radio"] {
+  margin-right: 10px;
+  /* Adjust as needed for the space between radio buttons */
+}
+
+.col-lg-8 label {
+  margin-right: 30px;
+  /* Adjust as needed for the space between label and radio button */
+}
+
+.create-component {
+  text-align: center;
+  /* Optional: Centers the button within the container */
+}
+
+.create-component .btn {
+  margin-left: auto;
+  display: inline-block;
+  width: 100%;
+}
+
+
+.create-inventory {
+  text-align: center;
+}
+
+.inven-btn {
+  margin-left: auto;
+  display: inline-block;
+  width: 100%;
+}
+
+.background-dark {
+  background-color: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+.repeatedComponent-container {
+  position: relative;
+  overflow-x: overlay;
+  overflow-y: overlay;
+  height: 70vh;
+}
+
+.repeatedComponent-container::-webkit-scrollbar {
+  width: 0.2rem;
+  height: 0.2rem;
+  /* You can adjust this value to make it thinner or thicker */
+}
+
+.repeatedComponent-container::-webkit-scrollbar-thumb {
+  background-color: var(--bg-dark-gray2);
+  /* Color of the thumb */
+}
+
+.repeatedComponent-container::-webkit-scrollbar-track {
+  background-color: var(--bg-light-gray3);
+  /* Color of the track */
+}
+
+thead {
+  position: sticky;
+  top: 0px;
+}
+
+.alert-text {
+  font-size: 1.5rem;
+  color: var(--red);
+  text-shadow: 0 0 0.5px #878787;
+}
+
+.bg-repeat {
+  background: #ff003861;
+}
+
+
+.notification-box {
+  background: var(--bg-light-gray2);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  padding: 0.2rem;
+  margin: 0 1.5rem;
+}
+
+.stockName {
+  padding: 3px 7px;
+}
+
+.green {
+  background: green;
+  color: #fff;
+}
+
+.orange {
+  background: orange;
+  color: #fff;
+}
+
+.red {
+  background: red;
+  color: #fff;
+}
+
+.down-arrow {
+  width: 1.1rem;
+  filter: invert(1);
+  margin-bottom: 0.2rem;
+}

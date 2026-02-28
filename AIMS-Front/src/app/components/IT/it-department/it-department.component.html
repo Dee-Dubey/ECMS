@@ -1,0 +1,379 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <div class="row hero">
+    <!-- <app-notification></app-notification> -->
+
+    <div class="col-lg-12 primary-container">
+      <div class="row">
+        <div class="col-lg-7 mb-2">
+        </div>
+        <div class="col-lg-5 text-end">
+          <div class="create-inventory row" *ngIf="employeeRights === undefined || employeeRights === '0'">
+            <div class="col-md-4" *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+              <button type="button" class="btn inven-btn" data-bs-toggle="modal" data-bs-target="#exportCsvModal">Export
+                CSV file</button>
+            </div>
+            <div class="col-md-4" *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+              <button type="button" class="btn inven-btn" data-bs-toggle="modal" data-bs-target="#uploadCsvModal">Upload
+                CSV file</button>
+            </div>
+            <div class="col-md-4" *ngIf="userRights.ITDepartment.ITInventory.manage === 1">
+              <button type="button" class="btn inven-btn" data-bs-toggle="modal" data-bs-target="#exampleModal2">Create
+                IT and Other</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 2 / IT-Inventory -->
+      <div class="modal modal-lg fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Create IT and Other Inventory</h1>
+              <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearInventoryCsvForm()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-container">
+                <form [formGroup]="createInventory" class="row g-3" (ngSubmit)="submitCreateInventory()">
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Category Name <span class="required">*</span></label>
+                    <ng-select [items]="categories" bindLabel="name" bindValue="_id" (change)="changeCategory()"
+                      formControlName="categoryName" [searchable]="true" placeholder="Select Category">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['categoryName'].errors?.['required'] && createInventory.controls['categoryName'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Sub-category Name <span class="required">*</span></label>
+                    <ng-select [items]="subCategoryList" bindLabel="subCategoryName" bindValue="_id"
+                      (change)="changeSubCategory()" formControlName="subCategoryName" [searchable]="true"
+                      placeholder="Select Category">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['subCategoryName'].errors?.['required'] && createInventory.controls['subCategoryName'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Supplier <span class="required">*</span></label>
+                    <ng-select [items]="supplierList" bindLabel="name" bindValue="_id"
+                      formControlName="supplier" [searchable]="true" placeholder="Select Supplier">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['supplier'].errors?.['required'] && createInventory.controls['supplier'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-8 form-group" *ngIf="inputFieldsObject?.description === true">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" formControlName="description">
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Status <span class="required">*</span></label>
+                    <select class="form-select" formControlName="status">
+                      <option value="0">Working</option>
+                      <option value="1">Dead</option>
+                      <option value="2">Repairable</option>
+                      <option value="3">Scrap</option>
+                      <option value="4">Under Repair</option>
+                      <option value="5">Under Repair AMC</option>
+                      <option value="6">Under Maintenance</option>
+                      <option value="7">Under Maintenance AMC</option>
+
+                    </select>
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Amount <span class="required">*</span></label>
+                    <input type="number" class="form-control" formControlName="amount" min="1">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['amount'].errors?.['required'] && createInventory.controls['amount'].touched">
+                        This Field is required
+                      </small>
+                      <small *ngIf="createInventory.controls['amount'].errors?.['min']">
+                        Amount must be greater than 0.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Manufacturer<span class="required">*</span></label>
+                    <ng-select [items]="manufacturerList" bindLabel="name" bindValue="_id"
+                      formControlName="manufacturer" [searchable]="true" placeholder="Select Manufacturer">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['manufacturer'].errors?.['required'] && createInventory.controls['manufacturer'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" formControlName="quantity" min="1">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createInventory.controls['quantity'].errors?.['required'] && createInventory.controls['quantity'].touched">
+                        This field is required.
+                      </small>
+                      <small *ngIf="createInventory.controls['quantity'].errors?.['min']">
+                        Quantity must be greater than 0.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.purchaseDate === true">
+                    <label class="form-label">Purchase Date</label>
+                    <input type="date" class="form-control" formControlName="purchaseDate"
+                      onchange="javascript:console.log(this.value)">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.warrantyDate === true">
+                    <label class="form-label">Warranty Date</label>
+                    <input type="date" class="form-control" formControlName="warrantyDate">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.modelNo === true">
+                    <label class="form-label">Model No.</label>
+                    <input type="text" class="form-control" formControlName="modelNo">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.inputVoltage === true">
+                    <label class="form-label">Input Voltage</label>
+                    <input type="text" class="form-control" formControlName="inputVoltage">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.key === true">
+                    <label class="form-label">Key</label>
+                    <input type="text" class="form-control" formControlName="key">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.subscriptionStart === true">
+                    <label class="form-label">Subscription Start</label>
+                    <input type="date" class="form-control" formControlName="subscriptionStart">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.subscriptionEnd === true">
+                    <label class="form-label">Subscription End</label>
+                    <input type="date" class="form-control" formControlName="subscriptionEnd">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.cpu === true">
+                    <label class="form-label">CPU</label>
+                    <input type="text" class="form-control" formControlName="cpu">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.ram === true">
+                    <label class="form-label">RAM</label>
+                    <input type="text" class="form-control" formControlName="ram">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.drive === true">
+                    <label class="form-label">HDD/SSD</label>
+                    <input type="text" class="form-control" formControlName="drive">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.systemConfig === true">
+                    <label class="form-label">System Configuration</label>
+                    <input type="text" class="form-control" formControlName="systemConfig">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.licenseInEff === true">
+                    <label class="form-label">License in Effect</label>
+                    <input type="text" class="form-control" formControlName="licenseInEff">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.msEffect === true">
+                    <label class="form-label">MS 365 in Effect</label>
+                    <input type="text" class="form-control" formConteolName="msInEff">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.ipAddress === true">
+                    <label class="form-label">IP Address</label>
+                    <input type="text" class="form-control" formControlName="ipAddress">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.internetAccess === true">
+                    <label class="form-label">Internet Access</label>
+                    <input type="text" class="form-control" formControlName="internetAccess">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.softwareInstalled === true">
+                    <label class="form-label">Software Installed</label>
+                    <input type="text" class="form-control" formControlName="softwareInstalled">
+                  </div>
+
+                  <div class="col-md-4 form-group" *ngIf="inputFieldsObject?.lastUse === true">
+                    <label class="form-label">Last Use</label>
+                    <input type="text" class="form-control" formControlName="lastUse">
+                  </div>
+
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Serial Number</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="serialNumberInput">
+                      <button class="btn btn-add" type="button" (click)="addSerialNumber()">Add</button>
+                    </div>
+                  </div>
+                  <div class="wrapper">
+                      <div *ngFor="let serial of serialNumberArray; let i = index" class="list"><img
+                      src="../../../assets/icons/cross.svg" alt="cross icon" class="cross-icon"
+                      (click)="removeSerial(i)"> {{serial}}</div>
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn" type="submit" [disabled]="createInventory.invalid">Submit </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload CSV For IT Inventory -->
+      <div class="modal fade" id="uploadCsvModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add IT-Inventory By CSV File</h1>
+              <button type="button" id="closeModalUpload" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearInventoryCsvForm()"></button>
+            </div>
+            <div class="modal-body bg-no-opacity">
+              <div class="row">
+                <div class="col mb-3 form-group">
+                  <label class="form-label"><b>Select A File</b></label>
+                  <input #uploadInput type="file" class="form-control" name="inventoryCsvFile" accept=".csv"
+                    (change)="selectInventoryCSVFile($event)">
+                </div>
+              </div>
+              <button type="button" class="btn btn-submit" (click)="submitInventoryCsv()">Upload</button>
+
+              <div class="row">
+                <p class="mt-2">Please make sure that the file has the following columns in it and they follow the
+                  naming convention as defined:</p>
+                <ul class="ms-2 me-2">
+                  <li><b>categoryName</b>: Category Name is compulsory</li>
+                  <li><b>subCategoryName</b>: SubCategory Name is compulsory</li>
+                  <li><b>manufacturer</b>: Manufacturer is compulsory</li>
+                  <li><b>supplier</b>: Supplier is compulsory</li>
+                  <li><b>amount</b>: Amount is compulsory</li>
+                  <li><b>quantity</b>: Quantity is compulsory</li>
+                  <li><b>modelNo</b>: Model No. is not compulsory </li>
+                  <li><b>serialNo</b>: Serial No. is not compulsory</li>
+                  <li><b>purchaseDate</b>: Purchase Date is not compulsory, and the date format should be
+                    <b>YYYY-MM-DD</b>
+                  </li>
+                  <li><b>warrantyDate</b>: Warranty Date is not compulsory, and the date format should be
+                    <b>YYYY-MM-DD</b>
+                  </li>
+                  <li><b>inputVoltage</b>: Input Voltage is not compulsory</li>
+                  <li><b>key</b>: Key is not compulsory</li>
+                  <li><b>subscriptionStart</b>: SubscriptionStart Date is not compulsory, and the date format should
+                    be <b>YYYY-MM-DD</b></li>
+                  <li><b>subscriptionEnd</b>: SubscriptionEnd Date is not compulsory, and the date format should be
+                    <b>YYYY-MM-DD</b>
+                  </li>
+                  <li><b>cpu</b>: CPU is not compulsory</li>
+                  <li><b>ram</b>: RAM is not compulsory</li>
+                  <li><b>drive</b>: Drive is not compulsory</li>
+                  <li><b>systemConfig</b>: System Config is not compulsory</li>
+                  <li><b>licenseInEff</b>: License in Effect is not compulsory</li>
+                  <li><b>msEffect</b>: MS Effect is not compulsory</li>
+                  <li><b>ipAddress</b>: IP Address is not compulsory</li>
+                  <li><b>internetAccess</b>: Internet Access is not compulsory</li>
+                  <li><b>softwareInstalled</b>: Software Installed is not compulsory</li>
+                  <li><b>lastUse</b>: Last Use is not compulsory</li>
+                  <li><b>description</b>: Description is not compulsory</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export CSV For IT Inventory -->
+      <div class="modal fade" id="exportCsvModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add IT-Inventory By CSV File</h1>
+              <button type="button" id="closeModalUpload" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearInventoryCsvForm()"></button>
+            </div>
+            <div class="modal-body bg-no-opacity">
+              <div class="row">
+                <div class="col mb-3 form-group">
+                  <label class="form-label"><b>Select Category</b></label>
+                  <ng-select class="ng-select-filter" [items]="categories" bindLabel="name" bindValue="_id"
+                    (change)="populateSubcategoryByChangingCategory()" [(ngModel)]="categoryName" placeholder="All"
+                    [searchable]="true">
+                  </ng-select>
+                </div>
+                <div class="col mb-3 form-group">
+                  <label class="form-label"><b>Select Sub-category</b></label>
+                  <ng-select class="ng-select-filter" [items]="subCategoryArray" bindLabel="subCategoryName"
+                    bindValue="_id" [(ngModel)]="subCategoryName" placeholder="All" [searchable]="true">
+                  </ng-select>
+                </div>
+              </div>
+              <button type="button" class="btn btn-submit" (click)="exportITAssetCSVFile()">Export</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <app-inventory-dash style="height: 100%;"></app-inventory-dash>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!--Repeated Modal Button -->
+  <button type="button" class="btn btn-primary" id="successModalButton" hidden data-bs-toggle="modal"
+    data-bs-target="#successModal">
+    Launch demo modal
+  </button>
+
+  <div class="modal-backdrop fade" [ngClass]="{'show': isModalOpen}" *ngIf="isModalOpen"></div>
+
+  <div [ngClass]="{'modal fade': true, 'show': isModalOpen}" [attr.aria-hidden]="!isModalOpen"
+    [style.display]="isModalOpen ? 'block' : 'none'" id="CSVUploadWaitModal" tabindex="-1"
+    aria-labelledby="CSVUploadWaitModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          Please wait...
+          <button type="button" class="btn btn-secondary" id="closeWaitModal" hidden>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

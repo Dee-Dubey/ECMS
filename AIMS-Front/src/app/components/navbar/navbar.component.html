@@ -1,0 +1,233 @@
+<!-- <p>navbar works!</p> -->
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid">
+    <!-- <div class="navbar-brand">
+      <img src="../../../assets/logo/logo.png" alt="">
+    </div> -->
+
+    <div class="navbar-brand">
+      <div class="logo-icon">
+        <span></span>
+      </div>
+      <div class="logo-text">
+        <h2>ECMS</h2>
+        <!-- <p>Electronic Components Management</p> -->
+      </div>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="userDetails?.staffType === '0'">
+
+        <!-- Navbar main list (dropdown) -->
+        <li *ngIf="hasDepartmentAccess || userDetails?.userType === '0'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ activeItem.active || 'Select Department' }}
+          </a>
+
+          <ul class="dropdown-menu" data-bs-auto-close="outside">
+
+            <!-- IT-Department -->
+            <!-- <li>
+              <a class="nav-link"
+                *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && userRights?.ITDepartment?.ITInventory?.view === 1"
+                (click)="selectDepartment('IT Department')">
+                IT Department
+              </a>
+            </li> -->
+
+            <!-- Hard-Department -->
+            <li>
+              <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#hardwareCollapse"
+                *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') &&
+                (userRights.hardwareDepartment?.electronicDevice?.view === 1 || userRights?.hardwareDepartment?.testingEquipment?.view === 1 )" role="button" aria-expanded="false"
+                aria-controls="hardwareCollapse" (click)="$event.stopPropagation()">
+                Hardware Department
+              </a>
+              <div class="nav-link collapse ps-3" id="hardwareCollapse">
+                <div class="card card-body border-0 p-2 collapse-color">
+                  <a class="nav-link dropdown-item"
+                    *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && userRights?.hardwareDepartment?.electronicDevice?.view === 1"
+                    (click)="selectDepartment('Electronic Components')">
+                    Electronic Components
+                  </a>
+                  <!-- <a class="nav-link dropdown-item"
+                    *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && userRights?.hardwareDepartment?.testingEquipment?.view === 1"
+                    (click)="selectDepartment('Testing Equipments')">
+                    Testing Equipments
+                  </a> -->
+                </div>
+              </div>
+            </li>
+
+            <!-- Admin-Department -->
+            <!-- <li>
+              <a class="nav-link dropdown-item dropdown-toggle" data-bs-toggle="collapse" href="#adminCollapse"
+                *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && (userRights?.adminDepartment?.consumableAsset?.view === 1 || userRights?.adminDepartment?.fixedAsset?.view === 1)"
+                role="button" aria-expanded="false" aria-controls="adminCollapse" (click)="$event.stopPropagation()">
+                Admin Department
+              </a>
+              <div class="collapse ps-3" id="adminCollapse">
+                <div class="card card-body border-0 p-2 collapse-color">
+                  <a class="nav-link"
+                    *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && userRights?.adminDepartment?.fixedAsset?.view === 1"
+                    (click)="selectDepartment('Fixed Asset')">Fixed
+                    Asset</a>
+                  <a class="nav-link"
+                    *ngIf="(userDetails?.userType === '0' || userDetails?.staffType === '0') && userRights?.adminDepartment?.consumableAsset?.view === 1"
+                    (click)="selectDepartment('Consumable')">Consumable</a>
+                </div>
+              </div>
+            </li> -->
+          </ul>
+        </li>
+
+        <!-- Navbar sub list (dropdown) -->
+        <li class="nav-item dropdown" *ngIf="(userDetails?.staffType === '0' || userDetails?.userType === '0')">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ subActiveItem || 'Select Option' }}
+          </a>
+
+          <ul class="dropdown-menu" data-bs-auto-close="outside">
+            <ng-container *ngIf="activeItem.active">
+
+              <!-- IT -->
+              <!-- <ng-container *ngIf="activeItem.active === 'IT Department'">
+                <li><a class="nav-link" (click)="selectSubItem('IT-Dashboard')">Dashboard</a></li>
+                <li><a class="nav-link" (click)="selectSubItem('IT-List')">List</a></li>
+              </ng-container> -->
+
+              <!-- Electronic -->
+              <ng-container *ngIf="activeItem.active === 'Electronic Components'">
+                <li><a class="nav-link" (click)="selectSubItem('Electronic-Dashboard')">Dashboard</a></li>
+                <li><a class="nav-link" (click)="selectSubItem('Electronic-List')">List</a></li>
+              </ng-container>
+
+              <!-- Testing -->
+              <!-- <ng-container *ngIf="activeItem.active === 'Testing Equipments'">
+                <li><a class="nav-link" (click)="selectSubItem('Testing-Dashboard')">Dashboard</a></li>
+                <li><a class="nav-link" (click)="selectSubItem('Testing-List')">List</a></li>
+              </ng-container> -->
+
+              <!-- Fixed -->
+              <!-- <ng-container *ngIf="activeItem.active === 'Fixed Asset'">
+                <li><a class="nav-link" (click)="selectSubItem('Fixed-Dashboard')">Dashboard</a></li>
+                <li><a class="nav-link" (click)="selectSubItem('Fixed-List')">List</a></li>
+              </ng-container> -->
+
+              <!-- Consumable -->
+              <!-- <ng-container *ngIf="activeItem.active === 'Consumable'">
+                <li><a class="nav-link" (click)="selectSubItem('Consumable-Dashboard')">Dashboard</a></li>
+                <li><a class="nav-link" (click)="selectSubItem('Consumable-List')">List</a></li>
+              </ng-container> -->
+
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+
+            </ng-container>
+
+
+            <!-- ====================== B. GLOBAL SUB-ITEMS Shown for all users regardless of department =========================== -->
+            <li><a class="nav-link" (click)="selectSubItem('Allotments')">Allotments</a></li>
+
+            <!-- AMC (NOT for Hardware departments) -->
+            <!-- <li *ngIf="showAMC">
+              <a class="nav-link" (click)="selectSubItem('AMC')">AMC</a>
+            </li> -->
+
+            <!-- BOM (ONLY for Electronic + Testing) -->
+            <li *ngIf="showBOM">
+              <a class="nav-link" (click)="selectSubItem('BOM')">BOM</a>
+            </li>
+
+            <!-- Settings (ONLY when department selected) -->
+            <li *ngIf="showSettings">
+              <a class="nav-link" (click)="selectSubItem('Settings')">Settings</a>
+            </li>
+
+            <!-- Summary (ONLY for IT department) -->
+            <!-- <li *ngIf="showSummary">
+              <a class="nav-link" (click)="selectSubItem('Summary')">Summary</a>
+            </li> -->
+
+            <!-- HR Users -->
+            <li *ngIf="userRights?.hrDepartment?.user?.manage === 1">
+              <a class="nav-link" (click)="selectSubItem('Users')">Users</a>
+            </li>
+
+          </ul>
+        </li>
+      </ul>
+
+
+      <!-- Notification Bell -->
+      <div class="d-flex">
+        <div class="dropdown me-3 notification-dropdown">
+          <button class="btn position-relative notification-btn" data-bs-toggle="dropdown">
+            <img src="../../../assets/icons/notification.svg" alt="">
+            <!-- Notification count -->
+            <span *ngIf="outOfStockComponents.length > 0"
+              class="position-absolute top-2 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ outOfStockComponents.length }}
+            </span>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end p-0">
+            <li>
+              <div class="low-stock-notification">
+                <!-- Header -->
+                <div class="notification-header">
+                  ⚠ Low Stock
+                  <span class="count">({{ outOfStockComponents.length }})</span>
+                </div>
+
+                <!-- List -->
+                <div class="notification-list">
+                  <div class="notification-item" *ngFor="let item of outOfStockComponents" [ngClass]="item.severity">
+                    <div class="item-top">
+                      <span class="part">{{ item.manufacturerPartNumber }}</span>
+                      <span class="qty">Qty: {{ item.quantity }}</span>
+                    </div>
+                    <div class="item-bottom">
+                      <span class="project">{{ item.projectName }}</span>
+                      <span class="min">Min: {{ item.notificationQuantity }}</span>
+                    </div>
+                  </div>
+                  <!-- Empty state -->
+                  <div *ngIf="outOfStockComponents.length === 0" class="text-muted text-center p-3">
+                    No low stock alerts
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown profile-dropdown">
+          <button class="avatar-btn" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ userDetails?.firstName?.charAt(0) || '?' }}
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end profile-menu">
+            <li><a class="dropdown-item" routerLink="/profile">My Profile</a></li>
+            <li><a class="dropdown-item" routerLink="/guide">User Guide</a></li>
+            <li><a class="dropdown-item" routerLink="/profile/assigned">User Assigned</a></li>
+            <li><a class="dropdown-item" routerLink="/profile/history">User History</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

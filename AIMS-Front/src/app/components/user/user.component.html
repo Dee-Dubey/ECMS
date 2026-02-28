@@ -1,0 +1,1624 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <div class="container-fluid dashboard-container">
+    <div class="user-header shadow-sm mb-3">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <!-- LEFT SIDE -->
+        <div class="d-flex align-items-center">
+          <div class="header-icon-box mx-3">
+            <i class="bi bi-people-fill"></i>
+          </div>
+
+          <div>
+            <h4 class="mb-0 fw-bold">User Management</h4>
+            <small class="text-muted">
+              Manage users, permissions and access rights
+            </small>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE (YOUR BUTTONS) -->
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+
+          <!-- Export -->
+          <!-- <span
+          [attr.title]="!canManageUsers() ? 'You do not have permission' : null">
+          <button class="btn btn-light me-2 shadow-sm" [disabled]="!canManageUsers()">
+            <i class="bi bi-download me-1"></i> Export
+          </button>
+        </span> -->
+
+          <!-- Upload -->
+          <span [attr.title]="!canManageUsers() ? 'You do not have permission' : null">
+            <button class="btn btn-light shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadUserFile"
+              [disabled]="!canManageUsers()">
+              <i class="bi bi-upload me-1"></i> Upload
+            </button>
+          </span>
+          <!-- Upload Popup -->
+          <div class="modal fade" id="uploadUserFile" tabindex="-1" aria-labelledby="exampleModalLabel1"
+            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+
+                <div class="modal-header text-white">
+                  <h5 class="modal-title" id="exampleModalLabel1">
+                    Add Users By Excel File
+                  </h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                  </button>
+                </div>
+
+                <div class="modal-body">
+
+                  <div class="row">
+                    <div class="col mb-3 form-group">
+                      <label class="form-label"><b>Select A File</b></label>
+                      <input #uploadInput type="file" class="form-control" name="userCsvFile" accept=".xlsx"
+                        (change)="selectCSVFile($event)">
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-submit mb-3" (click)="uploadCSVFile()">
+                    Submit
+                  </button>
+
+                  <!-- Column Instruction Section -->
+                  <div class="row">
+                    <p class="mt-2">Please make sure that the file has the following columns in it and they follow the
+                      naming convention as defined:</p>
+                    <div class="rights-container table-scroll">
+
+                      <!-- Basic Fields -->
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> Basic User Information </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>loginid</b>: Unique Login ID of the user (Required)</li>
+                          <li><b>password</b>: Password of the user (Required)</li>
+                          <li><b>firstname</b>: First name of the user (Required)</li>
+                          <li><b>middlename</b>: Middle name of the user (Optional)</li>
+                          <li><b>lastname</b>: Last name of the user (Optional)</li>
+                          <li><b>employeecode</b>: Unique Employee Code (Required)</li>
+                          <li><b>organizationemail</b>: Organization Email ID (Optional)</li>
+                          <li><b>status</b>: User status (0 = Inactive, 1 = Active, 2 = Terminated)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"><b> HR Department Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>userrights</b>: Manage users (0 = No Access, 1 = Full Access)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> IT Department - Inventory Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>inventoryviewrights</b>: View inventory (0/1)</li>
+                          <li><b>inventorymanagerights</b>: Manage inventory (0/1)</li>
+                          <li><b>inventoryissuerights</b>: Issue inventory (0/1)</li>
+                          <li><b>inventoryreturnrights</b>: Return inventory (0/1)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> Hardware Department - Electronic Device Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>electronicviewrights</b>: View electronic devices (0/1)</li>
+                          <li><b>electronicmanagerights</b>: Manage electronic devices (0/1)</li>
+                          <li><b>electronicissuerights</b>: Issue electronic devices (0/1)</li>
+                          <li><b>electronicreturnrights</b>: Return electronic devices (0/1)</li>
+                          <li><b>electronicbomrights</b>: BOM access for electronic devices (0/1)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> Hardware Department - Testing Equipment Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>testingequipmentviewrights</b>: View testing equipment (0/1)</li>
+                          <li><b>testingequipmentmanagerights</b>: Manage testing equipment (0/1)</li>
+                          <li><b>testingequipmentissuerights</b>: Issue testing equipment (0/1)</li>
+                          <li><b>testingequipmentreturnrights</b>: Return testing equipment (0/1)</li>
+                          <li><b>testingequipmentbomrights</b>: BOM access for testing equipment (0/1)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> Admin Department - Consumable Asset Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>consumableassetviewrights</b>: View consumable assets (0/1)</li>
+                          <li><b>consumableassetmanagerights</b>: Manage consumable assets (0/1)</li>
+                          <li><b>consumableassetissuerights</b>: Issue consumable assets (0/1)</li>
+                          <li><b>consumableassetreturnrights</b>: Return consumable assets (0/1)</li>
+                        </ul>
+                      </div>
+
+                      <div class="rights-section">
+                        <h6 class="section-heading"> <b> Admin Department - Fixed Asset Rights </b></h6>
+                        <hr>
+                        <ul>
+                          <li><b>fixedassetviewrights</b>: View fixed assets (0/1)</li>
+                          <li><b>fixedassetmanagerights</b>: Manage fixed assets (0/1)</li>
+                          <li><b>fixedassetissuerights</b>: Issue fixed assets (0/1)</li>
+                          <li><b>fixedassetreturnrights</b>: Return fixed assets (0/1)</li>
+                        </ul>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add User -->
+          <span [attr.title]="!canManageUsers() ? 'You do not have permission' : null">
+            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2"
+              [disabled]="!canManageUsers()">
+              <i class="bi bi-plus-lg me-1"></i> Add User
+            </button>
+          </span>
+          <!-- Add User Popup Form -->
+          <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
+                  <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close" (click)="clearSelection()"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-container">
+                    <form [formGroup]="userForm" (ngSubmit)="submitUserForm()">
+                      <div class="row">
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">First Name <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="firstName" autocomplete="off">
+                          <div *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched">
+                            <small class="error-message" *ngIf="userForm.controls['firstName'].errors?.['required']">
+                              This field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Middle Name</label>
+                          <input type="text" class="form-control" formControlName="middleName" autocomplete="off">
+                        </div>
+
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Last Name</label>
+                          <input type="text" class="form-control" formControlName="lastName" autocomplete="off">
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Login Id <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="loginId" (change)="checkLoginId()"
+                            autocomplete="off">
+                          <small
+                            *ngIf="userForm.controls['loginId'].errors?.['required'] && userForm.controls['loginId'].touched"
+                            class="error-message">
+                            This field is required
+                          </small>
+                          <small
+                            *ngIf="userForm.controls['loginId'].errors?.['notUnique'] && userForm.controls['loginId'].touched"
+                            class="error-message">
+                            Login ID already exists !
+                          </small>
+                          <small *ngIf="!userForm.controls['loginId'].errors && userForm.controls['loginId'].touched"
+                            class="success-message">
+                            Login ID availabe
+                          </small>
+                        </div>
+
+                        <div class="col-lg-4 mb-3 form-group password-wrapper">
+                          <label>Password <span class="required">*</span></label>
+
+                          <div class="input-icon-wrapper">
+                            <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+                              formControlName="password">
+
+                            <span class="toggle-password" (click)="showPassword = !showPassword">
+                              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'">
+                              </i>
+                            </span>
+                          </div>
+
+                          <small class="error-message"
+                            *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].touched">
+                            This field is required
+                          </small>
+                        </div>
+                        <!-- <div class="col-lg-4 mb-3 form-group">
+                          <label>Password <span class="required">*</span></label>
+
+                          <input
+                            [type]="showPassword ? 'text' : 'password'"
+                            class="form-control"
+                            formControlName="password"
+                          >
+
+                          <span class="password-icon" (click)="showPassword = !showPassword">
+                            <span class="eye-wrapper">
+                              👁
+                              <span *ngIf="showPassword" class="eye-slash"></span>
+                            </span>
+                          </span>
+
+                          <small class="error-message"
+                            *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].touched">
+                            This field is required
+                          </small> -->
+                        <!-- <label class="form-label">Password <span class="required">*</span></label>
+                          <input type="password" class="form-control" formControlName="password"
+                            autocomplete="new-password">
+                          <div class="error-message"
+                            *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].touched">
+                            <div class="error-message" *ngIf="userForm.controls['password'].errors?.['required']">
+                              <small>This field is required</small>
+                            </div>
+                          </div> -->
+                        <!-- </div> -->
+
+                        <div class="col-lg-4 mb-3 form-group password-wrapper">
+                          <label>Confirm Password <span class="required">*</span></label>
+
+                          <div class="input-icon-wrapper">
+                            <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
+                              formControlName="confirmPassword">
+
+                            <span class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
+                              <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'">
+                              </i>
+                            </span>
+                          </div>
+
+                          <small class="error-message"
+                            *ngIf="userForm.controls['confirmPassword'].errors?.['required'] && userForm.controls['confirmPassword'].touched">
+                            This field is required
+                          </small>
+
+                          <small class="error-message" *ngIf="userForm.errors?.['misMatch'] && userForm.touched">
+                            Password is not matched
+                          </small>
+                        </div>
+                        <!-- <div class="col-lg-4 mb-3 form-group">
+                          <label>Confirm Password <span class="required">*</span></label>
+
+                          <input
+                            [type]="showConfirmPassword ? 'text' : 'password'"
+                            class="form-control"
+                            formControlName="confirmPassword"
+                          >
+
+                          <span class="confirm-password-icon" (click)="showConfirmPassword = !showConfirmPassword">
+                            <span class="eye-wrapper">
+                              👁
+                              <span *ngIf="showConfirmPassword" class="eye-slash"></span>
+                            </span>
+                          </span>
+                          <small class="error-message"
+                            *ngIf="userForm.controls['confirmPassword'].errors?.['required'] && userForm.controls['confirmPassword'].touched">
+                            This field is required
+                          </small>
+
+                          <small class="error-message"
+                            *ngIf="userForm.errors?.['misMatch'] && userForm.touched">
+                            Password is not matched
+                          </small> -->
+                        <!-- <label class="form-label">Confirm Password <span class="required">*</span></label>
+                          <input type="password" class="form-control" formControlName="confirmPassword"
+                            autocomplete="new-password">
+                          <div
+                            *ngIf="userForm.controls['confirmPassword'].invalid && userForm.controls['confirmPassword'].touched">
+                            <div class="error-message"
+                              *ngIf="userForm.controls['confirmPassword'].errors?.['required']">
+                              <small>This field is required</small>
+                            </div>
+                          </div>
+                          <div class="error-message" *ngIf="userForm.errors?.['misMatch'] && userForm.touched">
+                            <small>Password is not matched</small>
+                          </div> -->
+                        <!-- </div> -->
+
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Employee Code <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="employeeCode"
+                            (change)="checkEmployeeCode()" autocomplete="off">
+                          <small class="error-message"
+                            *ngIf="userForm.controls['employeeCode'].errors?.['required'] && userForm.controls['employeeCode'].touched">
+                            This field is required
+                          </small>
+                          <small class="error-message"
+                            *ngIf="userForm.controls['employeeCode'].errors?.['notUnique'] && userForm.controls['employeeCode'].touched">
+                            Employee Code Already Exists
+                          </small>
+                        </div>
+
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Organization Email <span class="required">*</span></label>
+                          <input type="email" class="form-control" formControlName="organizationEmail"
+                            autocomplete="off">
+                          <div
+                            *ngIf="userForm.controls['organizationEmail'].invalid && userForm.controls['organizationEmail'].touched">
+                            <small class="error-message"
+                              *ngIf="userForm.controls['organizationEmail'].errors?.['required']">
+                              This field is required
+                            </small>
+                            <small class="error-message"
+                              *ngIf="userForm.controls['organizationEmail'].errors?.['email']">
+                              Please enter a valid email address
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-12 mb-3 form-group">
+                          <hr>
+                          <label class="section-title mt-1">Access Rights</label>
+                          <div class="row">
+                            <label class="form-label mb-0 rights-title">HR Department</label>
+                            <div class="col-lg-4">
+                              <div class="input-group">
+                                <span class="input-group-text">Users </span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View/Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="userManage">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- <label class="form-label mb-0 rights-title">IT Department</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">IT Inventory</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+
+                          <label class="form-label mb-0 rights-title">Hardware Deparment</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Electronic Device</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicReturn">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">BOM</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicBOM">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Testing Equipment</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentReturn">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">BOM</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentBOM">
+                                  </div>
+                                </div>
+                              </div>
+                            </div> -->
+                          </div>
+
+                          <!-- <label class="form-label mb-0 rights-title">Admin Department</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Consumable Asset</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Fixed Asset</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-submit" [disabled]="userForm.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row g-4 mb-3">
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-primary">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h6>Total Users</h6>
+          <h3>{{statistics.totalUsers}}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-primary">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h6>Total Employee </h6>
+          <h3>{{statistics.noOfEmployees}}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-dark">
+            <i class="bi bi-key-fill"></i>
+          </div>
+          <h6>IMS Access</h6>
+          <h3>{{statistics.noOfUsers}}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-success">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <h6>Active</h6>
+          <h3>{{statistics.noOfActiveUsers}}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-warning">
+            <i class="bi bi-dash-circle-fill"></i>
+          </div>
+          <h6>Disabled</h6>
+          <h3>{{statistics.noOfDisabledUsers}}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="icon bg-danger">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <h6>Terminated</h6>
+          <h3>{{statistics.noOfTerminatedUsers}}</h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card p-2 mb-3 shadow-sm border-0">
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <div class="btn-group segmented-toggle" role="group">
+
+          <!-- Users -->
+          <input type="radio" class="btn-check" name="tableToggle" id="usersToggle" value="user"
+            [(ngModel)]="selectTable">
+          <label class="btn toggle-btn" [ngClass]="{'active-toggle': selectTable === 'user'}" for="usersToggle">
+            <i class="bi bi-people me-1"></i> Users
+          </label>
+
+          <!-- Employees -->
+          <input type="radio" class="btn-check" name="tableToggle" id="employeeToggle" value="employee"
+            [(ngModel)]="selectTable">
+          <label class="btn toggle-btn" [ngClass]="{'active-toggle': selectTable === 'employee'}" for="employeeToggle">
+            <i class="bi bi-person-badge me-1"></i> Employees
+          </label>
+
+        </div>
+
+        <div class="d-flex align-items-center flex-wrap gap-3">
+
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search users..." [(ngModel)]="searchText" (input)="applySearch()" />
+            <span *ngIf="searchText" class="clear-icon" (click)="clearSearch()"> ❌ </span>
+          </div>
+          <!-- Status Filter -->
+          <select class="form-select w-auto" [(ngModel)]="selectUserStatus" (change)="filterByStatus()">
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+            <option value="terminated">Terminated</option>
+          </select>
+          <!-- Reset -->
+          <button class="btn btn-outline-secondary" (click)="resetFilter()">
+            <i class="bi bi-arrow-clockwise me-1"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow-sm border-0">
+
+      <div class="table-responsive modern-table" *ngIf="selectTable === 'user'">
+        <div class="table-scroll">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Login Id</th>
+                <th>Employee Id</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th *ngIf="userRights.hrDepartment.user.manage === 1">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Data display on table -->
+              <tr *ngFor="let user of filteredUsers; let i = index" [hidden]="((user.status === 2 || user.status === 1) && selectUserStatus === 'disabled')
+                || ((user.status === 0 || user.status === 1) && selectUserStatus === 'terminated')">
+
+                <!-- Index -->
+                <td>{{ i + 1 }}</td>
+
+                <!-- Name with Avatar -->
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar" [ngClass]="{
+                          'bg-success': user.status === 1,
+                          'bg-warning': user.status === 0,
+                          'bg-danger': user.status === 2
+                        }">
+                      {{ user.firstName?.charAt(0) }}{{ user.lastName?.charAt(0) }}
+                    </div>
+                    <span class="ms-2">
+                      {{ user.firstName }} {{ user.middleName }} {{ user.lastName }}
+                    </span>
+                  </div>
+                </td>
+
+                <td>{{ user.loginId }}</td>
+                <td>{{ user.employeeCode }}</td>
+                <td>{{ user.organizationEmail }}</td>
+
+                <!-- Status Badge -->
+                <td>
+                  <span class="badge" [ngClass]="{
+                          'bg-success': user.status === 1,
+                          'bg-warning': user.status === 0,
+                          'bg-danger': user.status === 2
+                        }">
+                    {{ user.status === 1 ? 'Active' :
+                    user.status === 0 ? 'Disabled' : 'Terminated' }}
+                  </span>
+                </td>
+
+                <!-- Action -->
+                <td
+                  *ngIf="userRights.hrDepartment.user.manage === 1"
+                  class="align-middle col-1"
+                  [ngClass]="{
+                    'bg-terminated': user.status === 2,
+                    'bg-disabled': user.status === 0}"
+                  >
+                  <button class="btn btn-action editButton" data-bs-toggle="modal" data-bs-target="#editModalForm"
+                    (click)="selectUserEdit(user)" [disabled]="user.status === 2">
+                    Edit
+                  </button>
+                </td>
+
+              </tr>
+
+              <!-- No Data Row -->
+              <tr *ngIf="searchText && filteredUsers.length === 0">
+                <td [attr.colspan]="userRights.hrDepartment.user.manage === 1 ? 7 : 6"
+                    class="text-center py-4 text-muted no-data">
+                  No data found for "{{ searchText }}"
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-responsive modern-table" *ngIf="selectTable === 'employee'">
+        <div class="table-scroll">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Login Id</th>
+                <th>Employee Id</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th *ngIf="userRights.hrDepartment.user.manage === 1">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Data display on table -->
+              <tr *ngFor="let employee of filteredEmployees; let i = index" [hidden]="((employee.status === 2 || employee.status === 1) && selectUserStatus === 'disabled')
+                  || ((employee.status === 0 || employee.status === 1) && selectUserStatus === 'terminated')">
+
+                <td>{{ i + 1 }}</td>
+
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar" [ngClass]="{
+                          'bg-success': employee.status === 1,
+                          'bg-warning': employee.status === 0,
+                          'bg-danger': employee.status === 2
+                        }">
+                      {{ employee.firstName?.charAt(0) }}{{ employee.lastName?.charAt(0) }}
+                    </div>
+                    <span class="ms-2">
+                      {{ employee.firstName }} {{ employee.middleName }} {{ employee.lastName }}
+                    </span>
+                  </div>
+                </td>
+
+                <td>{{ employee.loginId }}</td>
+                <td>{{ employee.employeeCode }}</td>
+                <td>{{ employee.organizationEmail }}</td>
+
+                <td>
+                  <span class="badge" [ngClass]="{
+                          'bg-success': employee.status === 1,
+                          'bg-warning': employee.status === 0,
+                          'bg-danger': employee.status === 2
+                        }">
+                    {{ employee.status === 1 ? 'Active' :
+                    employee.status === 0 ? 'Disabled' : 'Terminated' }}
+                  </span>
+                </td>
+
+                <td class="align-middle col-1" [ngClass]="{
+                    'bg-terminated': employee.status === 2,
+                    'bg-disabled': employee.status === 0
+                  }" *ngIf="userRights.hrDepartment.user.manage === 1">
+
+                  <button class="btn btn-action editButton" data-bs-toggle="modal" data-bs-target="#editModalForm"
+                    (click)="selectUserEdit(employee)" [disabled]="employee.status === 2">
+
+                    Edit
+                  </button>
+
+                </td>
+
+              </tr>
+
+              <!-- No Data Row -->
+              <tr *ngIf="searchText && filteredEmployees.length === 0">
+                <td [attr.colspan]="userRights.hrDepartment.user.manage === 1 ? 7 : 6"
+                    class="text-center py-4 text-muted no-data">
+                  No data found for "{{ searchText }}"
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="searchText
+        &&((selectTable === 'user' && filteredUsers.length === 0) ||
+        (selectTable === 'employee' && filteredEmployees.length === 0))" class="text-center no-data-row">
+        No data found for "{{ searchText }}"
+      </div> -->
+
+      <!-- Edit Form Modal -->
+      <div class="modal modal-lg fade" id="editModalForm" tabindex="-1" aria-labelledby="editModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit User</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                (click)="clearSelection()"></button>
+            </div>
+            <div class="modal-body">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                    type="button" role="tab" aria-controls="home" aria-selected="true">Edit User Data</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                    role="tab" aria-controls="profile" aria-selected="false">Reset Password</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+                    role="tab" aria-controls="contact" aria-selected="false">Change User Status</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <!-- Edit User Data Form -->
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <div class="form-container mt-2 mb-3">
+                    <b>Enter User Data</b>
+                    <hr>
+                    <form [formGroup]="editUserForm" class="mt-2" (ngSubmit)="submitEditUserForm()">
+                      <div class="row">
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">First Name <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="firstName">
+                          <div
+                            *ngIf="editUserForm.controls['firstName'].invalid && editUserForm.controls['firstName'].touched">
+                            <small class="error-message"
+                              *ngIf="editUserForm.controls['firstName'].errors?.['required']">
+                              This field is required
+                            </small>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Middle Name</label>
+                          <input type="text" class="form-control" formControlName="middleName">
+                        </div>
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Last Name</label>
+                          <input type="text" class="form-control" formControlName="lastName">
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Login Id <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="loginId"
+                            (change)="checkEditLoginId()">
+                          <small
+                            *ngIf="editUserForm.controls['loginId'].errors?.['required'] && editUserForm.controls['loginId'].touched"
+                            class="error-message">
+                            This field is required
+                          </small>
+                          <small
+                            *ngIf="editUserForm.controls['loginId'].errors?.['notUnique'] && editUserForm.controls['loginId'].touched"
+                            class="error-message">
+                            Login ID already exists !
+                          </small>
+                          <small
+                            *ngIf="!editUserForm.controls['loginId'].errors && editUserForm.controls['loginId'].touched"
+                            class="success-message">
+                            Login ID availabe
+                          </small>
+                        </div>
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Employee Code <span class="required">*</span></label>
+                          <input type="text" class="form-control" formControlName="employeeCode"
+                            (change)="checkEditEmployeeCode()">
+                          <small class="error-message"
+                            *ngIf="editUserForm.controls['employeeCode'].errors?.['required'] && editUserForm.controls['employeeCode'].touched">
+                            This field is required
+                          </small>
+                          <small class="error-message"
+                            *ngIf="editUserForm.controls['employeeCode'].errors?.['notUnique'] && editUserForm.controls['employeeCode'].touched">
+                            Employee Code Already Exists
+                          </small>
+                        </div>
+                        <div class="col-lg-4 mb-3 form-group">
+                          <label class="form-label">Organization Email <span class="required">*</span></label>
+                          <input type="email" class="form-control" formControlName="organizationEmail">
+                          <div
+                            *ngIf="editUserForm.controls['organizationEmail'].invalid && editUserForm.controls['organizationEmail'].touched">
+                            <small class="error-message"
+                              *ngIf="editUserForm.controls['organizationEmail'].errors?.['required']">
+                              This field is required
+                            </small>
+                            <small class="error-message"
+                              *ngIf="editUserForm.controls['organizationEmail'].errors?.['email']">
+                              Please enter a valid email address
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-12 mb-3 form-group">
+                          <hr>
+                          <label class="form-label section-title">Rights</label>
+                          <div class="row">
+                            <label class="form-label">HR Department</label>
+                            <div class="col-lg-4">
+                              <div class="input-group">
+                                <span class="input-group-text">Users </span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View/Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="userManage">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- <label class="form-label rights-title">IT Department</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">IT Inventory</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="ITInventoryReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                          <label class="form-label rights-title">Hardware Department</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Electronic Device</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicReturn">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">BOM</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="electronicBOM">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Testing Equipment</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentReturn">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">BOM</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="testingEquipmentBOM">
+                                  </div>
+                                </div>
+                              </div>
+                            </div> -->
+                          </div>
+                          <!-- <label class="form-label rights-title">Admin Department</label>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Consumable Asset</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input"
+                                      formControlName="consumableAssetReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-12">
+                              <div class="input-group">
+                                <span class="input-group-text">Fixed Asset</span>
+                                <div class="check-grid">
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">View</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetView">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Manage</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetManage">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Issue</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetIssue">
+                                  </div>
+                                  <div class="mb-3 form-check">
+                                    <label class="form-check-label">Return</label>
+                                    <input type="checkbox" class="form-check-input" formControlName="fixedAssetReturn">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                        </div>
+                      </div>
+                      <!-- <button type="submit" class="btn btn-submit mt-4" [disabled]="editUserForm.invalid">Submit</button> -->
+                      <button type="submit" class="btn btn-submit mt-4">Submit</button>
+                    </form>
+                  </div>
+                </div>
+                <!-- Reset User Password Form -->
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                  <div class="form-container mt-2 mb-3">
+                    <b>Reset User Password</b>
+                    <hr>
+                    <form [formGroup]="resetPasswordFrom" class="mt-2" (ngSubmit)="submitResetPasswordForm()">
+                      <div class="row">
+                        <div class="col-lg-6 mb-3 form-group password-wrapper">
+                          <label class="form-label">
+                            Enter New Password <span class="required">*</span>
+                          </label>
+
+                          <div class="input-icon-wrapper">
+                            <input [type]="showResetPassword ? 'text' : 'password'" class="form-control"
+                              formControlName="password">
+
+                            <span class="toggle-password" (click)="showResetPassword = !showResetPassword">
+                              <i class="bi" [ngClass]="showResetPassword ? 'bi-eye-slash' : 'bi-eye'">
+                              </i>
+                            </span>
+                          </div>
+
+                          <div class="error-message"
+                            *ngIf="resetPasswordFrom.controls['password'].invalid && resetPasswordFrom.controls['password'].touched">
+                            <small *ngIf="resetPasswordFrom.controls['password'].errors?.['required']">
+                              This field is required
+                            </small>
+                          </div>
+                        </div>                        
+                        <div class="col-lg-6 mb-3 form-group password-wrapper">
+                          <label class="form-label">
+                            Confirm New Password <span class="required">*</span>
+                          </label>
+                          <div class="input-icon-wrapper">
+                            <input [type]="showResetConfirmPassword ? 'text' : 'password'" class="form-control"
+                              formControlName="confirmPassword">
+
+                            <span class="toggle-password"
+                              (click)="showResetConfirmPassword = !showResetConfirmPassword">
+                              <i class="bi" [ngClass]="showResetConfirmPassword ? 'bi-eye-slash' : 'bi-eye'">
+                              </i>
+                            </span>
+                          </div>
+                          <div
+                            *ngIf="resetPasswordFrom.controls['confirmPassword'].invalid && resetPasswordFrom.controls['confirmPassword'].touched">
+                            <small class="error-message"
+                              *ngIf="resetPasswordFrom.controls['confirmPassword'].errors?.['required']">
+                              This field is required
+                            </small>
+                          </div>
+                          <div class="error-message"
+                            *ngIf="resetPasswordFrom.errors?.['misMatch'] && resetPasswordFrom.touched">
+                            <small>Password is not matched</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit mt-4"
+                          [disabled]="resetPasswordFrom.invalid">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- Change User Status Form -->
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                  <div class="form-container mt-2 mb-3">
+                    <b>Change User Status</b>
+                    <hr>
+                    <div class="row">
+                      <div class="col-lg-6 mb-3 form-group">
+                        <label class="form-label">Select Status</label>
+                        <select class="form-control form-select" name="selectedUserStatus"
+                          [(ngModel)]="selectedUserStatus">
+                          <option value="0">Disabled</option>
+                          <option value="1">Active</option>
+                          <option value="2">Terminated</option>
+                        </select>
+                      </div>
+                      <div class="col-lg-6 mb-3 form-group d-flex justify-content-center">
+                        <button type="button" class="btn btn-submit mt-4" (click)="changeUserStatus()">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to delete the user: <b>{{selectedUserName}}</b>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-target="#deleteModalWait" data-bs-toggle="modal"
+          (click)="deleteUser()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Wait Delete Modal -->
+<div class="modal" id="deleteModalWait" tabindex="-1" data-bs-backdrop="static" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete User</h5>
+      </div>
+      <div class="modal-body">
+        <p>Please wait while we delete the user: <b>{{selectedUserName}}</b></p>
+        <button class="btn btn-primary" type="button" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Deleting...
+        </button>
+        <button type="button" id="deleteSuccessButton" data-bs-target="#deleteModalSuccess" data-bs-toggle="modal"
+          class="btn btn-primary" hidden></button>
+        <button type="button" id="deleteErrorButton" data-bs-target="#deleteModalError" data-bs-toggle="modal"
+          class="btn btn-primary" hidden></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Delete Success Modal -->
+<div class="modal fade" id="deleteModalSuccess" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>User: <b>{{selectedUserName}}</b> deleted successfully</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="pageRefresh()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Delete Error Modal -->
+<div class="modal fade" id="deleteModalError" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Error deleting the user: <b>{{selectedUserName}}</b></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Edit Form Modal -->
+<div class="modal modal-lg fade" id="editModalForm" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+          (click)="clearSelection()"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+              role="tab" aria-controls="home" aria-selected="true">Edit User Data</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+              role="tab" aria-controls="profile" aria-selected="false">Reset Password</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+              role="tab" aria-controls="contact" aria-selected="false">Change User Status</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <!-- Edit User Data Form -->
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="form-container mt-2 mb-3">
+              <b>Enter User Data</b>
+              <form [formGroup]="editUserForm" class="mt-2" (ngSubmit)="submitEditUserForm()">
+                <div class="row">
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">First Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="firstName">
+                    <div
+                      *ngIf="editUserForm.controls['firstName'].invalid && editUserForm.controls['firstName'].touched">
+                      <small class="error-message" *ngIf="editUserForm.controls['firstName'].errors?.['required']">
+                        This field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">Middle Name</label>
+                    <input type="text" class="form-control" formControlName="middleName">
+                  </div>
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" formControlName="lastName">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">Login Id <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="loginId" (change)="checkEditLoginId()">
+                    <small
+                      *ngIf="editUserForm.controls['loginId'].errors?.['required'] && editUserForm.controls['loginId'].touched"
+                      class="error-message">
+                      This field is required
+                    </small>
+                    <small
+                      *ngIf="editUserForm.controls['loginId'].errors?.['notUnique'] && editUserForm.controls['loginId'].touched"
+                      class="error-message">
+                      Login ID already exists !
+                    </small>
+                    <small *ngIf="!editUserForm.controls['loginId'].errors && editUserForm.controls['loginId'].touched"
+                      class="success-message">
+                      Login ID availabe
+                    </small>
+                  </div>
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">Employee Code <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="employeeCode"
+                      (change)="checkEditEmployeeCode()">
+                    <small class="error-message"
+                      *ngIf="editUserForm.controls['employeeCode'].errors?.['required'] && editUserForm.controls['employeeCode'].touched">
+                      This field is required
+                    </small>
+                    <small class="error-message"
+                      *ngIf="editUserForm.controls['employeeCode'].errors?.['notUnique'] && editUserForm.controls['employeeCode'].touched">
+                      Employee Code Already Exists
+                    </small>
+                  </div>
+                  <div class="col-lg-4 mb-3 form-group">
+                    <label class="form-label">Organization Email <span class="required">*</span></label>
+                    <input type="email" class="form-control" formControlName="organizationEmail">
+                    <div
+                      *ngIf="editUserForm.controls['organizationEmail'].invalid && editUserForm.controls['organizationEmail'].touched">
+                      <small class="error-message"
+                        *ngIf="editUserForm.controls['organizationEmail'].errors?.['required']">
+                        This field is required
+                      </small>
+                      <small class="error-message" *ngIf="editUserForm.controls['organizationEmail'].errors?.['email']">
+                        Please enter a valid email address
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 mb-3 form-group">
+                    <label class="form-label">Rights</label>
+                    <div class="row">
+                      <label class="form-label">HR Department</label>
+                      <div class="col-lg-4">
+                        <div class="input-group">
+                          <span class="input-group-text">Users </span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View/Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="userManage">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <label class="form-label">IT Department</label>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="input-group">
+                          <span class="input-group-text">IT Inventory</span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View</label>
+                              <input type="checkbox" class="form-check-input" formControlName="ITInventoryView">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="ITInventoryManage">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Issue</label>
+                              <input type="checkbox" class="form-check-input" formControlName="ITInventoryIssue">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Return</label>
+                              <input type="checkbox" class="form-check-input" formControlName="ITInventoryReturn">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                    <label class="form-label">Hardware Department</label>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="input-group">
+                          <span class="input-group-text">Electronic Device</span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View</label>
+                              <input type="checkbox" class="form-check-input" formControlName="electronicView">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="electronicManage">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Issue</label>
+                              <input type="checkbox" class="form-check-input" formControlName="electronicIssue">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Return</label>
+                              <input type="checkbox" class="form-check-input" formControlName="electronicReturn">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">BOM</label>
+                              <input type="checkbox" class="form-check-input" formControlName="electronicBOM">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-lg-12">
+                        <div class="input-group">
+                          <span class="input-group-text">Testing Equipment</span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View</label>
+                              <input type="checkbox" class="form-check-input" formControlName="testingEquipmentView">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="testingEquipmentManage">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Issue</label>
+                              <input type="checkbox" class="form-check-input" formControlName="testingEquipmentIssue">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Return</label>
+                              <input type="checkbox" class="form-check-input" formControlName="testingEquipmentReturn">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">BOM</label>
+                              <input type="checkbox" class="form-check-input" formControlName="testingEquipmentBOM">
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                    <!-- <label class="form-label">Admin Department</label>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="input-group">
+                          <span class="input-group-text">Consumable Asset</span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View</label>
+                              <input type="checkbox" class="form-check-input" formControlName="consumableAssetView">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="consumableAssetManage">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Issue</label>
+                              <input type="checkbox" class="form-check-input" formControlName="consumableAssetIssue">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Return</label>
+                              <input type="checkbox" class="form-check-input" formControlName="consumableAssetReturn">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="input-group">
+                          <span class="input-group-text">Fixed Asset</span>
+                          <div class="check-grid">
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">View</label>
+                              <input type="checkbox" class="form-check-input" formControlName="fixedAssetView">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Manage</label>
+                              <input type="checkbox" class="form-check-input" formControlName="fixedAssetManage">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Issue</label>
+                              <input type="checkbox" class="form-check-input" formControlName="fixedAssetIssue">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <label class="form-check-label">Return</label>
+                              <input type="checkbox" class="form-check-input" formControlName="fixedAssetReturn">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+                <!-- <button type="submit" class="btn btn-submit mt-4" [disabled]="editUserForm.invalid">Submit</button> -->
+                <button type="submit" class="btn btn-submit mt-4">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- Reset User Password Form -->
+          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="form-container mt-2 mb-3">
+              <b>Reset User Password</b>
+              <form [formGroup]="resetPasswordFrom" class="mt-2" (ngSubmit)="submitResetPasswordForm()">
+                <div class="row">
+                  <div class="col-lg-6 mb-3 form-group">
+                    <label class="form-label">Enter New Password <span class="required">*</span></label>
+                    <input type="password" class="form-control" formControlName="password">
+                    <div class="error-message"
+                      *ngIf="resetPasswordFrom.controls['password'].invalid && resetPasswordFrom.controls['password'].touched">
+                      <div class="error-message" *ngIf="resetPasswordFrom.controls['password'].errors?.['required']">
+                        <small>This field is required</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 mb-3 form-group">
+                    <label class="form-label">Confirm New Password <span class="required">*</span></label>
+                    <input type="password" class="form-control" formControlName="confirmPassword">
+                    <div
+                      *ngIf="resetPasswordFrom.controls['confirmPassword'].invalid && resetPasswordFrom.controls['confirmPassword'].touched">
+                      <div class="error-message"
+                        *ngIf="resetPasswordFrom.controls['confirmPassword'].errors?.['required']">
+                        <small>This field is required</small>
+                      </div>
+                    </div>
+                    <div class="error-message"
+                      *ngIf="resetPasswordFrom.errors?.['misMatch'] && resetPasswordFrom.touched">
+                      <small>Password is not matched</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-submit mt-4"
+                    [disabled]="resetPasswordFrom.invalid">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- Change User Status Form -->
+          <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="form-container mt-2 mb-3">
+              <b>Change User Status</b>
+              <div class="row">
+                <div class="col-lg-6 mb-3 form-group">
+                  <label class="form-label">Select Status</label>
+                  <select class="form-control form-select" name="selectedUserStatus" [(ngModel)]="selectedUserStatus">
+                    <option value="0">Disabled</option>
+                    <option value="1">Active</option>
+                    <option value="2">Terminated</option>
+                  </select>
+                </div>
+                <div class="col-lg-6 mb-3 form-group d-flex justify-content-center">
+                  <button type="button" class="btn btn-submit mt-4" (click)="changeUserStatus()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="statusButton" data-bs-target="#statusModal" data-bs-toggle="modal" class="btn btn-primary"
+  hidden></button>
+<!-- Reusable Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }}</h5>
+        <button *ngIf="modalState !== 'loading'" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p>{{ modalMessage }}</p>
+
+        <!-- Loading State -->
+        <div *ngIf="modalState === 'loading'">
+          <button class="btn btn-primary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm"></span>
+            Processing...
+          </button>
+        </div>
+
+        <!-- Success State -->
+        <div *ngIf="modalState === 'success'">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="pageRefresh()">
+            Close
+          </button>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="modalState === 'error'">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

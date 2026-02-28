@@ -1,0 +1,263 @@
+.profile-page {
+  max-width: 95%;
+  margin: auto;
+  font-family: system-ui, sans-serif;
+  color: #333;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* background: #f5f7fa; */
+  background: #f87777;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  /* background: #3f51b5; */
+  background: #fff;
+  color: #000000;
+  font-size: 28px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-info h2,
+h5 {
+  margin: 0;
+}
+
+.email {
+  font-size: 13px;
+  color: #666;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 12px;
+  margin: 6px 0;
+}
+
+.role-badge.admin {
+  background: #e53935;
+}
+
+.role-badge.employee {
+  background: #1e88e5;
+}
+
+.role-badge.user {
+  background: #43a047;
+}
+
+.role-badge.unknown {
+  background: #757575;
+}
+
+.profile-card {
+  background: #ffffff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+}
+
+.profile-card {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: #444;
+}
+
+.info-grid label {
+  font-size: 12px;
+  color: #777;
+  /* display: block; */
+}
+
+.info-grid span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.user-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.status.active {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.access-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.access-level.full {
+  color: #1e7d34;
+  font-weight: 600;
+}
+
+.access-level.limited {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.access-level.view-only {
+  color: #555;
+  font-weight: 500;
+}
+
+.responsibility-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.responsibility-list li {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+button.primary {
+  background: #3f51b5;
+  color: #fff;
+}
+
+button.secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+
+.heading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* background-color: var(--bg-red); */
+  /* color: white; */
+  /* width: 100%; */
+  /* height: 3vh; */
+}
+
+.basic-info {
+  width: 40%;
+}
+
+.more-details {
+  width: 60%;
+}
+
+
+
+
+.assigned-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.assigned-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.assigned-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.icon {
+  font-size: 28px;
+  padding: 18px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+/* Icon Background Colors */
+.it-icon {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+}
+
+.electronic-icon {
+  background: linear-gradient(135deg, #6f42c1, #4b2ea5);
+}
+
+.testing-icon {
+  background: linear-gradient(135deg, #fd7e14, #e8590c);
+}
+
+.fixed-icon {
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.content h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.content p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #777;
+}
+
+.count {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.blue {
+  color: #4e73df;
+}
+
+.purple {
+  color: #6f42c1;
+}
+
+.orange {
+  color: #fd7e14;
+}
+
+.gray {
+  color: #6c757d;
+}

@@ -1,0 +1,249 @@
+<div class="wrapper">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <div class="sidebar">
+    <div class="stats-card">
+
+      <div class="stats-title">Electronic Component</div>
+
+      <!-- PCB ICON -->
+      <svg width="120" height="120" viewBox="0 0 120 120">
+
+        <defs>
+          <linearGradient id="pcbGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2E8B57" />
+            <stop offset="100%" stop-color="#1E6B46" />
+          </linearGradient>
+        </defs>
+
+        <!-- Background -->
+        <rect x="15" y="15" width="90" height="90" rx="22" fill="url(#pcbGrad)" />
+
+        <!-- Center Chip -->
+        <rect x="42" y="42" width="36" height="36" rx="6" fill="#2C2C2C" />
+
+        <!-- Top Pins -->
+        <rect x="46" y="36" width="4" height="6" fill="#FFD700" />
+        <rect x="54" y="36" width="4" height="6" fill="#FFD700" />
+        <rect x="62" y="36" width="4" height="6" fill="#FFD700" />
+        <rect x="70" y="36" width="4" height="6" fill="#FFD700" />
+
+        <!-- Bottom Pins -->
+        <rect x="46" y="78" width="4" height="6" fill="#FFD700" />
+        <rect x="54" y="78" width="4" height="6" fill="#FFD700" />
+        <rect x="62" y="78" width="4" height="6" fill="#FFD700" />
+        <rect x="70" y="78" width="4" height="6" fill="#FFD700" />
+
+        <!-- Left Pins -->
+        <rect x="36" y="46" width="6" height="4" fill="#FFD700" />
+        <rect x="36" y="54" width="6" height="4" fill="#FFD700" />
+        <rect x="36" y="62" width="6" height="4" fill="#FFD700" />
+        <rect x="36" y="70" width="6" height="4" fill="#FFD700" />
+
+        <!-- Right Pins -->
+        <rect x="78" y="46" width="6" height="4" fill="#FFD700" />
+        <rect x="78" y="54" width="6" height="4" fill="#FFD700" />
+        <rect x="78" y="62" width="6" height="4" fill="#FFD700" />
+        <rect x="78" y="70" width="6" height="4" fill="#FFD700" />
+
+        <!-- Corner Circles -->
+        <circle cx="30" cy="30" r="6" fill="#FFD700" />
+        <circle cx="90" cy="30" r="6" fill="#FFD700" />
+        <circle cx="30" cy="90" r="6" fill="#FFD700" />
+        <circle cx="90" cy="90" r="6" fill="#FFD700" />
+
+      </svg>
+
+      <div class="stats-number">{{allotmentsDetails.noOfComponent || 0}}</div>
+      <div style="color:#777;">Total Electronic Components</div>
+
+    </div>
+  </div>
+
+  <!-- ================= MAIN ================= -->
+
+  <div class="main">
+
+    <div class="topbar">
+      <div class="tabs" *ngIf="selectedEmployeeId">
+        <!-- <div class="tab" [ngClass]="{'active': selectTable === 'assigned'}" (click)="selectTable = 'assigned'"> -->
+        <div class="tab" [class.active]="selectTable === 'assigned'" (click)="selectTable = 'assigned'">
+          Assigned
+        </div>
+
+        <!-- <div class="tab" [ngClass]="{'active': selectTable === 'history'}" (click)="selectTable = 'history'"> -->
+        <div class="tab" [class.active]="selectTable === 'history'" (click)="selectTable = 'history'">
+          History
+        </div>
+      </div>
+
+      <div class="search-wrapper" #searchContainer>
+
+        <div class="search-box">
+          🔍
+          <input type="text"
+            placeholder="Search users..."
+            [(ngModel)]="searchText"
+            (focus)="openUserList()"
+            (input)="filterEmployees()">
+
+          <span *ngIf="searchText"
+            class="clear-btn"
+            (click)="clearSearch()">
+            ❌
+          </span>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="search-result" *ngIf="showDropdown">
+
+          <!-- User List -->
+          <div *ngIf="filteredEmployees.length > 0;">
+            <div class="result-item"
+                *ngFor="let employee of filteredEmployees"
+                (click)="selectEmployee(employee)">
+              {{ employee.firstName }} {{ employee.lastName }}
+            </div>
+          </div>
+
+          <!-- No User Found -->
+           <div *ngIf="filteredEmployees.length === 0 && searchText" class="text-center no-data-row">
+            No data found for "{{ searchText }}"
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="empty" *ngIf="!selectedEmployeeId">
+      <h2>Please select a user from the list to continue.</h2>
+
+      <div class="empty-card">
+
+        <!-- MAGNIFIER ILLUSTRATION -->
+        <svg width="400" height="250" viewBox="0 0 500 300">
+          <rect x="40" y="60" width="300" height="160" rx="20" fill="#EEF2F7" />
+
+          <circle cx="100" cy="100" r="12" fill="#cdd5df" />
+          <rect x="130" y="90" width="120" height="10" rx="5" fill="#cdd5df" />
+
+          <circle cx="100" cy="140" r="12" fill="#cdd5df" />
+          <rect x="130" y="130" width="120" height="10" rx="5" fill="#cdd5df" />
+
+          <circle cx="100" cy="180" r="12" fill="#cdd5df" />
+          <rect x="130" y="170" width="120" height="10" rx="5" fill="#cdd5df" />
+
+          <!-- lens -->
+          <circle cx="320" cy="170" r="70" fill="#8BB5D9" />
+          <circle cx="320" cy="170" r="50" fill="#CFE5F5" />
+
+          <!-- handle -->
+          <rect x="370" y="210" width="120" height="25" transform="rotate(45 370 210)" fill="#5B7EA6" />
+        </svg>
+
+        <p>Select a user from the dropdown above to view assigned and history electronic components.</p>
+
+        <button class="btn"></button>
+
+      </div>
+    </div>
+
+    <!-- ================= Show only when employee selected for Electronic Components ================= -->
+    <div *ngIf="selectedEmployeeId">
+
+      <!-- ================= ASSIGNED SECTION ================= -->
+      <div *ngIf="selectTable === 'assigned'" class="card shadow-sm mt-3">
+        <div class="card-header fw-bold">
+          Electronic Component - Assigned
+        </div>
+
+        <div class="card-body">
+
+          <div *ngIf="assignedStockHistory?.length > 0; else noAssignedData">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Manufacturer Part No</th>
+                  <th>Transaction Type</th>
+                  <th>Project Name</th>
+                  <th>Quantity</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let assignedData of assignedStockHistory; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{assignedData.manufacturerPartNumber}}</td>
+                  <td>{{assignedData.transactionType}}</td>
+                  <td>{{projectNameList[assignedData.projectName]}}</td>
+                  <td>{{assignedData.finalQuantity}}</td>
+                  <td>{{assignedData.dateUpdate | date:'dd MMM yyyy - hh:mm a'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #noAssignedData>
+            <div class="text-muted fs-5">
+              No component inventory assigned to this user.
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+
+      <!-- ================= HISTORY SECTION ================= -->
+      <div *ngIf="selectTable === 'history'" class="card shadow-sm mt-3">
+        <div class="card-header fw-bold">
+          Electronic Component - History
+        </div>
+
+        <div class="card-body">
+
+          <div *ngIf="issuedStockHistory && issuedStockHistory.length > 0; else noHistoryData">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Manufacturer Part No</th>
+                  <th>Transaction Type</th>
+                  <th>Project Name</th>
+                  <th>Inventory Handler</th>
+                  <th>Quantity</th>
+                  <th>Date</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let stockHistory of issuedStockHistory; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{stockHistory.componentId?.manufacturerPartNumber || '--'}}</td>
+                  <td>{{stockHistory.transactionType}}</td>
+                  <td>{{projectNameList?.[stockHistory.projectName] || '--'}}</td>
+                  <td>{{stockHistory.inventoryHandler || '--'}}</td>
+                  <td>{{stockHistory.quantity}}</td>
+                  <td>{{stockHistory.date | date:'dd MMM yyyy - hh:mm a'}}</td>
+                  <td>{{stockHistory.note || '--'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #noHistoryData>
+            <div class="text-muted fs-5">
+              No component inventory history available for this user.
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

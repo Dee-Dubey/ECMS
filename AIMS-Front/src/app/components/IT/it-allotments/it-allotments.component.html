@@ -1,0 +1,237 @@
+  <div class="wrapper">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar">
+      <div class="stats-card">
+
+        <div class="stats-title">IT Inventory</div>
+
+        <!-- PCB ICON -->
+        <svg width="120" height="100" viewBox="0 0 140 100">
+
+          <!-- Laptop Screen -->
+          <rect x="25" y="30" width="60" height="35" rx="5" fill="#D95C5C"/>
+
+          <!-- Laptop Base -->
+          <rect x="20" y="65" width="70" height="8" rx="3" fill="#6E7C8C"/>
+
+          <!-- Box -->
+          <rect x="85" y="40" width="35" height="30" rx="4" fill="#F4A261"/>
+
+        </svg>
+
+        <div class="stats-number">{{allotmentsDetails.noOfIt  || 0}}</div>
+        <div style="color:#777;">Total IT Inventory</div>
+
+      </div>
+    </div>
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="main">
+
+      <div class="topbar">
+        <div class="tabs" *ngIf="selectedEmployeeId">
+          <div class="tab" [ngClass]="{'active': selectTable === 'assigned'}" (click)="selectTable = 'assigned'">
+            Assigned
+          </div>
+
+          <div class="tab" [ngClass]="{'active': selectTable === 'history'}" (click)="selectTable = 'history'">
+            History
+          </div>
+        </div>
+
+        <div class="search-wrapper" #searchContainer>
+
+          <div class="search-box">
+            🔍
+            <input type="text"
+              placeholder="Search users..."
+              [(ngModel)]="searchText"
+              (focus)="openUserList()"
+              (input)="filterEmployees()">
+
+            <span *ngIf="searchText"
+              class="clear-btn"
+              (click)="clearSearch()">
+              ❌
+            </span>
+          </div>
+
+          <!-- Dropdown -->
+          <div class="search-result" *ngIf="showDropdown">
+
+            <!-- User List -->
+            <div *ngIf="filteredEmployees.length > 0;">
+              <div class="result-item"
+                  *ngFor="let employee of filteredEmployees"
+                  (click)="selectEmployee(employee)">
+                {{ employee.firstName }} {{ employee.lastName }}
+              </div>
+            </div>
+
+            <!-- No User Found -->
+            <div *ngIf="filteredEmployees.length === 0 && searchText" class="text-center no-data-row">
+              No data found for "{{ searchText }}"
+            </div>
+
+          </div>
+
+      </div>
+
+        <!-- <div class="search-wrapper">
+          <div class="search-box">
+            🔍
+            <input type="text" placeholder="Search users..." [(ngModel)]="searchText" (input)="filterEmployees()">
+            <span *ngIf="searchText && filteredEmployees.length > 0" (click)="clearSearch()" style="cursor:pointer;">❌</span>
+          </div>
+
+          <div class="search-result" *ngIf="showDropdown && filteredEmployees.length > 0">
+            <div class="result-item" *ngFor="let employee of filteredEmployees" (click)="selectEmployee(employee)">
+              {{ employee.firstName }} {{ employee.lastName }}
+            </div>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="empty" *ngIf="!selectedEmployeeId">
+        <h2>Please select a user from the list to continue.</h2>
+
+        <div class="empty-card">
+
+          <!-- MAGNIFIER ILLUSTRATION -->
+          <svg width="400" height="250" viewBox="0 0 500 300">
+            <rect x="40" y="60" width="300" height="160" rx="20" fill="#EEF2F7"/>
+
+            <circle cx="100" cy="100" r="12" fill="#cdd5df"/>
+            <rect x="130" y="90" width="120" height="10" rx="5" fill="#cdd5df"/>
+
+            <circle cx="100" cy="140" r="12" fill="#cdd5df"/>
+            <rect x="130" y="130" width="120" height="10" rx="5" fill="#cdd5df"/>
+
+            <circle cx="100" cy="180" r="12" fill="#cdd5df"/>
+            <rect x="130" y="170" width="120" height="10" rx="5" fill="#cdd5df"/>
+
+            <!-- lens -->
+            <circle cx="320" cy="170" r="70" fill="#8BB5D9"/>
+            <circle cx="320" cy="170" r="50" fill="#CFE5F5"/>
+
+            <!-- handle -->
+            <rect x="370" y="210" width="120" height="25"
+                  transform="rotate(45 370 210)"
+                  fill="#5B7EA6"/>
+          </svg>
+
+          <p>Select a user from the dropdown above to view assigned and history IT Inventory.</p>
+
+          <button class="btn"></button>
+
+        </div>
+      </div>
+
+      <!-- ================= Show only when employee selected for IT SECTION ================= -->
+      <div class="accordion"  id="accordionExample" *ngIf="selectedEmployeeId">
+
+        <!-- Assigned -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button accordian-head" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAssigned">
+              IT INVENTORY - Assigned
+            </button>
+          </h2>
+          <div *ngIf="selectTable === 'assigned'">
+            <div class="accordion-body">
+
+              <div *ngIf="!ITAssignedFlag; else noITAssigned">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Inventory Id</th>
+                      <th>Transaction</th>
+                      <th>Category</th>
+                      <th>Sub Category</th>
+                      <th>Manufacturer</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of assignedITStockHistory; let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{item.inventoryId}}</td>
+                      <td>{{item.transactionType}}</td>
+                      <td>{{ITCategoryNameList?.[item.categoryName]}}</td>
+                      <td>{{ITSubCategoryNameList?.[item.subCategoryName]}}</td>
+                      <td>{{ITManufacturerNameList?.[item.manufacturer]}}</td>
+                      <td>{{item.updatedAt | date:'dd MMM yyyy - hh:mm a'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <ng-template #noITAssigned>
+                <span class="fs-5">No IT inventory assigned to this user.</span>
+              </ng-template>
+
+            </div>
+          </div>
+        </div>
+
+
+        <!-- History -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed accordian-head" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistory">
+              IT INVENTORY - History
+            </button>
+          </h2>
+          <div *ngIf="selectTable === 'history'">
+            <div class="accordion-body">
+
+              <div *ngIf="!ITHistoryFlag; else noITHistory">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Inventory Id</th>
+                      <th>Transaction</th>
+                      <th>Category</th>
+                      <th>Sub Category</th>
+                      <th>Manufacturer</th>
+                      <th>Handler</th>
+                      <th>Date</th>
+                      <th>Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of ITStockHistories; let i = index">
+                      <td>{{i+1}}</td>
+                      <td>{{item.inventoryId?.code}}</td>
+                      <td>{{item.transactionType}}</td>
+                      <td>{{ITCategoryNameList?.[item.inventoryId?.categoryName]}}</td>
+                      <td>{{ITSubCategoryNameList?.[item.inventoryId?.subCategoryName]}}</td>
+                      <td>{{ITManufacturerNameList?.[item.inventoryId?.manufacturer]}}</td>
+                      <td>{{item.inventoryHandler}}</td>
+                      <td>{{item.date | date:'dd MMM yyyy - hh:mm a'}}</td>
+                      <td>{{item.note || '--'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <ng-template #noITHistory>
+                <span class="fs-5">No IT inventory history available for this user.</span>
+              </ng-template>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+

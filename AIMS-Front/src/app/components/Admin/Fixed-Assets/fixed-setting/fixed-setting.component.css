@@ -1,0 +1,200 @@
+.setting-container {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.single-column {
+  height: 100%;
+}
+
+.hero {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  padding: 1rem 0
+}
+
+.single-container {
+  margin: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 14px;
+  background: var(--bg-dark-gray2);
+  height: 100%;
+  padding-bottom: 0.5rem;
+}
+
+.heading {
+  padding: 1rem;
+}
+
+.single-container h4 {
+  margin: 0;
+  color: var(--white);
+  font-size: 1.5rem;
+}
+
+
+.single-btn-container {
+  padding: 1rem;
+  border-radius: 11px;
+  background: var(--bg-white);
+  flex: 1;
+  overflow: overlay;
+}
+
+.single-btn-container::-webkit-scrollbar {
+  width: 0.2rem;
+}
+
+.single-btn-container::-webkit-scrollbar-thumb {
+  background-color: var(--bg-dark-gray2);
+}
+
+.single-btn-container::-webkit-scrollbar-track {
+  background-color: var(--bg-dark-gray2);
+}
+
+.component-btn {
+  width: 100%;
+  margin: 0.5rem 0;
+  background-color: var(--bg-light-gray3);
+  color: var(--black);
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.component-btn:hover {
+  background-color: var(--bg-red);
+  color: var(--white);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+/* modal design  */
+.modal-header {
+  background-color: var(--bg-dark-gray2);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+}
+
+/* form design  */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  margin-top: 0.5rem;
+}
+
+/* form design  */
+.btn-close {
+  color: var(--white);
+  opacity: 1;
+}
+
+.component-btn.disabled {
+  background: rgb(218, 218, 218);
+
+}
+
+/* modal design  */
+.icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.cross-icon {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-right: 0.3rem;
+}
+
+/* table design  */
+.table-container {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 18rem;
+  flex: 1;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 0.2rem;
+  height: 0.2rem;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: var(--bg-dark-gray2);
+}
+
+.table-container::-webkit-scrollbar-track {
+  background-color: var(--bg-light-gray3);
+}
+
+.add-btn {
+  text-align: center;
+  margin-bottom: 0.6rem;
+}
+
+.form-control {
+  margin: 0;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-flow: column;
+  padding: 0;
+}
+
+.list {
+  list-style: none;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.form-check {
+  margin-left: 0;
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.form-check-input {
+  margin-right: 10px;
+  border: 0.1rem outset gray;
+}
+
+.select-all {
+  margin-bottom: 20px;
+}
+
+/* tab group button  */
+.nav-link.active {
+  background: var(--bg-red);
+  border: none;
+  color: var(--white);
+}
+
+.nav-link {
+  color: var(--black);
+  font-weight: 500;
+}
+
+.btn-submit {
+  margin-top: 20px;
+}

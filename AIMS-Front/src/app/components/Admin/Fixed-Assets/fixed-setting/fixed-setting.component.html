@@ -1,0 +1,14 @@
+<div class="single-container">
+  <div class="heading">
+    <h4>Fixed Asset</h4>
+  </div>
+  <div class="single-btn-container">
+
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal6">Categorization</button>
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal7">Supplier</button>
+    <button type="button" class="btn component-btn" data-bs-toggle="modal"
+      [ngClass]="{disabled: userRights?.ITDepartment?.ITInventory?.manage === 0}" data-bs-target="#exampleModal8">Manufacturer</button>
+  </div>
+</div>

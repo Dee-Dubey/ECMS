@@ -1,0 +1,106 @@
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--bg-light-gray2);
+}
+
+.background-dark {
+  background-color: var(--bg-dark-gray2);
+  color: white;
+}
+
+.accordion-button {
+  background-color: var(--bg-dark-gray1);
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  border: none;
+  padding: 0.3rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--bg-dark-gray2);
+  color: var(--white);
+}
+
+.accordion-button:hover {
+  background-color: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+
+.accordion-body {
+  background-color: var(--bg-light-gray3);
+  padding: 1.5rem;
+  color: var(--black);
+}
+
+.accordion-button::after {
+  filter: invert(1);
+}
+
+
+.accordion-item {
+  border: 1px solid var(--bg-light-gray2);
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--bg-light-gray2);
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: var(--bg-dark-gray3);
+  color: var(--white);
+}
+
+.table td {
+  background-color: var(--bg-white);
+  color: var(--black);
+}
+
+.table-responsive {
+  margin-top: 1rem;
+}
+
+.background-dark {
+  background-color: #4a4b4b;
+  color: white;
+}
+
+.btn-outline-secondary {
+  width: 14ch;
+  background-color: var(--bg-dark-gray2);
+  border: 0.1rem solid var(--bg-light-gray3);
+  padding: 0.5rem 1rem;
+}
+
+.btn-check:checked+.btn,
+.btn.active {
+  width: 14ch;
+  background-color: #0d6efd;
+}
+
+.btn-check:checked+.btn:hover {
+  width: 14ch;
+  background-color: #0d6efd;
+}
+
+.btn-check+.btn:hover {
+  background: var(--bg-dark-gray1);
+  color: var(--white);
+}
+
+.hide {
+  display: none;
+}

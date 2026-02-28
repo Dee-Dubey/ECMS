@@ -1,0 +1,1161 @@
+<div class="">
+  <table class="table table-responsive table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="align-middle text-center background-dark">AMC Name</th>
+        <th scope="col" class="align-middle text-center background-dark">Start Date</th>
+        <th scope="col" class="align-middle text-center background-dark">End Date</th>
+        <th scope="col" class="align-middle text-center background-dark">Number of Assets</th>
+        <th scope="col" class="align-middle text-center background-dark" colspan="2">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr class="value-row" *ngFor="let item of activeAMCList" (click)="openDetails(item)" style="cursor: pointer;">
+        <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">{{item.amcName}}</th>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">{{item.startDate |
+          date:'shortDate' }} - {{item.startDate | date:'shortTime'}}</td>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">{{item.endDate |
+          date:'shortDate'}} - {{item.endDate | date: 'shortTime'}}</td>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">
+          {{item.coveredAssets.length}}</td>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">
+          <button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#activeAMCEdit"
+            (click)="openEdit(item)">Edit</button>
+        </td>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#amcDetails">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#amcHistory" class="btn btn-action"
+            (click)="openHistory(item)">History</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="row mt-2">
+    <div class="col-md-6">
+      <div class="select-pageNo">
+        <label class="form-label"><b>Results per page</b></label>
+        <select class="form-select form-select-sm " [(ngModel)]="pageLimit" (change)="changeDataLimit()">
+          <option value="10">10</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-6 text-end">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+          <li class="page-item" [class.disabled]="currentPageNo === 1">
+            <button class="page-link font-size-pagination" (click)="goToFirstPage()">&laquo;&laquo;</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === 1">
+            <button class="page-link font-size-pagination" (click)="previousPage()">&lsaquo;</button>
+          </li>
+          <li class="page-item" *ngFor="let page of getPagesToShow()" [class.active]="currentPageNo === page">
+            <button class="page-link font-size-pagination" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+            <button class="page-link font-size-pagination" (click)="nextPage()">&rsaquo;</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+            <button class="page-link font-size-pagination" (click)="goToLastPage()">&raquo;&raquo;</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Details view -->
+<div class="modal modal-xl fade" id="amcDetails" tabindex="-1" aria-labelledby="ActiveAMCDetailsLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header justify-content-between">
+        <h5 class="modal-title">{{selectedName}}</h5>
+        <div class="right-btns">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearSelection()"></button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="row-detail">
+          <div class="text-container">
+            <p class="detailsHeading">AMC Name:</p>
+            <p class="detailsValue">{{selectedAMC?.amcName ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Assets Code:</p>
+            <p class="detailsValue">{{selectedAMC?.assetsCode ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Start Date:</p>
+            <p class="detailsValue">{{selectedAMC?.startDate ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">End Date:</p>
+            <p class="detailsValue">{{selectedAMC?.endDate ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Service Provider:</p>
+            <p class="detailsValue">{{selectedAMC?.serviceProvider ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Invoice Number:</p>
+            <p class="detailsValue">{{selectedAMC?.invoiceNumber ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Cost:</p>
+            <p class="detailsValue">{{selectedAMC?.cost ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">AMC Type:</p>
+            <p class="detailsValue">{{selectedAMC?.amcType ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Frequency:</p>
+            <p class="detailsValue">{{selectedAMC?.frequency ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Payment Mode:</p>
+            <p class="detailsValue">{{selectedAMC?.paymentMode ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Payment Info:</p>
+            <p class="detailsValue">{{selectedAMC?.paymentInfo ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Additional Notes:</p>
+            <p class="detailsValue">{{selectedAMC?.additionalNotes ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Status:</p>
+            <p class="detailsValue">{{selectedAMC?.status ?? '--'}}</p>
+          </div>
+        </div>
+
+        <div class=" row card-body">
+          <div class="card col-md-12">
+            <div class="card-body p-0">
+              <p class="m-1 detailsHeading">Covered Assets</p>
+              <hr class="m-0">
+              <div class="accordion m-2" id="coveredAssetsAcc">
+                <div class="accordion-item border border-danger-subtle" *ngFor="let items of selectedAMC?.coveredAssets; let i = index">
+
+                  <h2 class="accordion-header">
+                    <button class="accordion-button assetsHeading p-2" type="button" data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#activeDetails'+i" [attr.aria-controls]="'collapse'+i" style="background-color: var(--bg-light-red2);">
+                      {{ items.department }}
+                    </button>
+                  </h2>
+
+                  <!-- <div [id]="'collapse'+i" class="accordion-collapse collapse" [class.show]="i === 0"> -->
+                  <div [id]="'activeDetails'+i" class="accordion-collapse collapse" [class.show]="true">
+                    <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th *ngFor="let h of getHeaders(items.assets)">
+                              {{ toDisplayName(h) }}
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr *ngFor="let asset of items.assets">
+                            <td *ngFor="let h of getHeaders(items.assets)">
+                              {{ resolveValue(asset, h, items.department) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal modal-xl fade" id="activeAMCEdit" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ selectedName }}</h1>
+        <button type="button" id="closeEditModalCreate" class="btn-close btn-close-white"
+          data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="modify-tab" data-bs-toggle="tab" data-bs-target="#modify" type="button"
+              role="tab" aria-controls="modify" aria-selected="true">Modify</button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="extended-tab" data-bs-toggle="tab" data-bs-target="#extended" type="button"
+              role="tab" aria-controls="extended" aria-selected="false">Extend AMC</button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="initiateService-tab" data-bs-toggle="tab" data-bs-target="#initiateService"
+              type="button" role="tab" aria-controls="initiateService" aria-selected="false">Initiate Service</button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="serviceClose-tab" data-bs-toggle="tab" data-bs-target="#serviceClose"
+              type="button" role="tab" aria-controls="serviceClose" aria-selected="false">Close Service</button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="repairInitiated-tab" data-bs-toggle="tab" data-bs-target="#repairInitiated"
+              type="button" role="tab" aria-controls="repairInitiated" aria-selected="false">Initiate Repair</button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="repairClose-tab" data-bs-toggle="tab" data-bs-target="#repairClose"
+              type="button" role="tab" aria-controls="repairClose" aria-selected="false">Close Repair</button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+          <!-- Modify Content -->
+          <div class="tab-pane fade show active" id="modify" role="tabpanel" aria-labelledby="modify-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="modifyAMCForm" (ngSubmit)="submitModifyAMC()">
+                <div class="row">
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">AMC Name <span class="required">*</span> </label>
+                    <input type="text" class="form-control" formControlName="amcName" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['amcName'].errors?.['required'] && modifyAMCForm.controls['amcName'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Assets Code <span class="required">*</span> </label>
+                    <input type="text" class="form-control" formControlName="assetsCode" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['assetsCode'].errors?.['required'] && modifyAMCForm.controls['assetsCode'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Start Date <span class="required">*</span> </label>
+                    <input type="date" class="form-control" formControlName="startDate" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['startDate'].errors?.['required'] && modifyAMCForm.controls['startDate'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">End Date <span class="required">*</span> </label>
+                    <input type="date" class="form-control" formControlName="endDate" />
+
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['endDate'].errors?.['required'] && modifyAMCForm.controls['endDate'].touched">
+                        This field is required.
+                      </small>
+                      <small *ngIf="modifyAMCForm.errors?.['dateRangeInvalid']">
+                        End Date must be greater than Start Date.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Service Provider <span class="required">*</span> </label>
+                    <!-- <input type="text" class="form-control" formControlName="serviceProvider" /> -->
+                    <ng-select [items]="providers" bindLabel="name" bindValue="_id" formControlName="serviceProvider"
+                      [searchable]="true" [addTag]="true" placeholder="Select Service Provider">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['serviceProvider'].errors?.['required'] && modifyAMCForm.controls['serviceProvider'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Invoice Number <span class="required">*</span></label>
+                    <input type="number" class="form-control" formControlName="invoiceNumber" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['invoiceNumber'].errors?.['required'] && modifyAMCForm.controls['invoiceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="cost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['cost'].errors?.['required'] && modifyAMCForm.controls['cost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">AMC Type <span class="required">*</span> </label>
+                    <ng-select [items]="amcType" bindLabel="name" bindValue="_id" formControlName="amcType"
+                      [searchable]="true" [addTag]="true" placeholder="Select AMC Type">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['amcType'].errors?.['required'] && modifyAMCForm.controls['amcType'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Frequency <span class="required">*</span> </label>
+                    <ng-select [items]="amcFrequency" bindLabel="name" bindValue="_id" formControlName="frequency"
+                      [searchable]="true" [addTag]="true" placeholder="Select AMC Frequency">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="modifyAMCForm.controls['frequency'].errors?.['required'] && modifyAMCForm.controls['frequency'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-9 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+
+                  <div class="col-md-12 form-group m-0">
+                    <hr>
+                    <div class="">
+                      <div class="card-header"> Add Covered Assets </div>
+                      <div class="card-body">
+                        <div class="row col-12">
+                          <div class="card col-4" style="width: 12rem;">
+                            <h5 class="card-title">Filter</h5>
+                            <hr>
+
+                            <div class="table-scroll">
+                              <div class="col-12 form-group m-0.1">
+                                <label class="form-label"> Department </label>
+                                <ng-select [items]="department" [searchable]="true" [(ngModel)]="filter.department"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Department"
+                                  (change)="onDepartmentChange()">
+                                </ng-select>
+                              </div>
+
+                              <div class="col-12 form-group m-0.1">
+                                <label class="form-label"> Category </label>
+                                <ng-select [items]="category" bindLabel="name" bindValue="_id" [searchable]="true"
+                                  [(ngModel)]="filter.category" [ngModelOptions]="{standalone: true}"
+                                  placeholder="Select Category">
+                                </ng-select>
+                              </div>
+
+                              <div *ngIf="filter.department === 'IT Department'" class="col-12 form-group m-0.1">
+                                <label class="form-label"> Sub Category </label>
+                                <ng-select [items]="subcategory" bindLabel="subCategoryName" bindValue="_id"
+                                  [searchable]="true" [(ngModel)]="filter.subcategory"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Sub Category">
+                                </ng-select>
+                              </div>
+
+                              <div
+                                *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                class="col-12 form-group m-0.1">
+                                <label class="form-label"> Manufacturer </label>
+                                <ng-select [items]="manufacturer" bindLabel="name" bindValue="_id" [searchable]="true"
+                                  [(ngModel)]="filter.manufacturer" [ngModelOptions]="{standalone: true}"
+                                  placeholder="Select Manufacture">
+                                </ng-select>
+                              </div>
+
+                              <div *ngIf="filter.department === 'Electronic Component'" class="col-12 form-group m-0.1">
+                                <label class="form-label"> Manufacturer Part Number</label>
+                                <input type="text" class="form-control" [(ngModel)]="filter.manufacturerPartNumber"
+                                  [ngModelOptions]="{standalone: true}" placeholder="Select Manufacturer Part Number">
+                              </div>
+                              <button type="button" class="btn btn-primary" (click)="applyFilter()">Filter</button>
+                            </div>
+                          </div>
+
+                          <div class="card col-4" style="width: 28rem;">
+                            <div class="card-body p-0">
+                              <h5 class="card-title">List Of Filtered</h5>
+                              <hr>
+                              <div class="table-scroll">
+                                <table class="table table-striped">
+                                  <thead>
+                                    <tr>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Select</th>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Assets ID</th>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Category</th>
+                                      <th *ngIf="filter.department === 'IT Department'" scope="col">Sub Category</th>
+                                      <th *ngIf="filter.department === 'Electronic Component'" scope="col">Manufacturer
+                                        Part No </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let item of filteredList">
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                        <input type="checkbox" [checked]="isSelected(item)"
+                                          (change)="moveAssetToAMC($event, item)">
+                                      </th>
+                                      <td
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                        {{getAssetCode(item)}} </td>
+                                      <td *ngIf="filter.department === 'IT Department'"> {{
+                                        ITSettingData.categoryMap[item.categoryName] }}</td>
+                                      <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                        ECSettingData.categoryMap[item.categoryName] }}</td>
+                                      <td *ngIf="filter.department === 'IT Department'"> {{
+                                        ITSettingData.subCategoryMap[item.subCategoryName] }} </td>
+                                      <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                        item.manufacturerPartNumber }} </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card col-4" style="width: 28rem;">
+                            <div class="card-body p-0">
+                              <h5 class="card-title">List of Selection</h5>
+                              <hr>
+                              <div class="table-scroll">
+                                <table class="table table-striped">
+                                  <thead>
+                                    <tr>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Select</th>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Assets ID</th>
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'"
+                                        scope="col">Category</th>
+                                      <th *ngIf="filter.department === 'IT Department'" scope="col">Sub Category</th>
+                                      <th *ngIf="filter.department === 'Electronic Component'" scope="col">Manufacturer
+                                        Part No </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let item of selectedBucket">
+                                      <th
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                        <input type="checkbox" [disabled]="availableAssetIDs.includes(item._id)" checked (change)="removeFromSelected($event, item)">
+                                      </th>
+                                      <td
+                                        *ngIf="filter.department === 'IT Department' || filter.department === 'Electronic Component'">
+                                        {{getAssetCode(item)}}</td>
+                                      <td *ngIf="filter.department === 'IT Department'"> {{
+                                        ITSettingData.categoryMap[item.categoryName] }}</td>
+                                      <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                        ECSettingData.categoryMap[item.categoryName] }}</td>
+                                      <td *ngIf="filter.department === 'IT Department'"> {{
+                                        ITSettingData.subCategoryMap[item.subCategoryName] }} </td>
+                                      <td *ngIf="filter.department === 'Electronic Component'"> {{
+                                        item.manufacturerPartNumber }} </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" [disabled]="modifyAMCForm.invalid" class="btn btn-submit mt-4">Submit</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Extended -->
+          <div class="tab-pane fade show" id="extended" role="tabpanel" aria-labelledby="extended-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="extendedForm" (ngSubmit)="submitExtended()">
+                <div class="row">
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">AMC Name <span class="required">*</span> </label>
+                    <input type="text" class="form-control" formControlName="amcName" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['amcName'].errors?.['required'] && extendedForm.controls['amcName'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">ID <span class="required">*</span> </label>
+                    <input type="text" class="form-control" formControlName="id" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['id'].errors?.['required'] && extendedForm.controls['id'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Start Date <span class="required">*</span> </label>
+                    <input type="date" class="form-control" formControlName="startDate" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['startDate'].errors?.['required'] && extendedForm.controls['startDate'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">End Date <span class="required">*</span> </label>
+                    <input type="date" class="form-control" formControlName="endDate" />
+
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['endDate'].errors?.['required'] && extendedForm.controls['endDate'].touched">
+                        This field is required.
+                      </small>
+                      <small *ngIf="extendedForm.errors?.['dateRangeInvalid']">
+                        End Date must be greater than Start Date.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Service Provider <span class="required">*</span> </label>
+                    <!-- <input type="text" class="form-control" formControlName="serviceProvider" /> -->
+                    <ng-select [items]="providers" bindLabel="name" bindValue="_id" formControlName="serviceProvider"
+                      [searchable]="true" [addTag]="true" placeholder="Select Service Provider">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['serviceProvider'].errors?.['required'] && extendedForm.controls['serviceProvider'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Invoice Number <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="invoiceNumber" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['invoiceNumber'].errors?.['required'] && extendedForm.controls['invoiceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="cost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['cost'].errors?.['required'] && extendedForm.controls['cost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">AMC Type <span class="required">*</span> </label>
+                    <ng-select [items]="amcType" bindLabel="name" bindValue="_id" formControlName="amcType"
+                      [searchable]="true" [addTag]="true" placeholder="Select AMC Type">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['amcType'].errors?.['required'] && extendedForm.controls['amcType'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Frequency <span class="required">*</span> </label>
+                    <ng-select [items]="amcFrequency" bindLabel="name" bindValue="_id" formControlName="frequency"
+                      [searchable]="true" [addTag]="true" placeholder="Select AMC Frequency">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="extendedForm.controls['frequency'].errors?.['required'] && extendedForm.controls['frequency'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Payment Mode </label>
+                    <input type="text" class="form-control" formControlName="paymentMode" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Payment Info </label>
+                    <input type="text" class="form-control" formControlName="paymentInfo" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+                </div>
+                <button type="submit" [disabled]="extendedForm.invalid" class="btn btn-submit mt-4">Submit</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Initiate Service -->
+          <div class="tab-pane fade show" id="initiateService" role="tabpanel" aria-labelledby="initiateService-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="initiateServiceForm" (ngSubmit)="onSubmitInitiateService()">
+                <div class="row">
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Invoice Number <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="invoiceNumber" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="initiateServiceForm.controls['invoiceNumber'].errors?.['required'] && initiateServiceForm.controls['invoiceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Estimated Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="estimatedCost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="initiateServiceForm.controls['estimatedCost'].errors?.['required'] && initiateServiceForm.controls['estimatedCost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Service Details </label>
+                    <input type="text" class="form-control" formControlName="serviceDetails" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+
+                  <div class="col-md-12 form-group m-0">
+                    <div class=" row card-body">
+                      <div class="card col-md-12">
+                        <div class="card-body p-0">
+                          <div class="card-title">List Of Assets</div>
+                          <hr>
+                          <div class="accordion" id="accordionInitiateService">
+                            <div class="accordion-item border border-danger-subtle"
+                              *ngFor="let items of editAMC?.availableAsset; let InitiateService = index">
+                              <h2 class="accordion-header">
+                                <button class="accordion-button assetsHeading p-2" type="button"
+                                  data-bs-toggle="collapse" [attr.data-bs-target]="'#InitiateService'+InitiateService"
+                                  [attr.aria-controls]="'collapse'+InitiateService" style="background-color: var(--bg-light-red2);">{{items.department}}</button>
+                              </h2>
+
+                              <div [id]="'InitiateService'+InitiateService" class="accordion-collapse collapse"
+                                [class.show]="true">
+                                <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                                  <table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Select</th>
+                                        <th *ngFor="let h of getHeaders(items.assets)">
+                                          {{ toDisplayName(h) }}
+                                        </th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      <tr *ngFor="let asset of items.assets">
+                                        <td><input type="checkbox" (change)="checkBoxInputId(asset._id)"></td>
+
+                                        <td *ngFor="let h of getHeaders(items.assets)">
+                                          {{ resolveValue(asset, h, items.department) }}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" [disabled]="initiateServiceForm.invalid" class="btn btn-submit mt-4">Submit
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Service Close -->
+          <div class="tab-pane fade show" id="serviceClose" role="tabpanel" aria-labelledby="serviceClose-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="serviceCloseForm" (ngSubmit)="submitServiceClose()">
+                <div class="row">
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"> Service Number <span class="required">*</span> </label>
+                    <ng-select [items]="openServiceNumber.serviceInitiated" bindLabel="serviceNumber" bindValue="serviceNumber"
+                      formControlName="serviceNumber" [searchable]="true" placeholder="Select Service Number"
+                      (change)="changeServiceNumber($event)">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="serviceCloseForm.controls['serviceNumber'].errors?.['required'] && serviceCloseForm.controls['serviceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"> Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="cost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="serviceCloseForm.controls['cost'].errors?.['required'] && serviceCloseForm.controls['cost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Payment Mode </label>
+                    <input type="text" class="form-control" formControlName="paymentMode" />
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Payment Info </label>
+                    <input type="text" class="form-control" formControlName="paymentInfo" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Service Details </label>
+                    <input type="text" class="form-control" formControlName="serviceDetails" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+
+                  <div class="col-md-12 form-group m-0">
+                    <div class=" row card-body">
+                      <div class="card col-md-12">
+                        <div class="card-body p-0">
+                          <div class="card-title">List Of Assets</div>
+                          <hr>
+                          <div class="accordion" id="accordionServiceClose">
+                            <div class="accordion" id="accordionServiceClose">
+                              <div class="accordion-item border border-danger-subtle"
+                                *ngFor="let items of serviceDetails?.servicedAssets; let serviceClose = index">
+                                <h2 class="accordion-header">
+                                  <button class="accordion-button assetsHeading p-2" type="button"
+                                    data-bs-toggle="collapse" [attr.data-bs-target]="'#serviceClose'+serviceClose"
+                                    [attr.aria-controls]="'collapse'+serviceClose" style="background-color: var(--bg-light-red2);">{{items.department}}</button>
+                                </h2>
+
+                                <div [id]="'serviceClose'+serviceClose" class="accordion-collapse collapse"
+                                  [class.show]="true">
+                                  <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                                    <table class="table table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th *ngFor="let h of getHeaders(items.assets)">
+                                            {{ toDisplayName(h) }}
+                                          </th>
+                                        </tr>
+                                      </thead>
+
+                                      <tbody>
+                                        <tr *ngFor="let asset of items.assets">
+                                          <td *ngFor="let h of getHeaders(items.assets)">
+                                            {{ resolveValue(asset, h, items.department) }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" [disabled]="serviceCloseForm.invalid" class="btn btn-submit mt-4">Submit</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Repair Initiated -->
+          <div class="tab-pane fade show" id="repairInitiated" role="tabpanel" aria-labelledby="repairInitiated-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="repairInitiatedForm" (ngSubmit)="submitRepairInitiated()">
+                <div class="row">
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Invoice Number <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="invoiceNumber" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="repairInitiatedForm.controls['invoiceNumber'].errors?.['required'] && repairInitiatedForm.controls['invoiceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Estimated Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="estimatedCost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="repairInitiatedForm.controls['estimatedCost'].errors?.['required'] && repairInitiatedForm.controls['estimatedCost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Service Details </label>
+                    <input type="text" class="form-control" formControlName="serviceDetails" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+
+                  <div class="col-md-12 form-group m-0">
+                    <div class=" row card-body">
+                      <div class="card col-md-12">
+                        <div class="card-body p-0">
+                          <div class="card-title">List Of Assets</div>
+                          <hr>
+                          <div class="accordion" id="accordionInitiateService">
+                            <div class="accordion-item border border-danger-subtle"
+                              *ngFor="let items of editAMC?.availableAsset; let InitiateService = index">
+                              <h2 class="accordion-header">
+                                <button class="accordion-button assetsHeading p-2" type="button"
+                                  data-bs-toggle="collapse" [attr.data-bs-target]="'#InitiateService'+InitiateService"
+                                  [attr.aria-controls]="'collapse'+InitiateService" style="background-color: var(--bg-light-red2);">{{items.department}}</button>
+                              </h2>
+
+                              <div [id]="'InitiateService'+InitiateService" class="accordion-collapse collapse"
+                                [class.show]="true">
+                                <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                                  <table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Select</th>
+                                        <th *ngFor="let h of getHeaders(items.assets)">
+                                          {{ toDisplayName(h) }}
+                                        </th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      <tr *ngFor="let asset of items.assets">
+                                        <td><input type="checkbox" (change)="checkBoxInputId(asset._id)"></td>
+
+                                        <td *ngFor="let h of getHeaders(items.assets)">
+                                          {{ resolveValue(asset, h, items.department) }}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <button type="submit" [disabled]="repairInitiatedForm.invalid" class="btn btn-submit mt-4">Submit
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Repair Close -->
+          <div class="tab-pane fade show" id="repairClose" role="tabpanel" aria-labelledby="repairClose-tab">
+            <div class="form-container mt-2 mb-3">
+              <form [formGroup]="repairCloseForm" (ngSubmit)="submitRepairClose()">
+                <div class="row">
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"> Service Number <span class="required">*</span> </label>
+                    <ng-select [items]="openServiceNumber.repairInitiated" bindLabel="serviceNumber" bindValue="serviceNumber"
+                      formControlName="serviceNumber" [searchable]="true" placeholder="Select Repair Number"
+                      (change)="changeRepairNumber($event)">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="repairCloseForm.controls['serviceNumber'].errors?.['required'] && repairCloseForm.controls['serviceNumber'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"> Cost <span class="required">*</span> </label>
+                    <input type="number" class="form-control" formControlName="cost" />
+                    <div class="error-message">
+                      <small
+                        *ngIf="repairCloseForm.controls['cost'].errors?.['required'] && repairCloseForm.controls['cost'].touched">
+                        This field is required.
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Payment Mode </label>
+                    <input type="text" class="form-control" formControlName="paymentMode" />
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label">Payment Info </label>
+                    <input type="text" class="form-control" formControlName="paymentInfo" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Service Details </label>
+                    <input type="text" class="form-control" formControlName="serviceDetails" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label">Additional Notes </label>
+                    <input type="text" class="form-control" formControlName="additionalNotes" />
+                  </div>
+
+                  <div class="col-md-12 form-group m-0">
+                    <div class=" row card-body">
+                      <div class="card col-md-12">
+                        <div class="card-body p-0">
+                          <div class="card-title">List Of Assets</div>
+                          <hr>
+                          <div class="accordion" id="accordionRepairClose">
+                            <div class="accordion" id="accordionRepairClose">
+                              <div class="accordion-item border border-danger-subtle"
+                                *ngFor="let items of repairDetails?.servicedAssets; let repairClose = index">
+                                <h2 class="accordion-header">
+                                  <button class="accordion-button assetsHeading p-2" type="button"
+                                    data-bs-toggle="collapse" [attr.data-bs-target]="'#repairClose'+repairClose"
+                                    [attr.aria-controls]="'collapse'+repairClose" style="background-color: var(--bg-light-red2);">{{items.department}}</button>
+                                </h2>
+
+                                <div [id]="'repairClose'+repairClose" class="accordion-collapse collapse"
+                                  [class.show]="true">
+                                  <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                                    <table class="table table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th *ngFor="let h of getHeaders(items.assets)">
+                                            {{ toDisplayName(h) }}
+                                          </th>
+                                        </tr>
+                                      </thead>
+
+                                      <tbody>
+                                        <tr *ngFor="let asset of items.assets">
+                                          <td *ngFor="let h of getHeaders(items.assets)">
+                                            {{ resolveValue(asset, h, items.department) }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" [disabled]="repairCloseForm.invalid" class="btn btn-submit mt-4">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal modal-xl fade" id="amcHistory" tabindex="-1" aria-labelledby="stockHistoryLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stockHistoryLabel">{{selectedName }}</h5>
+        <div class="color-cot">
+          <!-- Uncomment and adjust as necessary -->
+          <div class="color">
+            <input class="form-check-input search-box" name="historyFilter" [(ngModel)]="selectedFilterHistory" type="radio" checked value="all" (change)="changeHistoryFilter($event)">
+            All
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" name="historyFilter" [(ngModel)]="selectedFilterHistory"  type="radio" value="create" (change)="changeHistoryFilter($event)">
+            <div class="create box"></div>
+            Create
+          </div>
+          <!-- <div class="color">
+            <input class="form-check-input search-box" type="radio" value="issue">
+            <div class="ExtendAMC box"></div>
+            Extend AMC
+          </div> -->
+          <div class="color">
+            <input class="form-check-input search-box" type="radio" name="historyFilter" [(ngModel)]="selectedFilterHistory" value="service initiate" (change)="changeHistoryFilter($event)">
+            <div class="InitiateService box"></div>
+            Initiate Service
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" name="historyFilter" type="radio" [(ngModel)]="selectedFilterHistory" value="close service" (change)="changeHistoryFilter($event)">
+            <div class="CloseService box"></div>
+            Close Service
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" name="historyFilter" type="radio" [(ngModel)]="selectedFilterHistory" value="repair initiate" (change)="changeHistoryFilter($event)">
+            <div class="InitiateRepair box"></div>
+            Initiate Repair
+          </div>
+          <div class="color">
+            <input class="form-check-input search-box" name="historyFilter" type="radio" [(ngModel)]="selectedFilterHistory" value="close repair" (change)="changeHistoryFilter($event)">
+            <div class="CloseRepair box"></div>
+            Close Repair
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Content for stock history goes here -->
+        <div class="stockHistoryTable-container">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="col-header align-middle background-dark">#</th>
+                <th scope="col" class="col-header align-middle background-dark">Date</th>
+                <th scope="col" class="col-header align-middle background-dark">Transaction</th>
+                <th scope="col" class="col-header align-middle background-dark">Service No.</th>
+                <th scope="col" class="col-header align-middle background-dark">Service Status</th>
+                <th scope="col" class="col-header align-middle background-dark">Serviced Asset</th>
+                <th scope="col" class="col-header align-middle background-dark">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of historyList; let i = index">
+                <tr [ngClass]="{'table-active': selectedRow === i,'cursor-pointer': item}" (click)="toggleCollapse(i)">
+                  <th scope="row" class="align-middle col-data">{{i+1}}</th>
+                  <td class="align-middle col-data">{{item.createdAt | date:'shortDate'}} - {{item.createdAt |
+                    date:'shortTime'}}</td>
+                  <td class="align-middle col-data">{{item.transactionType || '--'}}</td>
+                  <td class="align-middle col-data">{{item.serviceNumber || '--'}}</td>
+                  <td class="align-middle col-data">{{item.serviceStatus || '--'}}</td>
+                  <td class="align-middle col-data">{{item.servicedAssets.length || '--'}}</td>
+                  <td class="align-middle col-data">{{item.additionalNotes || '--'}}</td>
+                </tr>
+
+                <tr *ngIf="selectedRow === i">
+                  <td colspan="8" class="p-0 border-0">
+                    <div [id]="'collapse' + i" class="accordion-collapse collapse" [ngClass]="{show: item }">
+                      <div class="accordion-body" *ngIf="item !== null">
+                        <table class="table table-responsive m-0">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="col-header align-middle background-dark">Bill No</th>
+                              <th scope="col" class="col-header align-middle background-dark">Cost</th>
+                              <th scope="col" class="col-header align-middle background-dark">Estimated Cost</th>
+                              <th scope="col" class="col-header align-middle background-dark">Payment Info</th>
+                              <th scope="col" class="col-header align-middle background-dark">Payment Mode</th>
+                              <th scope="col" class="col-header align-middle background-dark">Service Details</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{item?.billNo !== null || undefined || "" ? item?.billNo : '--'}}</td>
+                              <td>{{item?.cost !== null || undefined || "" ? item?.cost : '--' }}</td>
+                              <td>{{item?.estimatedCost !== null || undefined || "" ? item?.estimatedCost : '--' }}</td>
+                              <td>{{item?.paymentInfo !== null || undefined || "" ? item?.paymentInfo : '--' }}</td>
+                              <td>{{item?.paymentMode !== null || undefined || "" ? item?.paymentMode : '--' }}</td>
+                              <td>{{item?.serviceDetails !== null || undefined || "" ? item?.serviceDetails : '--' }}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="accordion-body" *ngIf="item === null">
+                        <table class="table table-responsive m-0">
+                          <tbody>
+                            <tr>
+                              <th scope="row">Component Stock Is Moved from
+                                <!-- {{projectNameList[stockHistory.movedFromProjectName]}} to -->
+                                <!-- {{projectNameList[stockHistory.projectName]}} -->
+                              </th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

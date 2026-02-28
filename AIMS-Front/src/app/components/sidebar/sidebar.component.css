@@ -1,0 +1,45 @@
+.main-container {
+  width: 100%;
+  background-color: #c62828;
+}
+
+.sideBar-list {
+  padding: 0;
+  margin: 0 1rem;
+}
+
+hr {
+  margin: 0.2rem 0;
+}
+
+.info {
+  font-size: medium;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.nav-item {
+  list-style: none;
+  margin: 1.5rem 0;
+  color: var(--white);
+  padding: 0.2rem 1rem;
+  transition: background 0.3s ease;
+}
+
+.nav-item:hover {
+  background: var(--bg-white);
+  color: var(--black);
+  border-radius: 5px;
+}
+
+.nav-link {
+  font-size: 1.3rem;
+}
+
+.sideBar-list .nav-item.active>.nav-link {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-radius: 5px;
+  margin-left: -4px;
+  padding: 3px;
+}

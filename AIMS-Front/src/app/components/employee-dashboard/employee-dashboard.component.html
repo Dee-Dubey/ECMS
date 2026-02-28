@@ -1,0 +1,176 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <div class="row hero">
+    <div class="sidebar-container col-2 ps-0">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <div class="accinfo-container mt-3 col-10">
+      <div class="account-profile">
+        <div class="row g-3">
+          <div class="profile-img-container">
+            <img src="../../../assets/icons/person.svg" alt="" class="profile-img">
+          </div>
+          <h4 class="emp-name">{{employeeDetail?.firstName}} {{employeeDetail?.middleName}} {{employeeDetail?.lastName}}
+          </h4>
+        </div>
+      </div>
+
+      <div class="acc-detail">
+        <div class="d-flex justify-content-between">
+          <div class="col-md-10">
+            <h2>Account Detail</h2>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-reset" data-bs-toggle="modal" data-bs-target="#exampleModal">Reset
+              Password</button>
+          </div>
+        </div>
+        <div class="row g-3 mt-3">
+          <div class="col-md-4">
+            <h5 class="profile-label">Organization Email</h5>
+            <p class="profile-para">{{employeeDetail?.organizationEmail}}</p>
+          </div>
+          <div class="col-md-4">
+            <h5 class="profile-label">Login Id</h5>
+            <p class="profile-para">{{employeeDetail?.loginId}}</p>
+          </div>
+          <!-- <div class="col-md-4">
+            <h5 class="profile-label">Password</h5>
+            <p class="profile-para">Deepakd123</p>
+          </div> -->
+          <div class="col-md-4">
+            <h5 class="profile-label">Employee Code</h5>
+            <p class="profile-para">{{employeeDetail?.employeeCode}}</p>
+          </div>
+          <!-- <div class="col-md-4">
+            <h5 class="profile-label">Employee Rights</h5>
+            <p class="profile-para">Deepakd123</p>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+
+
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- edit password -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Reset User Password</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Reset User Password Form -->
+        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"> -->
+        <div>
+          <div class="form-container mt-2 mb-3">
+
+            <form [formGroup]="resetPasswordFrom" class="mt-2" (ngSubmit)="submitResetPasswordForm()">
+              <div class="row">
+                <div class="col-lg-6 mb-3 form-group">
+                  <label class="form-label">Enter New Password <span class="required">*</span></label>
+                  <input type="password" class="form-control" formControlName="password">
+                  <div class="error-message"
+                    *ngIf="resetPasswordFrom.controls['password'].invalid && resetPasswordFrom.controls['password'].touched">
+                    <div class="error-message" *ngIf="resetPasswordFrom.controls['password'].errors?.['required']">
+                      <small>This field is required</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 mb-3 form-group">
+                  <label class="form-label">Confirm New Password <span class="required">*</span></label>
+                  <input type="password" class="form-control" formControlName="confirmPassword">
+                  <div
+                    *ngIf="resetPasswordFrom.controls['confirmPassword'].invalid && resetPasswordFrom.controls['confirmPassword'].touched">
+                    <div class="error-message"
+                      *ngIf="resetPasswordFrom.controls['confirmPassword'].errors?.['required']">
+                      <small>This field is required</small>
+                    </div>
+                  </div>
+                  <div class="error-message"
+                    *ngIf="resetPasswordFrom.errors?.['misMatch'] && resetPasswordFrom.touched">
+                    <small>Password is not matched</small>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-submit mt-4" [disabled]="resetPasswordFrom.invalid">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Wait Edit Modal -->
+<div class="modal" id="editModalWait" tabindex="-1" data-bs-backdrop="static" aria-labelledby="editModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit User</h5>
+      </div>
+      <div class="modal-body">
+        <p>Please wait while we edit the user: <b>{{employeeDetail?.firstName}}</b></p>
+        <button class="btn btn-primary" type="button" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Editing...
+        </button>
+        <button type="button" id="editSuccessButton" data-bs-target="#editModalSuccess" data-bs-toggle="modal"
+          class="btn btn-primary" hidden></button>
+        <button type="button" id="editErrorButton" data-bs-target="#editModalError" data-bs-toggle="modal"
+          class="btn btn-primary" hidden></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Success Modal -->
+<div class="modal fade" id="editModalSuccess" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>User: <b>{{employeeDetail?.firstName}}</b> edited successfully</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="pageRefresh()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Edit Error Modal -->
+<div class="modal fade" id="editModalError" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit User</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Error editing the user: <b>{{employeeDetail?.firstName}}</b></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

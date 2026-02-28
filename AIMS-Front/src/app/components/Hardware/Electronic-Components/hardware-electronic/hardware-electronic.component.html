@@ -1,0 +1,367 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <div class="row hero">
+    <div class="col-lg-12 primary-container">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-lg-7 mb-2">
+        </div>
+        <div class="col-lg-5 text-end">
+          <!-- Button trigger modal -->
+          <div class="create-component row" *ngIf="employeeRights !== '1'">
+            <div class="col-md-4" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+              <button type="button" class="btn create-btn" data-bs-toggle="modal"
+                data-bs-target="#exampleModalExport">Export Excel File</button>
+            </div>
+            <div class="col-md-4" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+              <button type="button" class="btn create-btn me-1" data-bs-toggle="modal"
+                data-bs-target="#exampleModalUpload">Upload Excel File</button>
+            </div>
+            <div class="col-md-4" *ngIf="userRights.hardwareDepartment.electronicDevice.manage === 1">
+              <button type="button" class="btn create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add
+                New Components</button>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-lg-7 mb-2 d-flex justify-content-end align-items-center">
+          <app-notification class="d-flex justify-content-end align-items-center w-100"></app-notification>
+           <app-notification></app-notification>
+        </div> -->
+      </div>
+
+      <!-- Electronic-component export excel file -->
+      <div class="modal modal-lg fade" id="exampleModalExport" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" style="--bs-modal-width: 650px;">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Electronic-Component Export Excel File</h1>
+              <button type="button" id="exampleModalExport" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="resetExportForm()"></button>
+            </div>
+            <div class="modal-body bg-no-opacity">
+              <div class="row justify-content-around align-items-center">
+                <div class="col-md-6">
+                  <ng-select class="ng-select-filter" [items]="comProjects" bindLabel="name" bindValue="_id"
+                    [(ngModel)]="selectedProject" placeholder="Select Project" [searchable]="true">
+                  </ng-select>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="checkChoice">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <b>Stock History of Selected Project</b>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-3">
+                  <button class="btn" (click)="exportCSVFile()">Export</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Electronic-component upload excel file -->
+      <div class="modal fade" id="exampleModalUpload" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" style="--bs-modal-width: 1200px;">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Electronic-Component Upload Excel File</h1>
+              <button type="button" id="closeModalUpload" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearComponentForm()"></button>
+            </div>
+            <div class="modal-body bg-no-opacity">
+              <div class="row">
+                <div class="col mb-3 form-group">
+                  <label class="form-label"><b>Select A File</b></label>
+                  <input #uploadInput type="file" class="form-control" name="componentCsvFile" accept=".xls,.xlsx"
+                    (change)="selectComponentExcelFile($event)">
+                </div>
+              </div>
+              <button type="button" class="btn btn-submit" (click)="submitExcelFile()">Upload</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Electronic-component create file -->
+      <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Component</h1>
+              <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearComponentForm()"></button>
+            </div>
+            <div class="modal-body bg-no-opacity">
+              <div class="form-container">
+                <form [formGroup]="createComponent" class="row g-3" (ngSubmit)="submitCreateComponent()">
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Manufacturer Part Number <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="manufacturerPartNumber"
+                      (input)="checkManufacturerPartNo()">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['manufacturerPartNumber'].errors?.['required'] && createComponent.controls['manufacturerPartNumber'].touched">This
+                        Field is required
+                      </small>
+                      <small
+                        *ngIf="createComponent.controls['manufacturerPartNumber'].errors?.['notUnique'] && createComponent.controls['manufacturerPartNumber'].touched"
+                        class="error-message">
+                        Manufacturer part number already exists !
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Manufacturer Name <span class="required">*</span></label>
+                    <ng-select [items]="comManufacturers" bindLabel="name" bindValue="_id"
+                      formControlName="manufacturerName" [searchable]="true" placeholder="Select manufacturer">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['manufacturerName'].errors?.['required'] && createComponent.controls['manufacturerName'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Description <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="description">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['description'].errors?.['required'] && createComponent.controls['description'].touched">This
+                        Field is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Package<span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="package">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['package'].errors?.['required'] && createComponent.controls['package'].touched">
+                        This Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Project Name <span class="required">*</span></label>
+                    <ng-select [items]="comProjects" bindLabel="name" bindValue="_id" formControlName="projectName"
+                      [searchable]="true" placeholder="Select Project">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['projectName'].errors?.['required'] && createComponent.controls['projectName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Quantity <span class="required">*</span></label>
+                    <input type="number" class="form-control" min="1" formControlName="quantity">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['quantity'].errors?.['required'] && createComponent.controls['quantity'].touched">
+                        This Field is required
+                      </small>
+                      <small
+                        *ngIf="!createComponent.controls['quantity'].errors?.['required'] && createComponent.controls['quantity'].errors?.['nonZeroPositiveInteger']">
+                        Quantity must be greater then 0 and not in descimal
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Category Name <span class="required">*</span></label>
+                    <ng-select [items]="comCategories" bindLabel="name" bindValue="_id" formControlName="categoryName"
+                      [searchable]="true" placeholder="Select Category">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['categoryName'].errors?.['required'] && createComponent.controls['categoryName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Supplier Name <span class="required">*</span></label>
+                    <ng-select [items]="comSuppliers" bindLabel="name" bindValue="_id" formControlName="supplierName"
+                      [searchable]="true" placeholder="Select Supplier">
+                    </ng-select>
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['supplierName'].errors?.['required'] && createComponent.controls['supplierName'].touched">This
+                        Field is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Supplier Part Number</label>
+                    <input type="text" class="form-control" formControlName="supplierPartNumber">
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Shelf Name</label>
+                    <ng-select [items]="shelfs" bindLabel="shelfName" bindValue="_id" formControlName="shelfName"
+                      [searchable]="true" placeholder="Select Shelf" (change)="changeShelfValue()">
+                    </ng-select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Box Name</label>
+                    <ng-select [items]="boxNames" bindLabel="name" bindValue="_id" formControlName="boxName"
+                      [searchable]="true" placeholder="----Select----">
+                    </ng-select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Comment</label>
+                    <input type="text" class="form-control" formControlName="comment">
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <label class="form-label">Notification Qty</label>
+                    <input type="number" class="form-control" formControlName="notificationQuantity">
+                    <div class="error-message">
+                      <small
+                        *ngIf="createComponent.controls['notificationQuantity'].errors?.['required'] && createComponent.controls['notificationQuantity'].touched">
+                        This Field is required
+                      </small>
+                      <small *ngIf="createComponent.errors?.['greaterThanQuantity'] && createComponent.touched">
+                        Ensure notification quantity does not exceed quantity.
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <button class="btn" type="submit" [disabled]="createComponent.invalid">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Electronic-component for selector -->
+      <div class="modal fade" id="csvPreviewModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header bg-no-opacity">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Component By Excel File</h1>
+              <button type="button" id="closeModalPerview" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height:70vh; overflow:auto">
+              <table class="table table-bordered align-middle csv-preview-table">
+                <thead>
+                  <tr>
+                    <th *ngFor="let col of columnMapping; let i = index; trackBy: trackByIndex">
+                      <select class="form-select" [ngModel]="columnMapping[i]" [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="onMapChange(i, $event)">
+                        <option value="">-- Ignore --</option>
+                        <option *ngFor="let h of systemHeaders" [value]="h.key" [disabled]="isMapped(h.key, i)">
+                          {{ h.label }}
+                        </option>
+                      </select>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of csvRawData">
+                    <td *ngFor="let cell of row">{{ cell }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-primary" (click)="confirmMapping()">Continue</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <app-component-dash style="height: 100%;"></app-component-dash>
+      </div>
+    </div>
+  </div>
+
+  <!--Repeated Modal Button -->
+  <button type="button" class="btn btn-primary" id="successModalButton" hidden data-bs-toggle="modal"
+    data-bs-target="#successModal">
+    Launch demo modal
+  </button>
+
+  <!--Repeated Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static"
+    data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Repeated Component</h1>
+          <button type="button" class="btn-close btn-close-white" id="closeSuccessModal" data-bs-dismiss="modal"
+            aria-label="Close" (click)="clearComponentForm()"></button>
+        </div>
+        <div class="modal-body">
+          <h3 class="alert-text">The Excel file contains data already in the database, as shown below. Do you want to
+            proceed?</h3>
+          <div class="repeatedComponent-container">
+            <table class="table table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-header align-middle background-dark">#</th>
+                  <th scope="col" class="col-header align-middle background-dark">Manufacturer Part No.</th>
+                  <th scope="col" class="col-header align-middle background-dark">Manufacturer</th>
+                  <th scope="col" class="col-header align-middle background-dark">Description</th>
+                  <th scope="col" class="col-header align-middle background-dark">Transaction</th>
+                  <th scope="col" class="col-header align-middle background-dark">Project</th>
+                  <th scope="col" class="col-header align-middle background-dark">Quantity</th>
+                  <th scope="col" class="col-header align-middle background-dark">Supplier</th>
+                  <th scope="col" class="col-header align-middle background-dark">Supplier Part No.</th>
+                  <th scope="col" class="col-header align-middle background-dark">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let repeatedComponent  of repeatedComponents; let i = index">
+                  <th scope="row" class="bg-repeat">{{i+1}}</th>
+                  <td class="bg-repeat">{{repeatedComponent.componentId.manufacturerPartNumber}}</td>
+                  <td class="bg-repeat">{{manufacturerNameList[repeatedComponent.componentId.manufacturer]}}</td>
+                  <td class="bg-repeat">{{repeatedComponent.componentId.description}}</td>
+                  <td class="bg-repeat">{{repeatedComponent.transactionType}}</td>
+                  <td class="bg-repeat">{{projectNameList[repeatedComponent.projectName]}}</td>
+                  <td class="bg-repeat">{{repeatedComponent.quantity}}</td>
+                  <td class="bg-repeat">{{supplierNameList[repeatedComponent.supplierName]}}</td>
+                  <td class="bg-repeat">{{repeatedComponent.supplierPartNo}}</td>
+                  <td class="bg-repeat">{{repeatedComponent.date | date:'shortDate' }} - {{repeatedComponent.date |
+                    date:'shortTime' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="confirmUpload()">Yes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="clearComponentForm()">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade" [ngClass]="{'show': isModalOpen}" *ngIf="isModalOpen"></div>
+
+  <div [ngClass]="{'modal fade': true, 'show': isModalOpen}" [attr.aria-hidden]="!isModalOpen"
+    [style.display]="isModalOpen ? 'block' : 'none'" id="CSVUploadWaitModal" tabindex="-1"
+    aria-labelledby="CSVUploadWaitModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          Please wait...
+          <button type="button" class="btn btn-secondary" id="closeWaitModal" hidden>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

@@ -1,0 +1,28 @@
+{
+    "defaultUser": {
+        "employeeCode": "ECMS-Master",
+        "firstName": "Master",
+        "loginId": "Master",
+        "password": "Master@2024",
+        "organizationEmail": "",
+        "rights": {
+            "hrDepartment": {
+                "user": {
+                    "manage": 1
+                }
+            },
+            "hardwareDepartment": {
+                "electronicDevice": {
+                    "view": 1,
+                    "manage": 1,
+                    "issue": 1,
+                    "return": 1,
+                    "BOM": 1
+                }
+            }
+        },
+        "status": 1,
+        "userType": "0"
+    },
+    "key": "Acevin-inventory"
+}

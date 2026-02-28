@@ -1,0 +1,1583 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+
+  <div class="row hero">
+    <div class="primary-container">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-8"> </div>
+
+          <div class="col-lg-4">
+            <div class="row" *ngIf="employeeRights === undefined || employeeRights === '0'">
+              <div class="col-6" *ngIf="userRights?.adminDepartment?.consumableAsset?.view === 1">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#exportCsvModal">Export CSV file</button>
+              </div>
+
+              <!-- <div class="col-3" *ngIf="userRights?.adminDepartment?.consumableAsset?.view === 1">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#uploadCsvModal">Upload CSV file</button>
+              </div> -->
+
+              <div class="col-6" *ngIf="userRights?.adminDepartment?.consumableAsset?.view === 1">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#addChallanNumber">Add/New</button>
+              </div>
+
+              <!-- <div class="col-3" *ngIf="userRights?.adminDepartment?.consumableAsset?.view === 1">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#deleteHistory">Delete History</button>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal-1 / Export CSV for consumable -->
+        <div class="modal fade" id="exportCsvModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header bg-no-opacity">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Consumable Export By CSV File</h1>
+                <button type="button" id="closeExportCSV" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                  aria-label="Close" (click)="clearExportCSV()"></button>
+              </div>
+              <div class="modal-body bg-no-opacity">
+                <div class="row">
+                  <div class="col mb-3 form-group">
+                    <label class="form-label"><b>Select Category</b></label>
+                    <ng-select class="ng-select-filter" [items]="categoryList" bindLabel="categoryList" bindValue="_id"
+                      [(ngModel)]="categoryName" placeholder="All" [searchable]="true"></ng-select>
+                  </div>
+                  <div class="col mb-3 form-group">
+                    <label class="form-label"><b>Select Supplier</b></label>
+                    <ng-select class="ng-select-filter" [items]="supplierList" bindLabel="supplierList" bindValue="_id"
+                      [(ngModel)]="supplierName" placeholder="All" [searchable]="true"> </ng-select>
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"><b>Select Start Date</b></label>
+                    <input type="date" class="form-control" [(ngModel)]="startDate" />
+                  </div>
+
+                  <div class="col-md-3 form-group">
+                    <label class="form-label"><b>Select End Date</b></label>
+                    <input type="date" class="form-control" [(ngModel)]="endDate" />
+                  </div>
+                </div>
+                <button type="button" class="btn btn-submit" (click)="exportConsumableCSVFile()">Export</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal-2 / Upload CSV For Consumable -->
+        <div class="modal fade" id="uploadCsvModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-no-opacity">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Consumable CSV File</h1>
+                <button type="button" id="closeUploadCSV" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                  aria-label="Close" (click)="clearUploadCSV()"></button>
+              </div>
+              <div class="modal-body bg-no-opacity">
+                <div class="row">
+                  <div class="col mb-3 form-group">
+                    <label class="form-label"><b>Select A File</b></label>
+                    <input #uploadInput type="file" class="form-control" name="consumableCsvFile" accept=".csv"
+                      (change)="selectConsumableCSVFile($event)">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-submit" (click)="submitConsumableCsv()">Upload</button>
+
+                <div class="row">
+                  <p class="mt-2">Please make sure that the file has the following columns in it and they follow the
+                    naming convention as defined:</p>
+                  <ul class="ms-2 me-2">
+                    <li><b>categoryName</b>: Category Name is compulsory</li>
+                    <li><b>subCategoryName</b>: SubCategory Name is compulsory</li>
+                    <li><b>manufacturer</b>: Manufacturer is compulsory</li>
+                    <li><b>supplier</b>: Supplier is compulsory</li>
+                    <li><b>amount</b>: Amount is compulsory</li>
+                    <li><b>quantity</b>: Quantity is compulsory</li>
+                    <li><b>modelNo</b>: Model No. is not compulsory </li>
+                    <li><b>serialNo</b>: Serial No. is not compulsory</li>
+                    <li><b>purchaseDate</b>: Purchase Date is not compulsory, and the date format should be
+                      <b>YYYY-MM-DD</b>
+                    </li>
+                    <li><b>warrantyDate</b>: Warranty Date is not compulsory, and the date format should be
+                      <b>YYYY-MM-DD</b>
+                    </li>
+                    <li><b>inputVoltage</b>: Input Voltage is not compulsory</li>
+                    <li><b>key</b>: Key is not compulsory</li>
+                    <li><b>subscriptionStart</b>: SubscriptionStart Date is not compulsory, and the date format should
+                      be <b>YYYY-MM-DD</b></li>
+                    <li><b>subscriptionEnd</b>: SubscriptionEnd Date is not compulsory, and the date format should be
+                      <b>YYYY-MM-DD</b>
+                    </li>
+                    <li><b>cpu</b>: CPU is not compulsory</li>
+                    <li><b>ram</b>: RAM is not compulsory</li>
+                    <li><b>drive</b>: Drive is not compulsory</li>
+                    <li><b>systemConfig</b>: System Config is not compulsory</li>
+                    <li><b>licenseInEff</b>: License in Effect is not compulsory</li>
+                    <li><b>msEffect</b>: MS Effect is not compulsory</li>
+                    <li><b>ipAddress</b>: IP Address is not compulsory</li>
+                    <li><b>internetAccess</b>: Internet Access is not compulsory</li>
+                    <li><b>softwareInstalled</b>: Software Installed is not compulsory</li>
+                    <li><b>lastUse</b>: Last Use is not compulsory</li>
+                    <li><b>description</b>: Description is not compulsory</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal-3 / Create Consumable -->
+        <div class="modal modal-lg fade" id="addChallanNumber" tabindex="-1" aria-labelledby="staticBackdropLabel"
+          data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+              <div class="modal-header" id="staticBackdropLabel">
+                <button type="button" id="closeConsumableSection" class="btn-close btn-close-white"
+                  data-bs-dismiss="modal" aria-label="Close" (click)="clearConsumableSection()"></button>
+              </div>
+
+              <div class="modal-body">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation"
+                    *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                    <button class="nav-link active" id="addItemName-tab" data-bs-toggle="tab"
+                      data-bs-target="#addItemName" type="button" role="tab" aria-controls="addItemName"
+                      aria-selected="true">Add New Item</button>
+                  </li>
+                  <li class="nav-item" role="presentation"
+                    *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                    <button class="nav-link" id="createConsume-tab" data-bs-toggle="tab"
+                      data-bs-target="#createConsume" type="button" role="tab" aria-controls="createConsume"
+                      aria-selected="false">Add New Challan</button>
+                  </li>
+                  <li class="nav-item" role="presentation"
+                    *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                    <button class="nav-link" id="addBillNumber-tab" data-bs-toggle="tab" aria-controls="addBillNumber"
+                      data-bs-target="#addBillNumber" type="button" role="tab" aria-controls="addBillNumber"
+                      aria-selected="false">Add New Bill</button>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  <!-- Add item name -->
+                  <div *ngIf="showAddItemNameForm()" class="tab-pane fade show active" id="addItemName" role="tabpanel" aria-labelledby="addItemName-tab">
+                    <div class="form-container mt-2 mb-3">
+                      <div class="row">
+                        <form [formGroup]="addItemName" (ngSubmit)="addItemNameForm()">
+                          <div class="row">
+
+                            <!-- Category -->
+                            <div class="col-md-4 form-group">
+                              <label class="form-label">
+                                Category <span class="required">*</span>
+                              </label>
+
+                              <ng-select
+                                [items]="categoryList"
+                                bindLabel="category"
+                                bindValue="_id"
+                                formControlName="category"
+                                [searchable]="true"
+                                placeholder="Select Category">
+                              </ng-select>
+
+                              <div class="text-danger">
+                                <small
+                                  *ngIf="addItemName.controls['category'].errors?.['required'] && addItemName.controls['category'].touched">
+                                  This Field is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <!-- Item Name -->
+                            <div class="col-md-4 form-group">
+                              <label class="form-label">
+                                Item Name <span class="required">*</span>
+                              </label>
+
+                              <input type="text" class="form-control" formControlName="itemName">
+
+                              <div class="text-danger">
+                                  <small *ngIf="addItemName.controls['itemName'].errors?.['required'] && addItemName.controls['itemName'].touched">
+                                    This Field is required
+                                  </small>
+                                  <small *ngIf="addItemName.controls['itemName'].errors?.['notUnique']" class="error-message">
+                                    Item name already exists
+                                  </small>
+                              </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-md-4 form-group">
+                              <label class="form-label">
+                                Shelf Location <span class="required">*</span>
+                              </label>
+
+                              <ng-select
+                                [items]="locationList"
+                                bindLabel="location"
+                                bindValue="_id"
+                                formControlName="location"
+                                [searchable]="true"
+                                placeholder="Select Shelf Location">
+                              </ng-select>
+
+                              <div class="text-danger">
+                                <small
+                                  *ngIf="addItemName.controls['location'].errors?.['required'] && addItemName.controls['location'].touched">
+                                  This Field is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <!-- Brand Name -->
+                            <div class="col-md-4 form-group position-relative">
+                              <label class="form-label">Brand Name</label>
+
+                              <input type="text" class="form-control" formControlName="brandName" placeholder="Type brand" />
+
+                              <ul *ngIf="showBrandSuggestions" class="list-group position-absolute w-100 shadow" style="z-index:1000; max-height:200px; overflow-y:auto;">
+                                <li *ngFor="let brand of filteredBrandList"
+                                    class="list-group-item list-group-item-action"
+                                    (click)="addItemName.patchValue({ brandName: brand.brandName }); showBrandSuggestions=false;">
+                                  {{ brand.brandName }}
+                                </li>
+                              </ul>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-md-4 form-group">
+                              <label class="form-label"> Description </label>
+                              <input type="text" class="form-control" formControlName="description">
+                            </div>
+
+                            <div class="col-12">
+                              <button class="btn" type="submit" [disabled]="addItemName.invalid || isSubmitting"> {{ isSubmitting ? 'Saving...' : 'Submit' }} </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- add challan number -->
+                  <div *ngIf="showChallanNumberForm()" class="tab-pane fade show" id="createConsume" role="tabpanel" aria-labelledby="createConsume-tab">
+                    <div class="form-container mt-2 mb-3">
+                      <form [formGroup]="addChallanNumber" (ngSubmit)="addChallanNumberForm()">
+                        <div class="row">
+
+                          <!-- Date -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Challan Date <span class="required">*</span>
+                            </label>
+                            <input type="date" class="form-control" formControlName="challanDate">
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addChallanNumber.controls['challanDate'].errors?.['required'] && addChallanNumber.controls['challanDate'].touched">
+                                This Field is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Challan Number -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Challan Number <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="challanNumber" placeholder="">
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addChallanNumber.controls['challanNumber'].errors?.['required'] && addChallanNumber.controls['challanNumber'].touched">
+                                This Field is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Supplier Name -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Supplier Name <span class="required">*</span>
+                            </label>
+
+                            <ng-select
+                              [items]="supplierList"
+                              bindLabel="supplierName"
+                              bindValue="_id"
+                              formControlName="supplier"
+                              [searchable]="true"
+                              placeholder="Select Supplier">
+                            </ng-select>
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf=" addChallanNumber.controls['supplier'].errors?.['required'] && addChallanNumber.controls['supplier'].touched">
+                                This Field is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Company Name -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Company Name <span class="required">*</span>
+                            </label>
+
+                            <ng-select
+                              [items]="companyList"
+                              bindLabel="companyName"
+                              bindValue="_id"
+                              formControlName="companyName"
+                              [searchable]="true"
+                              placeholder="Select Company Name">
+                            </ng-select>
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addChallanNumber.controls['companyName'].errors?.['required'] && addChallanNumber.controls['companyName'].touched">
+                                This Field is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- GST Number -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label"> GST Number </label>
+                            <input type="text" class="form-control" formControlName="GSTNumber" placeholder="">
+                          </div>
+
+                          <!-- Total Quantity -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Total Quantity <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalQuantity" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total Base Amount -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Total Base Amount <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalBaseAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total GST -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Total GST Amount<span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalGSTAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total Base Amount + GST -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Total Base Amount + GST <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Add Item List Button -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label"> Add Item List </label>
+                            <button type="button" class="form-control btn btn-primary add-button-class" (click)="addItem()"> Add Item </button>
+                          </div>
+
+                          <!-- Add Item List Section -->
+                          <div formArrayName="items">
+                            <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="card mb-3">
+                              <div class="card-body">
+                                <h6>Add New Item Details: {{ i + 1 }}</h6>
+                                <div class="row">
+
+                                  <!-- Item Name -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Item Name <span class="required">*</span>
+                                    </label>
+
+                                    <ng-select
+                                      [items]="itemNameList"
+                                      bindLabel="itemName"
+                                      bindValue="_id"
+                                      formControlName="itemName"
+                                      [searchable]="true"
+                                      placeholder="Select Item"
+                                      (change)="onItemChange($event, i)">
+                                    </ng-select>
+
+                                    <div class="error-message">
+                                      <small
+                                        *ngIf=" items.at(i).get('itemName')?.errors?.['required'] && items.at(i).get('itemName')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- HSN Code -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">HSN Code </label>
+                                    <input type="text" formControlName="hsnCode" class="form-control">
+                                  </div>
+
+                                  <!-- Quantity -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Quantity <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="quantity" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('quantity')?.errors?.['required'] && items.at(i).get('quantity')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Unit Price -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Unit Price <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="unitPrice" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('unitPrice')?.errors?.['required'] && items.at(i).get('unitPrice')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- CGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      CGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="CGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('CGST')?.errors?.['required'] && items.at(i).get('CGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- SGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      SGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="SGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('SGST')?.errors?.['required'] && items.at(i).get('SGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- IGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      IGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="IGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('IGST')?.errors?.['required'] && items.at(i).get('IGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Base Amount -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Base Amount <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="baseAmount" class="form-control" placeholder="" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('baseAmount')?.errors?.['required'] && items.at(i).get('baseAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- GST Amount -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      GST Amount <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="GSTAmount" class="form-control" placeholder="" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('GSTAmount')?.errors?.['required'] && items.at(i).get('GSTAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Base Amount + GST-->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Base Amount + GST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="totalAmount" class="form-control" placeholder="" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" items.at(i).get('totalAmount')?.errors?.['required'] && items.at(i).get('totalAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Remove Item List button -->
+                                  <div  *ngIf="items.length > 1" class="col-md-3 form-group">
+                                    <label class="form-label"> Remove Item List</label>
+                                    <button type="button" class="btn btn-danger mt-2 remove-button-class" (click)="removeItem(i)"> Remove </button>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Form Submit Button -->
+                          <div class="col-12">
+                            <button class="btn" type="submit" [disabled]="addChallanNumber.invalid">Submit </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <!-- add bill Number -->
+                  <div *ngIf="showBillNumberForm()" class="tab-pane fade show" id="addBillNumber" role="tabpanel" aria-labelledby="addBillNumber-tab">
+                    <div class="form-container mt-2 mb-3">
+                      <form [formGroup]="addBillNumber" (ngSubmit)="addBillNumberForm()">
+                        <div class="row">
+
+                          <!-- Bill Date -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Bill Date <span class="required">*</span>
+                            </label>
+
+                            <input type="date" class="form-control" formControlName="billDate">
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addBillNumber.controls['billDate'].errors?.['required'] && addBillNumber.controls['billDate'].touched">
+                                Bill Date is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Bill Number -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Bill Number <span class="required">*</span>
+                            </label>
+
+                            <input type="text" class="form-control" formControlName="billNumber" placeholder="">
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addBillNumber.controls['billNumber'].errors?.['required'] && addBillNumber.controls['billNumber'].touched">
+                                Bill Number is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Challan Toggle -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label d-block">Challan</label>
+
+                            <div class="challan-toggle">
+                              <label class="toggle-btn yes" [class.active]="addBillNumber.get('hasChallan')?.value === 'yes'" >
+                                <input type="radio" formControlName="hasChallan" value="yes" /> Yes
+                              </label>
+
+                              <label class="toggle-btn no" [class.active]="addBillNumber.get('hasChallan')?.value === 'no'" >
+                                <input type="radio" formControlName="hasChallan" value="no" /> No
+                              </label>
+                            </div>
+                          </div>
+
+                          <!-- Challan Multi Select -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasChallan')?.value === 'yes'">
+                            <label class="form-label">
+                              Challan Numbers <span class="required">*</span>
+                            </label>
+
+                            <ng-select
+                              [items]="challanNumberList"
+                              bindLabel="challanNumber"
+                              bindValue="_id"
+                              [multiple]="true"
+                              [closeOnSelect]="false"
+                              formControlName="challanIds"
+                              placeholder="Select Challan Numbers">
+
+                              <!-- <ng-template ng-option-tmp let-item="item" let-index="index">
+                                <input type="checkbox" [checked]="addBillNumber.get('challanIds')?.value?.includes(item._id)" class="me-2" />
+                                {{ item.challanNumber }}
+                              </ng-template> -->
+                            </ng-select>
+
+                            <small class="text-danger"
+                              *ngIf=" addBillNumber.get('challanIds')?.touched && addBillNumber.get('challanIds')?.invalid">
+                              Challan Number is required
+                            </small>
+                          </div>
+
+                          <!-- Supplier Name -->
+                          <div class="col-md-4 form-group">
+                            <label class="form-label">
+                              Supplier Name <span class="required">*</span>
+                            </label>
+
+                            <ng-select
+                              [items]="supplierList"
+                              bindLabel="supplierName"
+                              bindValue="_id"
+                              formControlName="supplier"
+                              [searchable]="true"
+                              placeholder="Select Supplier">
+                            </ng-select>
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addBillNumber.controls['supplier'].errors?.['required']
+                                      && addBillNumber.controls['supplier'].touched">
+                                This Field is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Company Name -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label">
+                              Company Name<span class="required">*</span>
+                            </label>
+
+                            <ng-select
+                              [items]="companyList"
+                              bindLabel="companyName"
+                              bindValue="_id"
+                              formControlName="companyName"
+                              [searchable]="true"
+                              placeholder="Select Company Name">
+                            </ng-select>
+
+                            <div class="text-danger">
+                              <small
+                                *ngIf="addBillNumber.controls['companyName'].errors?.['required'] && addBillNumber.controls['companyName'].touched">
+                                Company Name is required
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- GST Number -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label"> GST Number </label>
+                            <input type="text" class="form-control" formControlName="GSTNumber" placeholder="">
+                          </div>
+
+                          <!-- Total Quantity -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label">
+                              Total Quantity <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalQuantity" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total Base Amount-->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label">
+                              Total Base Amount <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalBaseAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total GST Amount-->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label">
+                              Total GST Amount <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalGSTAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Total Base Amount + GST -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label">
+                              Total Base Amount + GST <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" formControlName="totalAmount" placeholder="" readonly>
+                          </div>
+
+                          <!-- Add Item Toggle -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasChallan')?.value === 'yes'">
+                            <label class="form-label d-block">Add Item</label>
+                            <div class="challan-toggle">
+                              <label class="toggle-btn yes" [class.active]="addBillNumber.get('hasAddItems')?.value === 'yes'" >
+                                <input type="radio" formControlName="hasAddItems" value="yes" /> Yes
+                              </label>
+
+                              <label class="toggle-btn no" [class.active]="addBillNumber.get('hasAddItems')?.value === 'no'" >
+                                <input type="radio" formControlName="hasAddItems" value="no" /> No
+                              </label>
+                            </div>
+                          </div>
+
+                          <!-- Add Item List Button -->
+                          <div class="col-md-4 form-group" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <label class="form-label"> Add Item List </label>
+                            <button type="button" class="form-control btn btn-primary add-button-class" (click)="billAddItem()"> Add Item </button>
+                          </div>
+
+                          <!-- Add Item List Section -->
+                          <div formArrayName="billItems" *ngIf="addBillNumber.get('hasAddItems')?.value === 'yes'">
+                            <div *ngFor="let item of billItems.controls; let i = index" [formGroupName]="i" class="card mb-3">
+                              <div class="card-body">
+                                <h6>Add New Item Details: {{ i + 1 }}</h6>
+                                <div class="row">
+
+                                  <!-- Item Name -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Item Name <span class="required">*</span>
+                                    </label>
+
+                                    <ng-select
+                                      [items]="itemNameList"
+                                      bindLabel="itemName"
+                                      bindValue="_id"
+                                      formControlName="itemName"
+                                      placeholder="Select Item Name">
+                                    </ng-select>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('itemName')?.errors?.['required'] && billItems.at(i).get('itemName')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- HSN Code -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">HSN Code </label>
+                                    <input type="text" formControlName="hsnCode" class="form-control">
+                                  </div>
+
+                                  <!-- Quantity -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Quantity <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="quantity" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('quantity')?.errors?.['required'] && billItems.at(i).get('quantity')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Unit Price -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Unit Price <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="unitPrice" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('unitPrice')?.errors?.['required'] && billItems.at(i).get('unitPrice')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- CGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      CGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="CGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('CGST')?.errors?.['required'] && billItems.at(i).get('CGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- SGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      SGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="SGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('SGST')?.errors?.['required'] && billItems.at(i).get('SGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- IGST -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      IGST <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="IGST" class="form-control">
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('IGST')?.errors?.['required'] && billItems.at(i).get('IGST')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Base Amount -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Base Amount <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="baseAmount" class="form-control" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('baseAmount')?.errors?.['required'] && billItems.at(i).get('baseAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- GST Amount -->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      GST Amount <span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="GSTAmount" class="form-control" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('GSTAmount')?.errors?.['required'] && billItems.at(i).get('GSTAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Base Amount + GST-->
+                                  <div class="col-md-3 form-group">
+                                    <label class="form-label">
+                                      Base Amount + GST<span class="required">*</span>
+                                    </label>
+
+                                    <input type="number" formControlName="totalAmount" class="form-control" readonly>
+
+                                    <div class="error-message">
+                                      <small *ngIf=" billItems.at(i).get('totalAmount')?.errors?.['required'] && billItems.at(i).get('totalAmount')?.touched">
+                                        This field is required
+                                      </small>
+                                    </div>
+                                  </div>
+
+                                  <!-- Remove Item List button -->
+                                  <div  *ngIf="billItems.length > 1" class="col-md-3 form-group">
+                                    <label class="form-label"> Remove Item List</label>
+                                    <button type="button" class="btn btn-danger mt-2 remove-button-class" (click)="billRemoveItem(i)"> Remove </button>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Form Submit Button -->
+                          <div class="col-12">
+                            <button class="btn" type="submit" [disabled]="addBillNumber.invalid">Submit </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearSelection()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal-4 / Delete history consumable -->
+        <div class="modal fade" id="deleteHistory" tabindex="-1" aria-labelledby="deleteHistoryModalLabel"
+          data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-no-opacity">
+                <h1 class="modal-title fs-5" id="deleteHistoryModalLabel">Delete History Data</h1>
+                <button type="button" id="closeDeleteHistorySection" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                  aria-label="Close" (click)="clearDeleteHistorySection()"></button>
+              </div>
+              <div class="modal-body bg-no-opacity">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <label class="form-label"><b>Select Start Date</b></label>
+                    <input type="date" class="form-control" [(ngModel)]="startDate" />
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="form-label"><b>Select End Date</b></label>
+                    <input type="date" class="form-control" [(ngModel)]="endDate" />
+                  </div>
+                </div>
+                <button type="button" class="btn btn-submit" (click)="deleteConsumableHistory()">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Searchable field -->
+      <div class="row align-items-center">
+        <div class="col-mb-9">
+          <div class="row mb-3 align-items-end">
+            <div class="col-lg-2">
+              <label class="form-label"><b>Category</b></label>
+              <ng-select class="ng-select-filter" [items]="categoryList" bindLabel="name" bindValue="_id"
+                placeholder="All" [searchable]="true"> </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <label class="form-label"><b>Supplier</b></label>
+              <ng-select class="ng-select-filter" [items]="supplierList" bindLabel="subCategoryName" bindValue="_id"
+                placeholder="All" [searchable]="true"> </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <label class="form-label"><b>Location</b></label>
+              <ng-select class="ng-select-filter" [items]="locationList" bindLabel="name" bindValue="_id"
+                placeholder="All" [searchable]="true"> </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <button class="btn search-btn" (click)="applyFilter()">Apply</button>
+            </div>
+            <div class="col-lg-3">
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control search-input" [(ngModel)]="inputSearchText"
+                  (input)="getAllConsumable()" placeholder="search...">
+                <button class="btn search-btn" (click)="filterSearchedConsumable()">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table  -->
+      <div class="inventory-container">
+        <table class="table table-responsive table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="align-middle background-dark">#</th>
+              <th scope="col" class="align-middle background-dark">Date</th>
+              <th scope="col" class="align-middle background-dark">Category</th>
+              <th scope="col" class="align-middle background-dark">Item</th>
+              <th scope="col" class="align-middle background-dark">Location</th>
+              <th scope="col" class="align-middle background-dark">Intake Quantity</th>
+              <th scope="col" class="align-middle background-dark">Consume Quantity</th>
+              <th scope="col" class="align-middle background-dark">In Stock</th>
+              <th scope="col" class="align-center background-dark" colspan="2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="value-row" *ngFor="let consumable of itemMasterList; let i = index"
+              (click)="openConsumableEdit(consumable)">
+              <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails" scope="row">
+                {{pageLimit *(currentPageNo-1)+(i+1)}}</th>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable.updatedAt | date:'shortDate' }} - {{consumable.updatedAt | date:'shortTime'}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.category?.categoryName}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.itemName}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.location?.locationName}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.totalIntake}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.totalConsume}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                {{consumable?.inStock}}</td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                <button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#consumableEdit"
+                  (click)="openConsumableEdit(consumable)">Edit</button>
+              </td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#consumableDetails">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#consumableHistory" class="btn btn-action"
+                  (click)="openStockHistoryModal(consumable)">History</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Consumable Details Modal -->
+      <div class="modal modal-lg fade" id="consumableDetails" tabindex="-1" aria-labelledby="inventoryDetailsLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header justify-content-between">
+              <h5 class="modal-title">{{selectedConsumableDetails?.code}}</h5>
+              <div class="right-btns">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                  (click)="clearSelection()"></button>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="row-detail">
+                <div class="text-container">
+                  <p class="detailsHeading"> Date:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.categoryName || '--'}}</p>
+                </div>
+                <!-- <div class="text-container">
+                  <p class="detailsHeading"> Bill Number:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.billNumber || '--'}}</p>
+                </div> -->
+                <div class="text-container">
+                  <p class="detailsHeading"> Supplier:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.supplierList || '--'}}</p>
+                </div>
+                <div class="text-container">
+                  <p class="detailsHeading"> Category:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.categoryList || '--'}}</p>
+                </div>
+                <div class="text-container">
+                  <p class="detailsHeading"> Shelf Location:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.locationList || '--'}}</p>
+                </div>
+                <div class="text-container">
+                  <p class="detailsHeading"> Quantity:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.quantity || '--'}}</p>
+                </div>
+                <div class="text-container">
+                  <p class="detailsHeading"> Amount:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.amount || '--'}}</p>
+                </div>
+                <div class="text-container">
+                  <p class="detailsHeading"> Total Amount:</p>
+                  <p class="detailsValue">{{selectedConsumableDetails?.totalAmount || '--'}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consumable Edit Modal -->
+      <div class="modal modal-lg fade" id="consumableEdit" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">{{selectedConsumableDetails?.code}}</h1>
+              <button type="button" id="closeEditModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close" (click)="clearSelection()"></button>
+            </div>
+
+            <div class="modal-body">
+              <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation"
+                  *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                  <button class="nav-link active" id="modify-tab" data-bs-toggle="tab" data-bs-target="#modify"
+                    type="button" role="tab" aria-controls="modify" aria-selected="true">Modify</button>
+                </li>
+                <li class="nav-item" role="presentation"
+                  *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                  <button class="nav-link" id="consumeAssets-tab" data-bs-toggle="tab" data-bs-target="#consumeAssets"
+                    type="button" role="tab" aria-controls="consumeAssets" aria-selected="false">Consume Assets</button>
+                </li>
+                <li class="nav-item" role="presentation"
+                  *ngIf="userRights?.adminDepartment?.consumableAsset.manage === 1">
+                  <button class="nav-link" id="AddAssets-tab" data-bs-toggle="tab" data-bs-target="#AddAssets"
+                    type="button" role="tab" aria-controls="AddAssets" aria-selected="false">Add Assets</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <!-- Modify Content -->
+                <div class="tab-pane fade show active" id="modify" role="tabpanel" aria-labelledby="modify-tab"
+                  *ngIf="showAddItemNameForm()">
+                  <div class="form-container mt-2 mb-3">
+                    <form [formGroup]="modifyConsumableForm" (ngSubmit)="submitModifyConsumable()">
+                      <div class="row">
+
+                        <!-- <div class="col-md-4 form-group">
+                          <label class="form-label">Bill Number <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="billNumber" />
+                        </div> -->
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Supplier <span class="required">*</span></label>
+                          <select class="form-select" formControlName="supplierList">
+                            <option *ngFor="let supplier of supplierList" [value]="supplier">
+                              {{ supplier }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="modifyConsumableForm.controls['supplierList'].errors?.['required'] && modifyConsumableForm.controls['supplierList'].touched">This
+                              Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Category <span class="required">*</span></label>
+                          <select class="form-select" formControlName="categoryList">
+                            <option *ngFor="let item of categoryList" [value]="item">
+                              {{ item }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="modifyConsumableForm.controls['categoryList'].errors?.['required'] && modifyConsumableForm.controls['categoryList'].touched">
+                              This Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Shelf Location <span class="required">*</span></label>
+                          <select class="form-select" formControlName="locationList">
+                            <option *ngFor="let location of locationList" [value]="location">
+                              {{ location }}
+                            </option>
+                          </select>
+
+                          <div class="error-message">
+                            <small
+                              *ngIf="modifyConsumableForm.controls['locationList'].errors?.['required'] && modifyConsumableForm.controls['locationList'].touched">
+                              This Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="quantity" min="1">
+                          <div class="error-message">
+                            <small
+                              *ngIf="modifyConsumableForm.controls['quantity'].errors?.['required'] && modifyConsumableForm.controls['quantity'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="modifyConsumableForm.controls['quantity'].errors?.['min']">
+                              Quantity must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Amount</label>
+                          <input type="number" class="form-control" formControlName="amount" />
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Total Amount <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="totalAmount" min="1">
+                          <div class="error-message">
+                            <small
+                              *ngIf="modifyConsumableForm.controls['totalAmount'].errors?.['required'] && modifyConsumableForm.controls['totalAmount'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="modifyConsumableForm.controls['totalAmount'].errors?.['min']">
+                              Total Amount must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                      </div>
+                      <button type="submit" class="btn btn-submit mt-4"
+                        [disabled]="modifyConsumableForm.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Consume Assets -->
+                <div class="tab-pane fade show" id="consumeAssets" role="tabpanel" aria-labelledby="consumeAssets-tab"
+                  *ngIf="showChallanNumberForm()">
+                  <div class="form-container mt-2 mb-3">
+                    <form [formGroup]="consumeAssets" (ngSubmit)="submitConsumeAssets()">
+                      <div class="row">
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Category <span class="required">*</span></label>
+                          <select class="form-select" formControlName="categoryList">
+                            <option *ngFor="let item of categoryList" [value]="item">
+                              {{ item }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="consumeAssets.controls['categoryList'].errors?.['required'] && consumeAssets.controls['categoryList'].touched">
+                              This Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="quantity" min="1">
+                          <div class="error-message">
+                            <small
+                              *ngIf="consumeAssets.controls['quantity'].errors?.['required'] && consumeAssets.controls['quantity'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="consumeAssets.controls['quantity'].errors?.['min']">
+                              Quantity must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Consume Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="consumeQuantity" />
+                          <div class="error-message">
+                            <small
+                              *ngIf="consumeAssets.controls['consumeQuantity'].errors?.['required'] && consumeAssets.controls['consumeQuantity'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="consumeAssets.controls['consumeQuantity'].errors?.['min']">
+                              Quantity must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                      </div>
+                      <button type="submit" class="btn btn-submit mt-4"
+                        [disabled]="consumeAssets.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Add Assets -->
+                <div class="tab-pane fade show" id="AddAssets" role="tabpanel" aria-labelledby="AddAssets-tab"
+                  *ngIf="shouldShowAddAssetsForm()">
+                  <div class="form-container mt-2 mb-3">
+                    <form [formGroup]="addAssets" (ngSubmit)="submitAddAssets()">
+                      <div class="row">
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Category <span class="required">*</span></label>
+                          <select class="form-select" formControlName="categoryList">
+                            <option *ngFor="let item of categoryList" [value]="item">
+                              {{ item }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="addAssets.controls['categoryList'].errors?.['required'] && addAssets.controls['categoryList'].touched">
+                              This Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Bill Number <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="billNumber" />
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Supplier <span class="required">*</span></label>
+                          <select class="form-select" formControlName="supplierList">
+                            <option *ngFor="let supplier of supplierList" [value]="supplier">
+                              {{ supplier }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="addAssets.controls['supplierList'].errors?.['required'] && addAssets.controls['supplierList'].touched">This
+                              Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Shelf Location <span class="required">*</span></label>
+                          <select class="form-select" formControlName="locationList">
+                            <option *ngFor="let location of locationList" [value]="location">
+                              {{ location }}
+                            </option>
+                          </select>
+                          <div class="error-message">
+                            <small
+                              *ngIf="addAssets.controls['locationList'].errors?.['required'] && addAssets.controls['locationList'].touched">
+                              This Field is required
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Quantity <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="quantity" min="1">
+                          <div class="error-message">
+                            <small
+                              *ngIf="addAssets.controls['quantity'].errors?.['required'] && addAssets.controls['quantity'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="addAssets.controls['quantity'].errors?.['min']">
+                              Quantity must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Amount</label>
+                          <input type="number" class="form-control" formControlName="amount" />
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                          <label class="form-label">Total Amount <span class="required">*</span></label>
+                          <input type="number" class="form-control" formControlName="totalAmount" min="1">
+                          <div class="error-message">
+                            <small
+                              *ngIf="addAssets.controls['totalAmount'].errors?.['required'] && addAssets.controls['totalAmount'].touched">
+                              This field is required.
+                            </small>
+                            <small *ngIf="addAssets.controls['totalAmount'].errors?.['min']">
+                              Total Amount must be greater than 0.
+                            </small>
+                          </div>
+                        </div>
+
+                      </div>
+                      <button type="submit" class="btn btn-submit mt-4" [disabled]="addAssets.invalid">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="clearSelection()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consumable History Modal -->
+      <div class="modal modal-xl fade" id="consumableHistory" tabindex="-1" aria-labelledby="stockHistoryLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="stockHistoryLabel">{{selectedConsumableDetails?.code}}</h5>
+              <div class="color-cot">
+                <div class="color">
+                  <input class="form-check-input search-box" type="radio" value="all"
+                    [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryAll()"> All
+                </div>
+                <div class="color">
+                  <input class="form-check-input search-box" type="radio" value="create"
+                    [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryCreate()">
+                  <div class="create box"></div> Create
+                </div>
+                <div class="color">
+                  <input class="form-check-input search-box" type="radio" value="consume"
+                    [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryCreate()">
+                  <div class="consume box"></div> Consume
+                </div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="clearSelection()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="stockHistoryTable-container">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="col-header align-middle background-dark">#</th>
+                      <th scope="col" class="col-header align-middle background-dark">Date</th>
+                      <th scope="col" class="col-header align-middle background-dark">Bill Number</th>
+                      <th scope="col" class="col-header align-middle background-dark">Supplier</th>
+                      <th scope="col" class="col-header align-middle background-dark">Category</th>
+                      <!-- <th scope="col" class="col-header align-middle background-dark">Shelf Location</th> -->
+                      <th scope="col" class="col-header align-middle background-dark">Quantity</th>
+                      <!-- <th scope="col" class="col-header align-middle background-dark">Amount</th> -->
+                      <th scope="col" class="col-header align-middle background-dark">Total Amount</th>
+                      <th scope="col-2" class="col-header align-middle background-dark">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let stock of filteredStockHistories; let i = index">
+                      <th scope="row" class="align-middle col-data">{{i + 1}}</th>
+                      <td class="align-middle col-data">{{stock.date | date:'shortDate' }} - {{stock.date |
+                        date:'shortTime'}}</td>
+                      <td class="align-middle col-data"
+                        [ngClass]="{green: stock.transactionType === 'create', orange: stock.transactionType === 'issue', violet: stock.transactionType === 'returned'}">
+                        {{stock.transactionType}}</td>
+                      <td class="align-middle col-data">{{consumableCategoryNameList[stock?.consumableId?.categoryName]
+                        || '--'}}</td>
+                      <td class="align-middle col-data"> </td>
+                      <td class="align-middle col-data">{{stock.inventoryHandler}}</td>
+                      <td class="align-middle col-data">{{stock.issuedTo?.employeeCode || "--"}}
+                        [{{stock.issuedTo?.loginId || "--"}}]</td>
+                      <td class="align-middle col-data">{{stock.note || "--"}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="clearSelection()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="modal modal-xl fade" id="consumableHistory" tabindex="-1" aria-labelledby="stockHistoryLabel" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">--</h5>
+              <div class="color-cot">
+
+                <div class="color">
+                  <input class="form-check-input search-box" type="radio" value="all" [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryAll()"> All
+                </div>
+                <div class="color">
+                  <input class="form-check-input search-box" type="radio" value="create" [(ngModel)]="selectedFilterStockHistory" (change)="stockHistoryCreate()">
+                  <div class="create box"></div>
+                  Create
+                </div>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                (click)="clearSelection()"></button>
+            </div>
+            <div class="modal-body">
+              <div class="stockHistoryTable-container">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="col-header align-middle background-dark">#</th>
+                      <th scope="col" class="col-header align-middle background-dark">Date</th>
+                      <th scope="col" class="col-header align-middle background-dark">Transaction</th>
+                      <th scope="col" class="col-header align-middle background-dark">Project Name</th>
+                      <th scope="col" class="col-header align-middle background-dark">Quantity</th>
+                      <th scope="col" class="col-header align-middle background-dark">User</th>
+                      <th scope="col" class="col-header align-middle background-dark">Issued To</th>
+                      <th scope="col" class="col-header align-middle background-dark">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let stockHistory of filteredStockHistories; let i = index">
+                      <tr [ngClass]="{ 'table-active': selectedRow === i, 'cursor-pointer': stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add' || stockHistory.transactionType === 'move' }" (click)="toggleCollapse(i)">
+                        <th scope="row" class="align-middle col-data">{{i + 1}}</th>
+                        <td class="align-middle col-data">{{stockHistory.date | date:'shortDate' }} - {{stockHistory.date | date:'shortTime' }}</td>
+                        <td class="align-middle col-data transaction" [ngClass]="{ green: stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add', red: stockHistory.transactionType === 'consumed', orange: stockHistory.transactionType === 'issue', violet: stockHistory.transactionType === 'returned', brown: stockHistory.transactionType === 'move' }">{{stockHistory.transactionType}}</td>
+                        <td class="align-middle col-data"></td>
+                        <td class="align-middle col-data" [ngClass]="{ green: stockHistory.transactionType === 'create' || stockHistory.transactionType === 'add', red: stockHistory.transactionType === 'consumed', orange: stockHistory.transactionType === 'issue', violet: stockHistory.transactionType === 'returned', brown: stockHistory.transactionType === 'move' }">{{stockHistory.quantity}}</td>
+                        <td class="align-middle col-data"></td>
+                        <td class="align-middle col-data"></td>
+                        <td class="align-middle col-data"></td>
+                      </tr>
+
+                      <tr *ngIf="selectedRow === i">
+                        <td colspan="8" class="p-0 border-0">
+                          <div [id]="'collapse' + i" class="accordion-collapse collapse" [ngClass]="{show: stockHistory.transactionType ==='create' || stockHistory.transactionType ==='add' || stockHistory.transactionType === 'move' }">
+                            <div class="accordion-body" *ngIf="stockHistory?.supplierName !== null">
+                              <table class="table table-responsive m-0">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" class="col-header align-middle background-dark">Supplier Name</th>
+                                    <th scope="col" class="col-header align-middle background-dark">Supplier Part No.</th>
+                                    <th scope="col" class="col-header align-middle background-dark">Supplier Type</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>{{stockHistory?.supplierName?.name !== null || undefined || "" ? stockHistory?.supplierName?.name : '--'}}</td>
+                                    <td>{{stockHistory?.supplierPartNo !== null || undefined || "" ? stockHistory?.supplierPartNo : '--'}}</td>
+                                    <td>{{ stockHistory?.supplierName?.type !== null || undefined || "" ? stockHistory?.supplierName?.type : '--' }}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- pagination -->
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <div class="select-pageNo">
+            <label class="form-label"><b>Results per page</b></label>
+            <select class="form-select form-select-sm" aria-label="Small select example" [(ngModel)]="pageLimit"
+              (change)="changeDataLimit()">
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <nav aria-label="Page navigation" class="pagination">
+            <ul class="pagination">
+              <li class="page-item" [class.disabled]="currentPageNo === 1">
+                <button class="page-link" (click)="goToFirstPage()">{{"|<"}}</button>
+              </li>
+              <li class="page-item" [class.disabled]="currentPageNo <= 3">
+                <button class="page-link" (click)="previousPage()">{{"<<"}}</button>
+              </li>
+              <li class="page-item" *ngFor="let page of getPagesToShow()" [class.active]="currentPageNo === page">
+                <button class="page-link" (click)="goToPage(page)"> {{ page }} </button>
+              </li>
+              <li class="page-item" [class.disabled]="currentPageNo + 3 > totalPages">
+                <button class="page-link" (click)="nextPage()">{{">>"}}</button>
+              </li>
+              <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+                <button class="page-link" (click)="goToLastPage()">{{">|"}}</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

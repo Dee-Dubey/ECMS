@@ -1,0 +1,27 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+  <!-- <app-notification></app-notification> -->
+
+  <div class="hero p-0">
+
+    <div *ngIf="activeList === 'IT Department' && (userType === '0' || staffType === '0')">
+      <app-it-allotments></app-it-allotments>
+    </div>
+
+    <div *ngIf="activeList === 'Electronic Components' && (userType === '0' || staffType === '0')">
+      <app-components-allotments></app-components-allotments>
+    </div>
+
+    <div *ngIf="activeList === 'Testing Equipments' && (userType === '0' || staffType === '0')">
+      <app-testing-allotments></app-testing-allotments>
+    </div>
+
+    <div *ngIf="activeList === 'Fixed Asset' && (userType === '0' || staffType === '0')">
+      <app-consumable-allotments></app-consumable-allotments>
+    </div>
+
+
+  </div>
+
+  <app-footer></app-footer>
+</div>

@@ -1,0 +1,162 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+
+  <div class="row hero">
+    <div class="profile-page">
+
+      <!-- HEADER -->
+      <div class="profile-header">
+        <div class="avatar">
+          {{ userDetail?.firstName?.charAt(0) || '?' }}
+        </div>
+
+        <div class="header-info">
+          <h2>{{ userDetail?.firstName }} {{userDetail?.middleName}} {{userDetail?.lastName}}</h2>
+
+          <p class="email m-0">{{ userDetail?.email }}</p>
+
+          <p class="role-badge" [ngClass]="roleInfo.css"> {{ roleInfo.label }} </p>
+        </div>
+      </div>
+
+      <!-- BASIC INFO -->
+      <div class="user-details">
+        <div class="profile-card basic-info">
+          <div class="heading">
+            <h5>Basic Information</h5>
+          </div>
+
+          <div class="info-grid info">
+            <div class="access-item ">
+              <label>Name:</label>
+              <span>{{ userDetail?.firstName }} {{userDetail?.middleName}} {{userDetail?.lastName}}</span>
+            </div>
+
+            <div class="access-item ">
+              <label>E-mail:</label>
+              <span>{{ userDetail?.email }}</span>
+            </div>
+
+            <div class="access-item ">
+              <label>Employee Code:</label>
+              <span>{{ userDetail?.employeeCode }}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="profile-card more-details">
+          <div class="heading">
+            <h5>More Details</h5>
+          </div>
+
+          <div class="info-grid info">
+            <div class="access-item ">
+              <label>Login ID:</label>
+              <span>{{ userDetail?.loginId }}</span>
+            </div>
+
+            <div class="access-item ">
+              <label>Status:</label>
+              <span class="status" [ngClass]="userDetail?.status === 'Active' ? 'active' : 'inactive'">
+                {{ userDetail?.status }}
+              </span>
+            </div>
+
+            <div class="access-item ">
+              <label>Account Type::</label>
+              <span>{{ roleInfo.label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCESS OVERVIEW -->
+      <div class="profile-card">
+        <div class="assigned-container">
+
+          <!-- IT Department -->
+          <div class="assigned-card">
+            <div class="icon it-icon">💻</div>
+            <div class="content">
+                <h4>IT Department</h4>
+                <p><span class="count blue">{{ itAssignedCount }}</span> Assigned</p>
+            </div>
+          </div>
+
+          <!-- Electronic Components -->
+          <div class="assigned-card">
+            <div class="icon electronic-icon">🔌</div>
+            <div class="content">
+                <h4>Electronic Components</h4>
+                <p><span class="count purple">{{ electronicAssignedCount }}</span> Assigned</p>
+            </div>
+          </div>
+
+          <!-- Testing Equipments -->
+          <div class="assigned-card">
+            <div class="icon testing-icon">🛠️</div>
+            <div class="content">
+                <h4>Testing Equipments</h4>
+                <p><span class="count orange">{{testingAssignedCount}}</span> Assigned</p>
+            </div>
+          </div>
+
+          <!-- Fixed Assets -->
+          <div class="assigned-card">
+            <div class="icon fixed-icon">🏢</div>
+            <div class="content">
+                <h4>Fixed Assets</h4>
+                <p><span class="count gray">{{fixedAssetsAssignedCount}}</span> Assigned</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- <h5>Access Overview</h5>
+
+        <div class="access-list">
+          <div class="access-item" *ngFor="let item of permissionViewList">
+
+            <div class="module-name">
+              {{ formatLabel(item.department) }} /
+              {{ formatLabel(item.module) }}
+            </div>
+
+            <div class="permissions">
+              <span class="permission" *ngFor="let p of item.permissions">
+                {{ p | titlecase }}
+              </span>
+
+              <span *ngIf="item.permissions.length === 0" class="no-access">
+                No Access
+              </span>
+            </div>
+
+          </div>
+        </div> -->
+      </div>
+
+      <!-- RESPONSIBILITIES -->
+      <div class="profile-card">
+        <h5>Responsibilities</h5>
+
+        <ul class="responsibility-list">
+          <li *ngFor="let r of responsibilities">
+            ✔
+            {{ formatLabel(r.department) }} /
+            {{ formatLabel(r.module) }}
+            —
+            {{ r.actions.join(', ') | titlecase }}
+          </li>
+
+          <li *ngIf="responsibilities.length === 0" class="no-access">
+            No operational responsibilities assigned
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</div>

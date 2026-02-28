@@ -1,0 +1,14 @@
+[Unit]
+Description=AIMS Startup Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /opt/AIMS/server.js
+Restart=always
+RestartSec=60
+User=root
+Environment=Node_ENV=production
+WorkingDirectory=/opt/AIMS/
+
+[Install]
+WantedBy=multi.user.target

@@ -1,0 +1,377 @@
+<div class="">
+  <table class="table table-responsive table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="align-middle text-center background-dark">AMC Name</th>
+        <th scope="col" class="align-middle text-center background-dark">Number of Assets</th>
+        <th scope="col" class="align-middle text-center background-dark" colspan="2">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr class="value-row" *ngFor="let item of openServices">
+        <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#activeService" (click)="openDetails(item)">{{item.amcID.amcName}}</th>
+        <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#activeService" (click)="openDetails(item)">{{item.servicedAssets.length}}</th>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#activeService">
+          <button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#amcActiveEdit" (click)="openEdit(item)">Edit</button>
+        </td>
+        <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#activeService">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#activeServiceClose" class="btn btn-action" (click)="openClose(item)">Close</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row mt-2">
+    <div class="col-md-6">
+      <div class="select-pageNo">
+        <label class="form-label"><b>Results per page</b></label>
+        <select class="form-select form-select-sm " [(ngModel)]="pageLimit" (change)="changeDataLimit()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-6 text-end">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+          <li class="page-item" [class.disabled]="currentPageNo === 1">
+            <button class="page-link font-size-pagination" (click)="goToFirstPage()">&laquo;&laquo;</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === 1">
+            <button class="page-link font-size-pagination" (click)="previousPage()">&lsaquo;</button>
+          </li>
+          <li class="page-item" *ngFor="let page of getPagesToShow()" [class.active]="currentPageNo === page">
+            <button class="page-link font-size-pagination" (click)="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+            <button class="page-link font-size-pagination" (click)="nextPage()">&rsaquo;</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPageNo === totalPages">
+            <button class="page-link font-size-pagination" (click)="goToLastPage()">&raquo;&raquo;</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Details view section -->
+<div class="modal modal-xl fade" id="activeService" tabindex="-1" aria-labelledby="activeServiceDetailsLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header justify-content-between">
+        <h5 class="modal-title">{{selectedName}}</h5>
+        <div class="right-btns">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            (click)="clearSelection()"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row-detail">
+          <div class="text-container">
+            <p class="detailsHeading">Service Number:</p>
+            <p class="detailsValue">{{serviceDetails?.serviceNumber ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Service Status:</p>
+            <p class="detailsValue">{{serviceDetails?.serviceStatus ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Transaction:</p>
+            <p class="detailsValue">{{serviceDetails?.transactionType ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Bill No:</p>
+            <p class="detailsValue">{{serviceDetails?.billNo ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Estimated Cost:</p>
+            <p class="detailsValue">{{serviceDetails?.estimatedCost ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Payment Info:</p>
+            <p class="detailsValue">{{serviceDetails?.paymentInfo ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Payment Mode:</p>
+            <p class="detailsValue">{{serviceDetails?.paymentMode ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Service Details:</p>
+            <p class="detailsValue">{{serviceDetails?.serviceDetails ?? '--'}}</p>
+          </div>
+          <div class="text-container">
+            <p class="detailsHeading">Notes:</p>
+            <p class="detailsValue">{{serviceDetails?.additionalNotes ?? '--'}}</p>
+          </div>
+        </div>
+
+        <!-- <hr> -->
+        <div class=" row card-body">
+          <div class="card col-md-12">
+            <div class="card-body p-0">
+              <p class="m-1 detailsHeading">Covered Assets</p>
+              <div class="accordion m-2" id="coveredAssetsAcc">
+                <div class="accordion-item border border-danger-subtle" *ngFor="let items of serviceDetails?.servicedAssets; let i = index">
+
+                  <h2 class="accordion-header">
+                    <button class="accordion-button assetsHeading p-2" type="button" data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#serviceDetails'+i" [attr.aria-controls]="'collapse'+i" style="background-color: var(--bg-light-red2);">
+                      {{ items.department }}
+                    </button>
+                  </h2>
+
+                  <div [id]="'serviceDetails'+i" class="accordion-collapse collapse" [class.show]="true">
+                    <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th *ngFor="let h of getHeaders(items.assets)">
+                              {{ toDisplayName(h) }}
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr *ngFor="let asset of items.assets">
+                            <td *ngFor="let h of getHeaders(items.assets)">
+                              {{ resolveValue(asset, h, items.department) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Form Section-->
+<div class="modal modal-lg fade" id="amcActiveEdit" tabindex="-1" aria-labelledby="initiateServiceModalLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="initiateServiceModalLabel">{{selectedName}}</h1>
+        <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="clearInitiateServiceForm()">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-container">
+          <form [formGroup]="initiateServiceForm" class="g-3" (ngSubmit)="onSubmitInitiateService()">
+            <div class="row">
+              <div class="col-md-3 form-group">
+                <label class="form-label">Invoice Number <span class="required">*</span> </label>
+                <input type="number" class="form-control" formControlName="invoiceNumber" />
+                <div class="error-message">
+                  <small
+                    *ngIf="initiateServiceForm.controls['invoiceNumber'].errors?.['required'] && initiateServiceForm.controls['invoiceNumber'].touched">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <div class="col-md-3 form-group">
+                <label class="form-label">Estimated Cost <span class="required">*</span> </label>
+                <input type="number" class="form-control" formControlName="estimatedCost" />
+                <div class="error-message">
+                  <small
+                    *ngIf="initiateServiceForm.controls['estimatedCost'].errors?.['required'] && initiateServiceForm.controls['estimatedCost'].touched">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label class="form-label"> Service Details </label>
+                <input type="text" class="form-control" formControlName="serviceDetails" />
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label class="form-label">Additional Notes </label>
+                <input type="text" class="form-control" formControlName="additionalNotes" />
+              </div>
+
+              <div class="col-md-12 form-group m-0">
+                <div class=" row card-body">
+                  <div class="card col-md-12">
+                    <div class="card-body p-0">
+                      <div class="card-title">List Of Assets</div>
+                      <hr>
+                      <div class="accordion" id="accordionInitiateService" *ngIf="serviceDetails?.servicedAssets?.length > 0">
+                        <div class="accordion-item border border-danger-subtle"
+                          *ngFor="let items of serviceDetails?.servicedAssets; let InitiateService = index">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button assetsHeading p-2" type="button"
+                              data-bs-toggle="collapse" [attr.data-bs-target]="'#InitiateService'+InitiateService"
+                              [attr.aria-controls]="'collapse'+InitiateService" style="background-color: var(--bg-light-red2);">
+                                {{items.department}}
+                              </button>
+                          </h2>
+
+                          <div [id]="'InitiateService'+InitiateService" class="accordion-collapse collapse"
+                            [class.show]="true">
+                            <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                              <table class="table table-striped">
+                                <thead>
+                                  <tr>
+                                    <th>Select</th>
+                                    <th *ngFor="let h of getHeaders(items.assets)">
+                                      {{ toDisplayName(h) }}
+                                    </th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  <tr *ngFor="let asset of items.assets">
+                                    <td><input type="checkbox" (change)="checkBoxInputId(asset._id)" checked (change)="changeServicedAsset($event, asset, items.department)"></td>
+
+                                    <td *ngFor="let h of getHeaders(items.assets)">
+                                      {{ resolveValue(asset, h, items.department) }}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="submit" [disabled]="initiateServiceForm.invalid" class="btn btn-submit mt-4">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Close section -->
+<div class="modal modal-lg fade" id="activeServiceClose" tabindex="-1" aria-labelledby="initiateServiceCloseModalLabel"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="initiateServiceCloseModalLabel">{{selectedName}}</h1>
+        <button type="button" id="closeModalCreate" class="btn-close btn-close-white" data-bs-dismiss="modal"
+          aria-label="Close" (click)="clearInitiateServiceClose()">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-container">
+          <div class="row">
+            <form [formGroup]="serviceCloseForm" (ngSubmit)="submitInitiateServiceClose()">
+              <div class="row">
+
+                <div class="col-md-3 form-group">
+                  <label class="form-label"> Service Number <span class="required">*</span> </label>
+                  <input type="text" class="form-control" formControlName="serviceNumber">
+                  <div class="error-message">
+                    <small
+                      *ngIf="serviceCloseForm.controls['serviceNumber'].errors?.['required'] && serviceCloseForm.controls['serviceNumber'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label class="form-label"> Cost <span class="required">*</span> </label>
+                  <input type="number" class="form-control" formControlName="cost" />
+                  <div class="error-message">
+                    <small
+                      *ngIf="serviceCloseForm.controls['cost'].errors?.['required'] && serviceCloseForm.controls['cost'].touched">
+                      This field is required.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label class="form-label">Payment Mode </label>
+                  <input type="text" class="form-control" formControlName="paymentMode" />
+                </div>
+
+                <div class="col-md-3 form-group">
+                  <label class="form-label">Payment Info </label>
+                  <input type="text" class="form-control" formControlName="paymentInfo" />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label class="form-label">Service Details </label>
+                  <input type="text" class="form-control" formControlName="serviceDetails" />
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label class="form-label">Additional Notes </label>
+                  <input type="text" class="form-control" formControlName="additionalNotes" />
+                </div>
+
+                <div class="col-md-12 form-group m-0">
+                  <div class=" row card-body">
+                    <div class="card col-md-12">
+                      <div class="card-body p-0">
+                        <div class="card-title">List Of Assets</div>
+                        <hr>
+                        <div class="accordion" id="accordionServiceClose" *ngIf="serviceDetails?.servicedAssets?.length > 0">
+                            <div class="accordion" id="accordionServiceClose">
+                              <div class="accordion-item border border-danger-subtle"
+                                *ngFor="let items of serviceDetails?.servicedAssets; let serviceClose = index">
+                                <h2 class="accordion-header">
+                                  <button class="accordion-button assetsHeading p-2" type="button"
+                                    data-bs-toggle="collapse" [attr.data-bs-target]="'#serviceClose'+serviceClose"
+                                    [attr.aria-controls]="'collapse'+serviceClose" style="background-color: var(--bg-light-red2);">{{items.department}}</button>
+                                </h2>
+
+                                <div [id]="'serviceClose'+serviceClose" class="accordion-collapse collapse"
+                                  [class.show]="true">
+                                  <div class="accordion-body" class="modal-dialog-scrollable table-scroll-details">
+                                    <table class="table table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th *ngFor="let h of getHeaders(items.assets)">
+                                            {{ toDisplayName(h) }}
+                                          </th>
+                                        </tr>
+                                      </thead>
+
+                                      <tbody>
+                                        <tr *ngFor="let asset of items.assets">
+                                          <td *ngFor="let h of getHeaders(items.assets)">
+                                            {{ resolveValue(asset, h, items.department) }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" [disabled]="serviceCloseForm.invalid" class="btn btn-submit mt-4">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

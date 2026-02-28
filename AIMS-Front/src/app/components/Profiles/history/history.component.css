@@ -1,0 +1,192 @@
+/* Department Cards */
+.dept-card{
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 15px 30px rgba(0,0,0,0.08);
+  transition:0.3s;
+}
+
+.dept-card:hover{
+  transform:translateY(-5px);
+}
+
+/* Card Header Section */
+.card-top{
+  padding:10px 8px;
+  text-align:center;
+  color:white;
+}
+
+.card-top i{
+  font-size:45px;
+  margin-bottom:10px;
+}
+
+/* Gradient Colors */
+.it-gradient{
+  background:linear-gradient(135deg,#ff4b4b,#ff1e56);
+}
+
+.hardware-gradient{
+  background:linear-gradient(135deg,#ff8a00,#ff5e00);
+}
+
+.admin-gradient{
+  background:linear-gradient(135deg,#2c7a7b,#285e61);
+}
+
+/* Bottom White Section */
+.card-bottom{
+  background:#f9f9fb;
+  padding:10px;
+}
+
+.it-cardBottom {
+  height: 16.5vh !important;
+}
+
+.card-bottom p{
+  color:#6c757d;
+  margin-bottom:5px;
+}
+
+/* Sub Items */
+.sub-item{
+  background:#ffffff;
+  border-radius:10px;
+  padding:10px 15px;
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 3px 8px rgba(0,0,0,0.05);
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.sub-item:hover{
+  background:#f1f1f5;
+}
+
+/* Collapse Header */
+.collapse-header{
+  margin:15px;
+  margin-bottom: 10px;
+  /* background:linear-gradient(90deg,#ff3d3d,#ff1e56); */
+  color:white;
+  padding:6px 6px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:500;
+}
+
+/* Table */
+.table-wrapper{
+  margin:15px;
+  margin-top: 0px;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.table thead{
+  background:#5b5b5f;
+  color:white;
+}
+
+.table th{
+  padding:15px;
+  font-weight:500;
+}
+
+.table td{
+  padding:15px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* .main-container {
+  height: 100vh;
+} */
+
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+app-footer {
+  margin-top: auto;
+}
+
+.history-table-head {
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-container {
+  background: var(--bg-light-gray1);
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.red {
+  color: var(--red);
+  font-weight: 500;
+}
+
+.green {
+  color: var(--green);
+  font-weight: 500;
+}
+
+.orange {
+  color: var(--dark-orange);
+  font-weight: 500;
+}
+
+.violet {
+  color: blueviolet;
+  font-weight: 500;
+}
+
+.background-dark {
+  background-color: #4a4b4b;
+  color: white;
+}
+
+.nav-link {
+  background-color: var(--bg-red);
+  color: white;
+  width: 100%;
+}
+
+.UserHistory-contaainer {
+  height: calc(100vh - 1rem - 9vh);
+  overflow-y: overlay;
+}
+
+.nav-link:hover {
+  background-color: #4a4b4b;
+}
+
+.nav-link.active {
+  background-color: #4a4b4b;
+  color: white;
+  width: 100%;
+}
+
+.nav-tabs {
+  margin-top: 16px;
+}

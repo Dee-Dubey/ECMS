@@ -1,0 +1,88 @@
+.sidebar-container {
+  background: var(--bg-light-gray1);
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.accinfo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.acc-detail {
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+}
+
+.acc-heading h2 {
+  margin-bottom: 0;
+  font-size: 1.8rem;
+}
+
+.profile-para {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  background: var(--bg-white);
+  padding: 0.3rem 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.profile-label {
+  font-size: 1.5rem;
+}
+
+.profile-person {
+  width: 10rem;
+}
+
+.emp-name {
+  margin-top: 0;
+  font-size: 1.8rem;
+}
+
+.btn-reset {
+  width: 100%;
+  font-size: 1.1rem;
+  background: var(--bg-red);
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+.account-profile {
+  margin-bottom: 1rem;
+  display: inline-block;
+  text-align: center;
+  width: 16rem;
+}
+
+.btn-edit {
+  font-size: 1.3rem;
+  display: inline;
+}
+
+.profile-img-container {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 0.5rem;
+  background: var(--white);
+  border-radius: 50%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.profile-img {
+  width: 15rem;
+  height: 15rem;
+}
+
+.modal-header {
+  background-color: var(--bg-dark-gray2);
+  padding: 0.5rem 1.5rem;
+}
+
+.modal-title {
+  color: white;
+}

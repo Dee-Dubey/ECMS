@@ -1,0 +1,136 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+
+  <div class="row hero">
+    <div class="primary-container">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-6"> </div>
+
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-4">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#exportCsvModal">Export
+                  CSV file</button>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#uploadCsvModal">Upload
+                  CSV file</button>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn inven-btn" data-bs-toggle="modal"
+                  data-bs-target="#exampleModal2">Create
+                  Consumable</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-mb-9">
+          <div class="row mb-3 align-items-end">
+            <div class="col-lg-2">
+              <label class="form-label"><b>Category</b></label>
+              <ng-select class="ng-select-filter" bindLabel="name" bindValue="_id" placeholder="All"
+                [searchable]="true">
+              </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <label class="form-label"><b>Sub-Category</b></label>
+              <ng-select class="ng-select-filter" bindLabel="subCategoryName" bindValue="_id" placeholder="All"
+                [searchable]="true">
+              </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <label class="form-label"><b>Manufacturers</b></label>
+              <ng-select class="ng-select-filter" bindLabel="name" bindValue="_id" placeholder="All"
+                [searchable]="true">
+              </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <button class="btn search-btn">Apply</button>
+            </div>
+            <div class="col-lg-3">
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control search-input" placeholder="search...">
+                <button class="btn search-btn">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inventory-container">
+        <table class="table table-responsive table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="align-middle background-dark">#</th>
+              <th scope="col" class="align-middle background-dark">Manufacturer part No.</th>
+              <th scope="col" class="align-middle background-dark">manufacturer</th>
+              <th scope="col" class="align-middle background-dark">Package</th>
+              <th scope="col" class="align-middle background-dark">Category</th>
+              <th scope="col" class="align-middle background-dark">Component-ID</th>
+              <th scope="col" class="align-middle background-dark">In-Stock</th>
+              <th scope="col" class="align-middle background-dark" colspan="2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="value-row">
+              <th class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails" scope="row"></th>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails"></td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails">
+                <button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#inventoryEdit">Edit</button>
+              </td>
+              <td class="align-middle text-center" data-bs-toggle="modal" data-bs-target="#inventoryDetails">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#stockHistory" class="btn btn-action" >History</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <div class="select-pageNo">
+            <label class="form-label"><b>Results per page</b></label>
+            <select class="form-select form-select-sm" aria-label="Small select example">
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <nav aria-label="Page navigation" class="pagination">
+            <ul class="pagination">
+              <li class="page-item">
+                <button class="page-link">{{"|<"}}</button>
+              </li>
+              <li class="page-item">
+                <button class="page-link">{{"<<"}}</button>
+              </li>
+              <li class="page-item">
+                <button class="page-link"> -- </button>
+              </li>
+              <li class="page-item">
+                <button class="page-link">{{">>"}}</button>
+              </li>
+              <li class="page-item">
+                <button class="page-link">{{">|"}}</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

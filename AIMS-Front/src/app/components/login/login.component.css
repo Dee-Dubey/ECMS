@@ -1,0 +1,57 @@
+.container-fluid {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-light-gray3);
+  padding-top: 1rem;
+
+}
+
+.main-header img {
+  width: 12rem;
+}
+
+.main-header h3 {
+  color: var(--red);
+  letter-spacing: 1px;
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+.container {
+  padding: 1rem;
+  max-width: 880px;
+  width: 100%;
+  background: var(--bg-dark-gray2);
+  border-radius: 10px;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.row {
+  align-items: center;
+}
+
+.inven-banner img {
+  width: 100%;
+}
+
+/* form section css  */
+.form-login h5 {
+  color: var(--white);
+  font-size: 2rem;
+}
+
+.input-group {
+  margin: 1rem 0 0;
+}
+
+.btn-submit {
+  border: none;
+  margin: 0;
+}
+
+.btn-submit:disabled {
+  opacity: 50%;
+}

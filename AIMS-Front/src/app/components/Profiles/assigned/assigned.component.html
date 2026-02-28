@@ -1,0 +1,345 @@
+<div class="container-fluid main-container">
+  <app-navbar></app-navbar>
+
+  <!-- <div class="assigned-main-heading">
+    <i class="bi bi-clock-assigned me-2"></i>
+    History Section
+  </div> -->
+
+  <div class="row g-3 m-1">
+
+    <!-- Admin Department -->
+    <div class="col-md-4 mt-1">
+      <div class="dept-card">
+        <div class="card-top admin-gradient">
+          <i class="bi bi-hdd-rack"></i>
+          <h4 class="mb-0">Admin Department - Assigned</h4>
+        </div>
+        <div class="card-bottom">
+          <!-- <p>View your admin department Assigned</p> -->
+
+          <div class="sub-item" (click)="selectSection('fixed')">
+            <span><i class="bi bi-archive me-2"></i> 📦 Fixed Assets </span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+          <div class="sub-item" (click)="selectSection('consumable')">
+            <span><i class="bi bi-box-seam me-2"></i> 🛍️ Consumable </span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Hardware Department -->
+    <div class="col-md-4 mt-1">
+      <div class="dept-card">
+        <div class="card-top hardware-gradient">
+          <i class="bi bi-cpu"></i>
+          <h4 class="mb-0">Hardware Department - Assigned</h4>
+        </div>
+        <div class="card-bottom">
+          <!-- <p>View your hardware department Assigned</p> -->
+
+          <div class="sub-item" (click)="selectSection('electronic')">
+            <span><i class="bi bi-motherboard me-2"></i> 🔌 Electronic Components </span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+          <div class="sub-item" (click)="selectSection('testing')">
+            <span><i class="bi bi-tools me-2"></i> 🛠️ Testing Equipments </span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- IT Department -->
+    <div class="col-md-4 mt-1">
+      <div class="dept-card">
+        <div class="card-top it-gradient">
+          <i class="bi bi-laptop"></i>
+          <h4 class="mb-0">IT Department - Assigned</h4>
+        </div>
+        <div class="card-bottom it-cardBottom">
+          <!-- <p>View your IT inventory Assigned</p> -->
+          <div class="sub-item" (click)="selectSection('it')">
+            <span><i class="bi bi-motherboard me-2"></i> 💻 IT Inventory </span>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- IT INVENTORY TABLE -->
+  <!-- ============================= -->
+
+  <div *ngIf="selectedSection === 'it'">
+
+    <div class="collapse-header it-gradient">
+      <div style="font-size: 1.5rem;"> 💻 IT Inventory - Assigned</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Inventory ID</th>
+            <th>Category</th>
+            <th>Sub-Category</th>
+            <th>Manufacturer</th>
+            <th>Transaction</th>
+            <th>Date</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignedData of assignedITStockHistory; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{assignedData.inventoryId}}</td>
+            <td>{{ITCategoryNameList[assignedData.categoryName]}}</td>
+            <td>{{ITSubCategoryNameList[assignedData.subCategoryName]}}</td>
+            <td>{{ITManufacturerNameList[assignedData.manufacturer]}}</td>
+            <td>{{assignedData.transactionType}}</td>
+            <td>{{assignedData.updatedAt | date:'dd MMM yyyy'}} - {{assignedData.updatedAt | date:'shortTime'}}</td>
+            <td>{{assignedData.note || '--'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- ELECTRONIC COMPONENT TABLE -->
+  <!-- ============================= -->
+
+  <div *ngIf="selectedSection === 'electronic'">
+    <div class="collapse-header hardware-gradient">
+      <div style="font-size: 1.5rem;">🔌 Electronic Components - Assigned</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Manufacture Part NO</th>
+            <th>Transaction Type</th>
+            <th>Project Name</th>
+            <th>Quantity</th>
+            <th>Date</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignedData of assignedStockHistory; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{assignedData?.manufacturerPartNumber}}</td>
+            <td [ngClass]="{green: assignedData.transactionType === 'create' || assignedData.transactionType === 'add', red: assignedData.transactionType === 'consumed' , orange: assignedData.transactionType === 'issue' , violet: assignedData.transactionType === 'return'}">{{assignedData.transactionType}}</td>
+            <td>{{projectNameList[assignedData.projectName]}}</td>
+            <td [ngClass]="{green: assignedData.transactionType === 'create' || assignedData.transactionType === 'add', red: assignedData.transactionType === 'consumed' , orange: assignedData.transactionType === 'issue', violet: assignedData.transactionType === 'return' }">{{assignedData.finalQuantity}}</td>
+            <td>{{assignedData?.dateUpdate | date:'dd MMM yyyy'}} - {{assignedData.dateUpdate | date:'shortTime' }}</td>
+            <td>{{assignedData?.note ? assignedData.note : '--'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- TESTING EQUIPMENT TABLE -->
+  <!-- ============================= -->
+
+  <div *ngIf="selectedSection === 'testing'">
+    <div class="collapse-header hardware-gradient">
+      <div style="font-size: 1.5rem;">🛠️ Testing Equipments - Assigned</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Equipment Name</th>
+            <th>Handler</th>
+            <th>Transaction</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of testingHistories; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{item.equipmentName}}</td>
+            <td>{{item.handler}}</td>
+            <td>{{item.transactionType}}</td>
+            <td>{{item.date | date:'dd MMM yyyy - hh:mm a'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- FIXED ASSETS TABLE -->
+  <!-- ============================= -->
+
+  <div *ngIf="selectedSection === 'fixed'">
+    <div class="collapse-header admin-gradient">
+      <div style="font-size: 1.5rem;">📦 Fixed Assets - Assigned</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Asset Name</th>
+            <th>Handler</th>
+            <th>Transaction</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of fixedAssetHistories; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{item.assetName}}</td>
+            <td>{{item.handler}}</td>
+            <td>{{item.transactionType}}</td>
+            <td>{{item.date | date:'dd MMM yyyy - hh:mm a'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- CONSUMABLE TABLE -->
+  <!-- ============================= -->
+
+  <div *ngIf="selectedSection === 'consumable'">
+    <div class="collapse-header admin-gradient">
+      <div style="font-size: 1.5rem;">🛍️ Consumable - Assigned</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Consumable Name</th>
+            <th>Handler</th>
+            <th>Transaction</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of consumableHistories; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.handler}}</td>
+            <td>{{item.transactionType}}</td>
+            <td>{{item.date | date:'dd MMM yyyy - hh:mm a'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+
+  <!-- <div class="row hero">
+    <div class="assigned-container col-lg-12 mt-3">
+      <ul class="nav mb-3" id="myTab" role="tablist">
+        <div class="col-lg-6 mb-2">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+              role="tab" aria-controls="home" aria-selected="true">
+              Component Inventory
+            </button>
+          </li>
+        </div>
+        <div class="col-lg-6 mb-2">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+              role="tab" aria-controls="profile" aria-selected="false">IT and Other
+              Inventory</button>
+          </li>
+        </div>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="align-middle text-center background-dark">#</th>
+                <th scope="col" class="align-middle text-center background-dark">Manufacturer Part No</th>
+                <th scope="col" class="align-middle text-center background-dark">Transaction Type</th>
+                <th scope="col" class="align-middle text-center background-dark">Project Name</th>
+                <th scope="col" class="align-middle text-center background-dark">Quantity</th>
+                <th scope="col" class="align-middle text-center background-dark">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="value-row" *ngFor="let assignedData of assignedStockHistory;  let i = index">
+                <td class="align-middle col-1 text-center">{{i+1}}</td>
+                <td class="align-middle col-2 text-center">{{assignedData.manufacturerPartNumber}}</td>
+                <td class="align-middle col-2 text-center">{{assignedData.transactionType}}</td>
+                <td class="align-middle col-2 text-center">{{projectNameList[assignedData.projectName]}}</td>
+                <td class="align-middle col-1 text-center">{{assignedData.finalQuantity}}</td>
+                <td class="align-middle col-1 text-center">{{assignedData.dateUpdate | date:'shortDate'}} {{
+                  assignedData.dateUpdate
+                  |
+                  date:'shortTime' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class=" tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <table class="table table-responsive table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="align-middle text-center background-dark">#</th>
+                <th scope="col" class="align-middle text-center background-dark">Inventory Id</th>
+                <th scope="col" class="align-middle text-center background-dark">Transaction Type</th>
+                <th scope="col" class="align-middle text-center background-dark">Category Name</th>
+                <th scope="col" class="align-middle text-center background-dark">Sub-category Name</th>
+                <th scope="col" class="align-middle text-center background-dark">Manufacturer Name</th>
+                <th scope="col" class="align-middle text-center background-dark">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="value-row" *ngFor="let assignedData of assignedITStockHistory; let i = index">
+                <th scope="row" class="align-middle text-center">{{i+1}}</th>
+                <td class="align-middle text-center">{{assignedData.inventoryId}}</td>
+                <td class="align-middle text-center">{{assignedData.transactionType}}</td>
+                <td class="align-middle text-center">{{ITCategoryNameList[assignedData.categoryName]}}</td>
+                <td class="align-middle text-center">{{ITSubCategoryNameList[assignedData.subCategoryName]}}</td>
+                <td class="align-middle text-center">{{ITManufacturerNameList[assignedData.manufacturer]}}</td>
+                <td class="align-middle text-center">{{assignedData.updatedAt | date:'shortDate'}}
+                  {{assignedData.updatedAt | date:'shortTime'}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <app-footer></app-footer>
+</div>

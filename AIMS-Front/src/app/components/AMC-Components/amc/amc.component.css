@@ -1,0 +1,95 @@
+.nav-height {
+  height: 5vh;
+}
+
+.notification-height {
+  height: 4vh;
+}
+
+.button-division {
+  height: 5vh;
+}
+
+.main-section {
+  height: 86vh;
+}
+
+
+
+.div-section-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30rem;
+  padding: 0;
+  border: 1px solid;
+}
+
+.div-section-2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 19rem;
+  padding: 0;
+  border: 1px solid;
+}
+
+.div-section-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24.5rem;
+  padding: 0;
+  border: 1px solid;
+}
+
+.row-m {
+  margin-left: 0.1px;
+  margin-bottom: 5px;
+}
+
+.button-size {
+  width: 100%;
+}
+
+.modal-header {
+  background-color: var(--bg-dark-gray2);
+  padding: 0.5rem 1.5rem;
+}
+
+.modal-title {
+  color: var(--white);
+}
+
+.btn-close {
+  color: var(--white);
+  opacity: 1;
+}
+
+.modal-body {
+  background: var(--bg-light-gray3);
+  padding: 1rem 1.5rem;
+}
+
+.table-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.top-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
