@@ -393,7 +393,7 @@ exports.postLogin = (req, res) => {
                 logger.warn('Incorrect password', { loginId });
                 return res.send({ status: 'password' })
             }
-            const token = jwt.sign({ loginId: user.loginId }, 'Acevin-inventory', { expiresIn: '10h' })
+            const token = jwt.sign({ loginId: user.loginId }, 'Electronic-component', { expiresIn: '10h' })
             logger.info('Login successful', { loginId, user });
             res.send({ status: 'sucess', token: token, user: user })
         }).catch(err => {

@@ -57,7 +57,7 @@ checkAndCreateUploadsDir(logsDir)
  * Last Modified: 25 October 2025
  * Modified By: Raza A [AS-127]
  */ 
-mongoose.connect('mongodb://127.0.0.1:27017/Acevin-IMS-NEW').then(() => {
+mongoose.connect('mongodb://127.0.0.1:27017/ECMS').then(() => {
     console.log('MongoDB Database Acevin-IMS is connected');
     logger.info('MongoDB Database Acevin-IMS is connected')
 }).catch((error) => {

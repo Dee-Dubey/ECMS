@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     const token = authHeader.split(' ')[1]; // Bearer <token>
 
 
-    const decoded = jwt.verify(token, 'Acevin-inventory');
+    const decoded = jwt.verify(token, 'Electronic-component');
     req.loginId = decoded.loginId;
 
 
